@@ -15,3 +15,11 @@ Business validation and the immutable ProfileDetails value live in
 backend/services/profiles.py and use only the Python standard library. HTTP schemas
 and persistence must convert to/from these plain values; no ORM records may enter
 the service.
+
+## Persistence
+
+Migration 0002 adds one profile per user, keyed by a foreign key to users.id.
+SQL constraints enforce age, height, weight, and time-zone length bounds.
+Persistence operations receive a server-selected owner UUID, return plain
+ProfileDetails values, and use an atomic upsert for repeat saves. Integration
+checks cover owner isolation, repeated updates, bounds, and foreign keys.

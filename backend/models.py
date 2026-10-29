@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import CheckConstraint, DateTime, ForeignKey, String, Text, func
+from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Float, SmallInteger, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.database import Base
@@ -31,3 +31,20 @@ class LoginSession(Base):
     user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+
+
+class Profile(Base):
+    __tablename__ = "profiles"
+    __table_args__ = (
+        CheckConstraint("age BETWEEN 18 AND 120", name="ck_profiles_age"),
+        CheckConstraint("height_cm BETWEEN 50 AND 300", name="ck_profiles_height"),
+        CheckConstraint("weight_kg BETWEEN 20 AND 500", name="ck_profiles_weight"),
+        CheckConstraint("length(timezone) BETWEEN 1 AND 64", name="ck_profiles_timezone"),
+    )
+
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    age: Mapped[int] = mapped_column(SmallInteger)
+    height_cm: Mapped[float] = mapped_column(Float)
+    weight_kg: Mapped[float] = mapped_column(Float)
+    timezone: Mapped[str] = mapped_column(String(64))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
