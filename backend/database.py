@@ -17,6 +17,7 @@ class Base(DeclarativeBase):
 def create_database_engine() -> Engine:
     return create_engine(
         get_database_url(), pool_pre_ping=True, hide_parameters=True,
+        pool_size=5, max_overflow=5, pool_timeout=3,
         connect_args={"connect_timeout": 5, "application_name": "trainai",
                       "options": "-c statement_timeout=5000 -c lock_timeout=2000"},
     )

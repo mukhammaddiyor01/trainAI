@@ -32,7 +32,7 @@ Plain business services remain independent of these HTTP controls.
 | Login attempts | 8 per normalized username per rolling 60 seconds |
 | Limiter state | 4096 fingerprint buckets per limiter, expired entries removed, capacity fails closed |
 | Password work | Two simultaneous registration/login operations |
-| PostgreSQL | 5-second connection/statement bounds, 2-second lock bound |
+| PostgreSQL | 10 connections maximum, 3-second pool wait, 5-second connection/statement bounds, 2-second lock bound |
 | Local server launcher | 32 concurrent requests/connections, 5-second keep-alive, 16 KiB incomplete HTTP event buffer |
 
 Throttling returns 429 with Retry-After. Use `python -m backend` so the documented

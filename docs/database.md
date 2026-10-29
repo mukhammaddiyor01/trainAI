@@ -57,3 +57,13 @@ keys, then checks downgrade/upgrade and removes only its own cluster. It never
 uses DATABASE_URL from the application configuration. Requires installed initdb,
 pg_ctl, and createdb. Direct integration test discovery is skipped unless an
 explicit TRAINAI_TEST_DATABASE_URL ending in _test matches DATABASE_URL.
+
+## Operation budgets
+
+The runtime pool is capped at 5 pooled plus 5 overflow connections, with a
+3-second pool checkout timeout. Connections and SQL statements have 5-second
+bounds; lock waits are capped at 2 seconds. Integration checks confirm the
+PostgreSQL statement_timeout and lock_timeout settings are active. Slow queries
+and pool failures become generic persistence errors, without leaking parameters.
+Large future administrative migrations may need an explicit reviewed operator
+configuration; never remove runtime bounds silently.

@@ -5,7 +5,7 @@ import unittest
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
-from sqlalchemy import inspect, select
+from sqlalchemy import inspect, select, text
 from sqlalchemy.exc import IntegrityError
 
 from backend.database import close_database, get_engine, session_scope
@@ -63,6 +63,12 @@ class AccountDatabaseTests(unittest.TestCase):
             with session_scope() as session:
                 session.add(LoginSession(token_digest=uuid4().hex * 2, user_id=uuid4(),
                                          expires_at=datetime.now(timezone.utc) + timedelta(hours=1)))
+
+
+    def test_postgresql_operation_timeouts_are_active(self):
+        with get_engine().connect() as connection:
+            self.assertEqual(connection.scalar(text("SHOW statement_timeout")), "5s")
+            self.assertEqual(connection.scalar(text("SHOW lock_timeout")), "2s")
 
 
 if __name__ == "__main__":
