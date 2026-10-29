@@ -24,7 +24,7 @@ def validate_profile(age: int, height_cm: float, weight_kg: float, timezone: str
         (height_cm, 50, 300, "Enter a height from 50 to 300 cm."),
         (weight_kg, 20, 500, "Enter a weight from 20 to 500 kg."),
     ]:
-        if type(value) not in (int, float) or not math.isfinite(value) or not minimum <= value <= maximum:
+        if type(value) not in (int, float) or not minimum <= value <= maximum or not math.isfinite(value):
             raise InvalidProfile(message)
     if not isinstance(timezone, str) or not 1 <= len(timezone) <= 64:
         raise InvalidProfile("Choose a valid IANA time zone.")

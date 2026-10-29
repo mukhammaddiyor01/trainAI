@@ -14,7 +14,7 @@ class ProfileRuleTests(unittest.TestCase):
     def test_invalid_incomplete_and_nonfinite_values_are_rejected(self):
         valid = {"age": 28, "height_cm": 172.0, "weight_kg": 70.0, "timezone": "UTC"}
         changes = [{"age": 17}, {"age": 121}, {"age": True}, {"age": "28"},
-                   {"height_cm": float("nan")}, {"height_cm": 301}, {"height_cm": True},
+                   {"height_cm": float("nan")}, {"height_cm": 301}, {"height_cm": True}, {"height_cm": 10 ** 1000},
                    {"weight_kg": float("inf")}, {"weight_kg": 0}, {"weight_kg": None},
                    {"timezone": "Asia/Unknown"}, {"timezone": "../../private"}, {"timezone": ""}]
         for change in changes:
