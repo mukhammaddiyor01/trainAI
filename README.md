@@ -51,7 +51,7 @@ docs/
 
 Only layers currently needed have files. Plain Python services, SQLAlchemy models,
 Alembic migrations, and AI/vision adapters will be added with their features.
-See [architecture](docs/architecture.md), [environment](docs/environment.md), and
+See [database configuration](docs/database.md), [architecture](docs/architecture.md), [environment](docs/environment.md), and
 [development rules](AGENTS.md).
 
 ## Next milestone
