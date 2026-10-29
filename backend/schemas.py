@@ -31,3 +31,16 @@ class AccountResponse(BaseModel):
 
     user_id: UUID
     username: str = Field(min_length=3, max_length=32, pattern=r"^[a-z0-9_]+$")
+
+
+class ProfileInput(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    age: int = Field(ge=18, le=120)
+    height_cm: float = Field(ge=50, le=300, allow_inf_nan=False)
+    weight_kg: float = Field(ge=20, le=500, allow_inf_nan=False)
+    timezone: str = Field(min_length=1, max_length=64)
+
+
+class ProfileResponse(ProfileInput):
+    """An explicit four-field response without owner IDs or internal metadata."""

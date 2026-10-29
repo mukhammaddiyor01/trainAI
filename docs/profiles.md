@@ -23,3 +23,14 @@ SQL constraints enforce age, height, weight, and time-zone length bounds.
 Persistence operations receive a server-selected owner UUID, return plain
 ProfileDetails values, and use an atomic upsert for repeat saves. Integration
 checks cover owner isolation, repeated updates, bounds, and foreign keys.
+
+## Authenticated API
+
+GET /api/profile and PUT /api/profile use the shared AuthenticatedAccount guard.
+The API has no owner-ID path parameter and does not accept user_id or role in the
+body. All persistence uses the guard's server-derived UUID. PUT additionally
+requires the exact same Origin, bounded JSON (8192 bytes, 10 seconds), and a
+strict ProfileInput schema before plain service validation. ProfileResponse exposes
+only age, height_cm, weight_kg, and timezone. Reads return 404 until a profile exists.
+Two-user HTTP checks verify that query spoofing and body mass assignment cannot
+read or overwrite another user's profile. No plan or goal is created on save.

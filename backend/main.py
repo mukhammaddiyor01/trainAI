@@ -18,6 +18,8 @@ from backend.config import DatabaseConfigurationError
 from backend.database import close_database
 from backend.services.accounts import InvalidAccountInput
 from backend.routes import router
+from backend.profile_routes import router as profile_router
+from backend.services.profiles import InvalidProfile
 from backend.rate_limits import AttemptLimiter
 from backend.http_limits import HttpLimitsMiddleware
 
@@ -48,7 +50,7 @@ def create_app() -> FastAPI:
             status = 409
         return JSONResponse({"detail": str(error)}, status_code=status)
 
-    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable]:
+    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable, InvalidProfile]:
         app.add_exception_handler(error_type, account_error)
 
     async def persistence_error(request, error):
@@ -93,6 +95,7 @@ def create_app() -> FastAPI:
     app.include_router(router)
     app.include_router(auth_router)
     app.include_router(account_pages_router)
+    app.include_router(profile_router)
     return app
 
 
