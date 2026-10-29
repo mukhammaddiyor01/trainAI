@@ -22,3 +22,13 @@ Verified dependency: argon2-cffi 25.1.0.
 Sources: [argon2-cffi hashing](https://argon2-cffi.readthedocs.io/en/stable/howto.html),
 [OWASP authentication guidance](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html),
 [OWASP session guidance](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html).
+
+## Persistent sessions
+
+Registration returns a plain immutable identity after the transaction commits.
+Login uses one generic error for unknown usernames and wrong passwords, verifies
+Argon2 outside the read transaction, and rehashes passwords when parameters change.
+Successful login creates a fresh token and revokes the previous browser token.
+Identity lookups join sessions to users and enforce expiry on the server. Logout
+revokes only the supplied token and is idempotent. No browser user_id establishes
+identity. These operations are verified against the disposable PostgreSQL cluster.
