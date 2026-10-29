@@ -7,7 +7,7 @@ from fastapi.responses import Response
 from pydantic import ValidationError
 
 from backend.guards import AuthenticatedAccount, require_same_origin
-from backend.request_validation import read_json
+from backend.request_validation import read_bounded_body, read_json
 from backend.rate_limits import AUTH_PEER_ATTEMPTS, LOGIN_ACCOUNT_ATTEMPTS, enforce_attempt_limit
 from backend.schemas import AccountResponse, Credentials
 from starlette.concurrency import run_in_threadpool
@@ -76,6 +76,7 @@ async def me(identity: AuthenticatedAccount):
 @router.post("/logout", status_code=204)
 async def logout(request: Request):
     require_same_origin(request)
+    await read_bounded_body(request, 0)
     await run_in_threadpool(revoke_login_session, request.cookies.get(SESSION_COOKIE))
     response = Response(status_code=204)
     response.delete_cookie(SESSION_COOKIE, path="/", httponly=True, samesite="strict")

@@ -58,8 +58,7 @@ def main() -> int:
         if serve:
             print("Disposable browser test: http://127.0.0.1:8001 (Ctrl+C stops and removes test data).", flush=True)
             try:
-                run(sys.executable, "-m", "uvicorn", "backend.main:app", "--host", "127.0.0.1",
-                    "--port", "8001", "--no-access-log", cwd=root, env=environment)
+                run(sys.executable, "-m", "backend", "--port", "8001", cwd=root, env=environment)
             except KeyboardInterrupt:
                 pass
         else:

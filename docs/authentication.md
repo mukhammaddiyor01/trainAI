@@ -92,3 +92,6 @@ The existing two-operation Argon2 concurrency cap remains in place.
 This limiter is per-process and resets on restart. It is appropriate for the
 current single-process local server; a shared limiter must be selected before
 running multiple workers or deploying. Proxy headers are not a source of identity.
+
+See [security boundaries](security.md) for request/response limits, transport settings,
+rate-limit scope, and the deferred OAuth/OIDC requirements. OAuth remains disabled.

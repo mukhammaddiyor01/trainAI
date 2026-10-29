@@ -5,6 +5,7 @@ from pathlib import Path
 from threading import BoundedSemaphore
 
 from fastapi import FastAPI
+from fastapi.exceptions import ResponseValidationError
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.trustedhost import TrustedHostMiddleware
@@ -18,6 +19,7 @@ from backend.database import close_database
 from backend.services.accounts import InvalidAccountInput
 from backend.routes import router
 from backend.rate_limits import AttemptLimiter
+from backend.http_limits import HttpLimitsMiddleware
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -58,6 +60,11 @@ def create_app() -> FastAPI:
     for error_type in [DatabaseConfigurationError, SQLAlchemyError]:
         app.add_exception_handler(error_type, persistence_error)
 
+    @app.exception_handler(ResponseValidationError)
+    async def invalid_response(request, error):
+        return JSONResponse({"detail": "The response could not be completed."}, status_code=500)
+
+    app.add_middleware(HttpLimitsMiddleware)
     app.add_middleware(
         TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost"]
     )
@@ -68,6 +75,9 @@ def create_app() -> FastAPI:
         response.headers["Cache-Control"] = "no-store"
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Cross-Origin-Resource-Policy"] = "same-origin"
+        response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
         response.headers["Permissions-Policy"] = "camera=(), microphone=()"
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; script-src 'self'; style-src 'self'; "

@@ -22,7 +22,7 @@ python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements-dev.txt -c constraints.txt
 .venv/bin/python -m pip check
 .venv/bin/python -m unittest discover -s tests -v
-.venv/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
+.venv/bin/python -m backend
 ```
 
 Open http://127.0.0.1:8000. Stop the server with Ctrl+C. Run commands from the
