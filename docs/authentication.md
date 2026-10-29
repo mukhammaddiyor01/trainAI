@@ -70,3 +70,12 @@ compressed bodies, and invalid password text are rejected. Validation responses
 do not echo inputs. SecretStr hides passwords from schema representations.
 AccountResponse exposes only user_id and username, including on login; setting
 cookies no longer bypasses response-model validation.
+
+## Shared guards
+
+backend/guards.py centralizes same-origin write checks and session identity.
+Private API routes use AuthenticatedAccount (FastAPI Depends). The account page
+uses the same identity resolver and redirects anonymous visitors. Invalid, revoked,
+and expired cookies fail closed. Query parameters, X-User-Id, and arbitrary Bearer
+headers do not establish identity. Each private data query must additionally scope
+its records to this identity; authentication alone does not establish ownership.

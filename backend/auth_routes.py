@@ -6,21 +6,17 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import Response
 from pydantic import ValidationError
 
+from backend.guards import AuthenticatedAccount, require_same_origin
 from backend.request_validation import read_json
 from backend.schemas import AccountResponse, Credentials
 from starlette.concurrency import run_in_threadpool
 
-from backend.accounts import (account_for_token, authenticate_account, create_login_session,
+from backend.accounts import (authenticate_account, create_login_session,
                               register_account, revoke_login_session)
 from backend.session_tokens import SESSION_COOKIE, SESSION_SECONDS
 
 router = APIRouter(prefix="/auth")
 MAX_AUTH_BYTES = 2048
-
-
-def require_same_origin(request: Request) -> None:
-    if request.headers.get("origin") != str(request.base_url).rstrip("/"):
-        raise HTTPException(403, "Submit this request from the TrainAI page.")
 
 
 async def read_credentials(request: Request) -> Credentials:
@@ -67,10 +63,7 @@ async def login(request: Request, response: Response, credentials: Annotated[Cre
 
 
 @router.get("/me", response_model=AccountResponse)
-async def me(request: Request):
-    identity = await run_in_threadpool(account_for_token, request.cookies.get(SESSION_COOKIE))
-    if identity is None:
-        raise HTTPException(401, "Sign in to continue.")
+async def me(identity: AuthenticatedAccount):
     return AccountResponse(user_id=identity.user_id, username=identity.username)
 
 
