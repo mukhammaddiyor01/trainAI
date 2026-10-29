@@ -76,3 +76,12 @@ Sources checked during implementation:
 - [Pydantic strict mode](https://docs.pydantic.dev/latest/concepts/strict_mode/)
 - [AnyIO timeouts](https://anyio.readthedocs.io/en/stable/cancellation.html)
 - [OWASP REST security](https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html)
+
+## Isolated browser-test cookies
+
+Cookies are scoped to hosts and paths, not ports. The disposable test runner now
+sets a unique TRAINAI_COOKIE_NAME for every cluster so signing in or out on port
+8001 cannot overwrite the main application's cookie on port 8000. Other instances'
+cookies are ignored by the guard. The default application name remains
+trainai_session. An optional process-environment override is validated at startup;
+invalid names fail closed. Changing the cookie name requires restarting the app.

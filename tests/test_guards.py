@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 
 from backend.accounts import AccountIdentity
 from backend.main import create_app
+from backend.session_tokens import SESSION_COOKIE
 
 
 class GuardTests(unittest.TestCase):
@@ -17,7 +18,7 @@ class GuardTests(unittest.TestCase):
                 for token in [None, "invalid", "A" * 43]:
                     client.cookies.clear()
                     if token:
-                        client.cookies.set("trainai_session", token)
+                        client.cookies.set(SESSION_COOKIE, token)
                     self.assertEqual(client.get("/auth/me").status_code, 401)
                     response = client.get("/account", follow_redirects=False)
                     self.assertEqual(response.status_code, 303)

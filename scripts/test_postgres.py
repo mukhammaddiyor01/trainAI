@@ -6,6 +6,7 @@ binaries. Never connects to the application's configured database.
 
 import argparse
 import os
+import secrets
 from pathlib import Path
 import shutil
 import subprocess
@@ -53,7 +54,8 @@ def main() -> int:
                     raise RuntimeError("Refusing migrations outside the owned temporary cluster.")
         finally:
             engine.dispose()
-        environment = {**os.environ, "DATABASE_URL": url, "TRAINAI_TEST_DATABASE_URL": url}
+        environment = {**os.environ, "DATABASE_URL": url, "TRAINAI_TEST_DATABASE_URL": url,
+                       "TRAINAI_COOKIE_NAME": "trainai_test_" + secrets.token_hex(6)}
         run(sys.executable, "-m", "alembic", "upgrade", "head", cwd=root, env=environment)
         if serve:
             print("Disposable browser test: http://127.0.0.1:8001 (Ctrl+C stops and removes test data).", flush=True)
