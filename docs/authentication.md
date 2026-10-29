@@ -32,3 +32,18 @@ Successful login creates a fresh token and revokes the previous browser token.
 Identity lookups join sessions to users and enforce expiry on the server. Logout
 revokes only the supplied token and is idempotent. No browser user_id establishes
 identity. These operations are verified against the disposable PostgreSQL cluster.
+
+## HTTP contract
+
+POST /auth/register and POST /auth/login accept only username/password JSON,
+with a 2048-byte streamed body limit. Every state-changing authentication request
+requires an Origin header matching the local page exactly; missing or cross-origin
+requests are rejected. Registration does not implicitly log in. Login sets a fresh
+HttpOnly, SameSite=Strict, host-only cookie, valid for 24 hours; Secure is enabled
+under HTTPS. HTTP cookies are only intended for loopback development.
+
+GET /auth/me derives identity exclusively from a valid session cookie. POST
+/auth/logout revokes it. Raw tokens and passwords never appear in response bodies
+or validation errors. Persistence failures return a generic 503. Hashing and database
+work run in worker threads; at most two registration/login operations run at once.
+The web health endpoint and public page do not require database availability.
