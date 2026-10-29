@@ -51,3 +51,25 @@ The real database connection and explicit 0001 migration were checked separately
 no synthetic test accounts were written there. The temporary browser cluster was
 stopped and removed. Profiles, fitness calculations, AI, and camera behavior remain
 unimplemented and untested.
+
+## Security and basic-profile increment
+
+All 53 tests passed in the isolated PostgreSQL runner with no skipped checks.
+Added coverage includes strict schema and response allowlisting, ambiguous JSON,
+mass assignment, identity guards, normalized login throttling, bounded limiter
+state, API rate limits, slow/chunked requests, header/URL limits, proxy spoofing,
+partial-response leak prevention, safe response failures, unique test-cookie
+namespaces, active SQL timeouts, and private profile read/write isolation.
+
+Browser registration → sign-in → basic profile → save → reload → invalid time-zone
+update → reload → logout was verified with synthetic data. Saved values persisted;
+the invalid update preserved the old profile. Desktop and mobile layouts were
+inspected with no horizontal overflow at the checked sizes. Test data and clusters
+were removed. The real database received only the reviewed additive profile
+migration; no synthetic profiles were written to it.
+
+PyPA pip-audit 2.10.1 checked all 29 pinned dependencies using the PyPI advisory
+service on 2026-10-29, exiting 0 with no known vulnerabilities. The full public
+package report is saved as docs/dependency-audit.json. No code, .env, or private
+profile data was sent for the audit. The audit tool used a separate temporary
+virtual environment, not the application's runtime environment.

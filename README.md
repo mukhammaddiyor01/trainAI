@@ -10,7 +10,8 @@ loss, or weight maintenance. The intended workflow is:
 The web foundation and account access are implemented: responsive English pages,
 registration, Argon2id password hashing, server-side sessions, sign-in/sign-out,
 and private account identity. PostgreSQL schema changes use explicit Alembic
-migrations. Profiles, goals, fitness planning, logging, AI inference, training,
+migrations. A private basic profile stores age, height, weight, and time zone.
+Goals, planning preferences, fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
 ## Local setup
@@ -39,10 +40,10 @@ See [database setup](docs/database.md) before running explicit migrations:
 ```
 
 Open `/register` to create your own account, `/login` to sign in, and `/account`
-to view your private account. Passwords must be 15–128 characters. Registration
-does not automatically sign in. No real user data belongs in test fixtures.
+to view your private account. Open `/profile` to save your basic details. Passwords
+must be 15–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 29 checks, including PostgreSQL integration, use the disposable runner:
+For all 53 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
@@ -68,12 +69,21 @@ third-party frontend requests.
 
 ```text
 backend/
+  __main__.py             Local server with transport limits
   main.py                 Application composition and browser policies
   routes.py               Public page and health controllers
+  auth_routes.py          Bounded authentication API
+  profile_routes.py       Private profile API
+  account_pages.py        Authenticated browser pages
+  guards.py               Session and same-origin guards
+  schemas.py              Strict input and public output contracts
+  profiles.py             Owner-scoped persistence
+  services/profiles.py     Plain Python profile validation
+  models.py               Account, session, and profile records
 frontend/
-  templates/index.html    English introduction and availability states
-  static/css/styles.css   Responsive layout and visual system
-tests/test_web.py         Web-shell and public-asset boundary checks
+  templates/              Introduction, authentication, account, and profile pages
+  static/                 Local styles and browser scripts
+tests/                    Isolated service, security, HTTP, and database checks
 docs/
   architecture.md         Layer boundaries and staged implementation
   environment.md          Verified dependencies and hardware limitations
@@ -82,11 +92,26 @@ docs/
 Account-input services, SQLAlchemy account/session models, migration files,
 authentication controllers, and private account pages are now present. Fitness
 services and AI/vision adapters will be introduced with their features.
-See [database configuration](docs/database.md), [architecture](docs/architecture.md), [environment](docs/environment.md), and
-[authentication](docs/authentication.md), and [development rules](AGENTS.md).
+See [database configuration](docs/database.md), [architecture](docs/architecture.md),
+[environment](docs/environment.md), [authentication](docs/authentication.md), and
+[development rules](AGENTS.md).
 
 ## Next milestone
 
-Add private fitness profiles and goals, using the authenticated server-side identity. Metric units, user-selected IANA time zones, Monday week
+Add goals and planning preferences in small increments using the authenticated
+server-side identity. Metric units, user-selected IANA time zones, Monday week
 boundaries, and customizable meal schedules are confirmed product defaults.
 Use only synthetic data in tests; never commit real profiles or activity records.
+
+## Security controls
+
+Strict Pydantic input models, shared session/origin guards, owner-scoped profile
+operations, explicit public response models, login/API rate limits, bounded JSON
+bodies and response sizes, body/query/pool timeouts, proxy-header rejection, and
+browser security headers are implemented. Use `python -m backend` for the capped
+local launcher. Rate limits currently apply to one process, not multiple workers.
+
+OAuth is deferred by the user's choice. See [security boundaries](docs/security.md)
+and [basic profiles](docs/profiles.md). A 2026-10-29 pip-audit run checked all
+29 pinned dependencies and reported no known advisories. This is a point-in-time
+dependency result, not a complete security assessment.

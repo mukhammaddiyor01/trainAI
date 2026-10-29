@@ -24,14 +24,16 @@ Product defaults confirmed by the user:
 
 ## Current Milestone and Implementation Order
 
-The development rules and initial web foundation were committed first. Account
-registration, Argon2id hashing, server-side sessions, login/logout, and responsive
-account pages are now implemented. All 29 checks passed with an isolated
-PostgreSQL cluster; the browser account flow was verified with synthetic data.
-The user provided DATABASE_URL in ignored .env; connectivity and explicit account
-migration 0001 succeeded. See docs/verification.md and docs/authentication.md.
-The next milestone is private profiles and goals using server-derived identity.
-No private fitness records, planning, or AI features are accepted yet.
+The web foundation, account access, and private basic profile are implemented.
+The profile currently includes age, height, weight, and an explicit IANA time zone.
+Strict input/response schemas, shared authentication/origin guards, ownership-scoped
+profile operations, request/rate/resource limits, and safe errors are verified.
+All 53 checks passed with an isolated PostgreSQL cluster. The browser profile flow
+was verified using synthetic data; the configured real database was upgraded
+explicitly to migration 0002. See docs/verification.md, docs/profiles.md, and
+docs/security.md. The next small increments add goals and planning preferences.
+No calorie calculations, generated plans, logging, or AI features are active.
+OAuth is explicitly deferred by the user; keep local authentication for now.
 
 Implement small, independently verifiable steps, creating files only when needed:
 
@@ -83,6 +85,16 @@ runtime business validation or HTTPException in services. Never hide errors with
 dependency injection containers, and empty files without a concrete need.
 
 ## Authentication, Ownership, and Persistence
+
+For every new private endpoint, use the shared account guard, an explicit strict
+input schema, an allowlisted response schema, bounded request/response sizes, and
+ownership-scoped persistence. Keep auth, validation, persistence, HTTP, and UI work
+in small separate verified commits. Security tests must cover bypass attempts,
+not only successful requests. Do not claim complete security from passing tests.
+See docs/security.md for the current single-process local limits and launcher.
+Do not silently weaken limits, add trusted proxies, or expose a public listener.
+OAuth integration later requires a provider decision and reviewed state/PKCE,
+callback and identity validation; never link accounts from an unverified email.
 
 Implement authentication before accepting private multi-user records. Resolve
 identity on the server; never trust a browser-supplied user_id. Use a maintained

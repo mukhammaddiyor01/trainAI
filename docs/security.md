@@ -23,6 +23,7 @@ Plain business services remain independent of these HTTP controls.
 
 | Boundary | Limit / behavior |
 | --- | --- |
+| Basic profile bodies | 8192 bytes, strict four-field input, authenticated owner only |
 | Credential bodies | 2048 bytes, including streamed/chunked bodies |
 | Body arrival | 10 seconds total, then 408 |
 | Metadata | 64 headers, 16 KiB header bytes, 4096-byte request target |
@@ -85,3 +86,13 @@ sets a unique TRAINAI_COOKIE_NAME for every cluster so signing in or out on port
 cookies are ignored by the guard. The default application name remains
 trainai_session. An optional process-environment override is validated at startup;
 invalid names fail closed. Changing the cookie name requires restarting the app.
+
+## Dependency advisory snapshot
+
+On 2026-10-29, pip-audit 2.10.1 audited the complete 29-package constraints.txt
+set against the PyPI advisory service with --disable-pip --no-deps --strict.
+It exited 0 and reported no known vulnerabilities. The JSON report is stored in
+[dependency-audit.json](dependency-audit.json). Audit tooling ran in a separate
+temporary environment; no application secrets or private data were supplied.
+Version pins are recorded, but the installation is not yet a hash-locked supply
+chain workflow. Advisory results can change after this snapshot.

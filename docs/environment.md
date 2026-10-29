@@ -65,3 +65,12 @@ A subsequent unrestricted connectivity check confirmed the local PostgreSQL serv
 accepts connections. The user supplied a DATABASE_URL through the ignored .env.
 SELECT 1 passed, the selected database had no existing tables, and account migration
 0001 was applied explicitly. No credentials or database address are recorded here.
+
+## Security/profile verification
+
+Pydantic 2.14.1 and AnyIO 4.15.1 are now explicit direct dependencies, already
+present in the recorded compatible resolution. No extra runtime packages were
+needed for the security or profile increment. All 53 isolated checks passed.
+The configured database was explicitly upgraded to revision 0002 after revision
+and conflict checks. PyPA pip-audit 2.10.1 reported no known advisories across all
+29 pinned packages on 2026-10-29. See docs/security.md for scope and limitations.
