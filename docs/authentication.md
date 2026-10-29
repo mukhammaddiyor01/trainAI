@@ -79,3 +79,16 @@ uses the same identity resolver and redirects anonymous visitors. Invalid, revok
 and expired cookies fail closed. Query parameters, X-User-Id, and arbitrary Bearer
 headers do not establish identity. Each private data query must additionally scope
 its records to this identity; authentication alone does not establish ownership.
+
+## Login attempt limits
+
+A rolling 60-second window permits 30 credential requests per client address and
+8 login attempts per normalized username. Invalid payloads count against the
+client limit. Successful logins do not reset the window. HTTP 429 includes
+Retry-After. Limiter state is lock-protected and capped at 4096 fingerprints; a
+full map fails closed until entries expire. Passwords never enter limiter state.
+The existing two-operation Argon2 concurrency cap remains in place.
+
+This limiter is per-process and resets on restart. It is appropriate for the
+current single-process local server; a shared limiter must be selected before
+running multiple workers or deploying. Proxy headers are not a source of identity.

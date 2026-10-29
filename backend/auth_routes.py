@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from backend.guards import AuthenticatedAccount, require_same_origin
 from backend.request_validation import read_json
+from backend.rate_limits import AUTH_PEER_ATTEMPTS, LOGIN_ACCOUNT_ATTEMPTS, enforce_attempt_limit
 from backend.schemas import AccountResponse, Credentials
 from starlette.concurrency import run_in_threadpool
 
@@ -21,18 +22,23 @@ MAX_AUTH_BYTES = 2048
 
 async def read_credentials(request: Request) -> Credentials:
     require_same_origin(request)
+    peer = request.client.host if request.client else "unknown"
+    enforce_attempt_limit(request, "auth-peer", peer, AUTH_PEER_ATTEMPTS)
     values = await read_json(request, MAX_AUTH_BYTES)
     try:
-        return Credentials.model_validate(values)
+        credentials = Credentials.model_validate(values)
     except ValidationError:
         raise HTTPException(422, "Check the username and password fields.") from None
+    if request.url.path == "/auth/login":
+        enforce_attempt_limit(request, "login-account", credentials.username.strip().lower(), LOGIN_ACCOUNT_ATTEMPTS)
+    return credentials
 
 
 async def auth_work(request: Request, function, *args):
     # Bound memory-intensive Argon2 operations and keep them off the event loop.
     slots = request.app.state.auth_slots
     if not slots.acquire(blocking=False):
-        raise HTTPException(429, "Another sign-in is in progress. Try again shortly.")
+        raise HTTPException(429, "Another sign-in is in progress. Try again shortly.", headers={"Retry-After": "1"})
     try:
         return await run_in_threadpool(function, *args)
     finally:

@@ -17,6 +17,7 @@ from backend.config import DatabaseConfigurationError
 from backend.database import close_database
 from backend.services.accounts import InvalidAccountInput
 from backend.routes import router
+from backend.rate_limits import AttemptLimiter
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -35,6 +36,7 @@ def create_app() -> FastAPI:
         docs_url=None, redoc_url=None, openapi_url=None,
     )
     app.state.auth_slots = BoundedSemaphore(2)
+    app.state.auth_attempts = AttemptLimiter()
 
     async def account_error(request, error):
         status = 422
