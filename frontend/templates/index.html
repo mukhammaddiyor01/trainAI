@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TrainAI: a fitness planning application in development. Follow the journey from profile to plan, daily log, and weekly review.">
+  <title>TrainAI — Your training, with a plan</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap">
+    <a class="wordmark" href="/" aria-label="TrainAI home">Train<span>AI</span><i aria-hidden="true"></i></a>
+    <nav aria-label="Main navigation">
+      <a href="#workflow">The approach</a>
+      <a href="#status">Project status</a>
+    </nav>
+    <span class="build-badge">In development</span>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="intro">A routine that fits your life.</p>
+        <h1 id="hero-title">Your training.<br>With a plan.</h1>
+        <p class="lead">Workouts, meals, and daily check-ins.<br class="desktop-break"> One place to build your next week.</p>
+        <a class="button" href="#workflow">Explore the approach <span aria-hidden="true">↗</span></a>
+        <p class="availability">The foundation is ready. Accounts and planning are coming next.</p>
+      </div>
+      <aside class="week-preview" aria-labelledby="week-title">
+        <div class="preview-heading"><span>Your weekly rhythm</span><span class="preview-label">Planned experience</span></div>
+        <div class="week-days" aria-label="A week beginning on Monday">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+        </div>
+        <div class="week-empty">
+          <div class="schedule-symbol" aria-hidden="true"><span></span><span></span><span></span></div>
+          <h2 id="week-title">Start with you.</h2>
+          <p>Your goals, your schedule, your preferences.<br>A useful plan begins with a complete profile.</p>
+          <span class="upcoming">Profile setup coming next</span>
+        </div>
+        <div class="preview-footer"><span>Workout + nutrition</span><span>Built around your week</span></div>
+      </aside>
+    </section>
+
+    <section id="workflow" class="workflow" aria-labelledby="workflow-title">
+      <div class="section-heading"><h2 id="workflow-title">A plan is a starting point.<br>Your week tells the rest.</h2><p>The experience we’re building connects planning with what you actually do.</p></div>
+      <ol class="journey">
+        <li><span class="step">01</span><h3>Make it personal</h3><p>Start with your goals, equipment, available time, and food preferences.</p></li>
+        <li><span class="step">02</span><h3>Plan your week</h3><p>Bring workouts, meals, and recovery into one manageable routine.</p></li>
+        <li><span class="step">03</span><h3>Log your day</h3><p>Record what happened. Missing entries stay unknown, rather than counting as failure.</p></li>
+        <li><span class="step">04</span><h3>Review and adjust</h3><p>Use enough records to understand patterns. Approve changes before a new plan becomes active.</p></li>
+      </ol>
+    </section>
+
+    <section id="status" class="status" aria-labelledby="status-title">
+      <div><span class="status-tag">Current milestone</span><h2 id="status-title">A working foundation.</h2><p>This first release serves the app and introduces the workflow. It does not collect personal fitness information yet.</p></div>
+      <div class="status-details">
+        <dl><div><dt>Available now</dt><dd>Web shell and application health check</dd></div><div><dt>Next milestone</dt><dd>Private accounts, profiles, and goals</dd></div><div><dt>AI coach</dt><dd>Not connected</dd></div></dl>
+        <details><summary>What comes after the foundation?</summary><p>Reviewed exercise and food catalogs, weekly planning, daily logs, and approved plan changes. Local AI evaluation and camera-assisted logging follow later.</p></details>
+      </div>
+    </section>
+  </main>
+  <footer class="wrap site-footer"><a class="wordmark" href="/">Train<span>AI</span></a><p>Built for steady routines. Developed one step at a time.</p><a href="#main">Back to top</a></footer>
+</body>
+</html>

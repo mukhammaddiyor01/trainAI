@@ -24,8 +24,13 @@ Product defaults confirmed by the user:
 
 ## Current Milestone and Implementation Order
 
-Prepare and commit this file before application code. Then implement small,
-independently verifiable steps, creating files only when needed:
+The development rules were committed before application code. The initial web
+foundation is now implemented and verified: public introduction, local assets,
+web-only health, seven HTTP tests, and browser checks. See docs/verification.md.
+The next milestone is authentication, ownership, profiles, goals, and PostgreSQL.
+No private user data or AI features are accepted by the current shell.
+
+Implement small, independently verifiable steps, creating files only when needed:
 
 1. Document architecture, verify dependencies, and build the application shell.
 2. Add authentication, ownership checks, profiles, goals, and persistence.
