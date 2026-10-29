@@ -14,8 +14,7 @@ records or logs. Oversized and invalid passwords fail before hashing.
 
 Sessions use cryptographically random 32-byte tokens. Only SHA-256 digests are
 stored in PostgreSQL, with a user foreign key and a fixed 24-hour expiry. Raw
-tokens belong only in a browser's HttpOnly session cookie. Routes and browser
-flows will be introduced in a separate verified increment.
+tokens belong only in a browser's HttpOnly session cookie. HTTP routes and browser pages are implemented and verified separately.
 
 Verified dependency: argon2-cffi 25.1.0.
 
@@ -47,3 +46,17 @@ GET /auth/me derives identity exclusively from a valid session cookie. POST
 or validation errors. Persistence failures return a generic 503. Hashing and database
 work run in worker threads; at most two registration/login operations run at once.
 The web health endpoint and public page do not require database availability.
+
+## Browser experience
+
+/login and /register use labeled responsive forms, password-manager autocomplete,
+local JavaScript, live status feedback, duplicate-submit protection, and a
+15-second request timeout. Password fields are cleared before a request is sent.
+No credentials are placed in query strings, browser storage, or error messages.
+/account resolves its identity from the session token, redirects anonymous
+visitors, and provides sign-out. Fitness onboarding remains a later increment.
+
+Registration, sign-in, invalid-password feedback, private account access, and
+logout were verified in a browser using the disposable database runner. Desktop
+and mobile layouts were inspected. The configured real database was migrated
+explicitly, but synthetic browser accounts were not added to it.

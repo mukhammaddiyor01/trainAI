@@ -32,3 +32,22 @@ or errors. Temporary viewport overrides were reset after verification.
 There is no database or model boundary in this milestone. Authentication, private
 data isolation, fitness calculations, inference, camera accuracy, and the complete
 fitness product workflow have not been tested because they are not implemented.
+
+## Account-access increment
+
+All 29 tests passed through scripts/test_postgres.py against a fresh temporary
+PostgreSQL cluster. This includes account normalization, password hashing, token
+rotation/expiry/revocation, schema parity, transaction rollback, HTTP request
+boundaries, same-origin enforcement, and two-user session isolation. The runner
+also verified downgrade/upgrade exclusively inside its owned disposable cluster.
+
+Browser registration → sign-in → account page → logout was verified on the
+separate disposable server. After logout, /account redirected to /login. Invalid
+password feedback appeared without reflecting credentials, and the password field
+was cleared. Desktop and mobile layouts were inspected with no horizontal
+overflow at the checked sizes. No unexpected JavaScript errors were observed.
+
+The real database connection and explicit 0001 migration were checked separately;
+no synthetic test accounts were written there. The temporary browser cluster was
+stopped and removed. Profiles, fitness calculations, AI, and camera behavior remain
+unimplemented and untested.

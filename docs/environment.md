@@ -51,3 +51,17 @@ The PostgreSQL client was 16.15 during initial inspection; 127.0.0.1:5432 return
 no response. That observation does not establish server absence. PostgreSQL
 connection credentials and a dedicated database will be configured explicitly in
 the next milestone. No database was created, started, migrated, or substituted.
+
+## Persistence and authentication increment
+
+The isolated environment now also includes SQLAlchemy 2.1.6, psycopg and
+psycopg-binary 3.3.6, python-dotenv 1.2.4, Alembic 1.20.1, and argon2-cffi 25.1.0.
+The exact transitive dependency versions are recorded in constraints.txt. PyPI
+metadata and the official SQLAlchemy, psycopg, Alembic, and argon2-cffi documentation
+were checked before installation. All 29 tests passed in the isolated PostgreSQL
+runner, with no skipped tests.
+
+A subsequent unrestricted connectivity check confirmed the local PostgreSQL server
+accepts connections. The user supplied a DATABASE_URL through the ignored .env.
+SELECT 1 passed, the selected database had no existing tables, and account migration
+0001 was applied explicitly. No credentials or database address are recorded here.

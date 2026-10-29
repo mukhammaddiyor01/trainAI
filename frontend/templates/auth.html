@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ 'Create account' if mode == 'register' else 'Sign in' }} — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <script src="{{ url_for('static', path='/js/auth.js').path }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap">
+    <a class="wordmark" href="/" aria-label="TrainAI home">Train<span>AI</span><i aria-hidden="true"></i></a>
+    <nav aria-label="Account navigation"><a href="/">Home</a><a href="{{ '/login' if mode == 'register' else '/register' }}">{{ 'Sign in' if mode == 'register' else 'Create account' }}</a></nav>
+  </header>
+  <main id="main" class="wrap auth-layout">
+    <section class="auth-intro">
+      <p>A routine that fits your life.</p>
+      <h1>{{ 'Start with you.' if mode == 'register' else 'Welcome back.' }}</h1>
+      <p class="lead">{{ 'Create your private account. Your fitness profile comes next.' if mode == 'register' else 'Sign in to your own space. Build your next step from here.' }}</p>
+      <div class="auth-note"><span aria-hidden="true">↗</span><p>Your account keeps your space separate.<br>Plans, logs, and coaching will follow in later updates.</p></div>
+    </section>
+    <section class="auth-panel" aria-labelledby="form-title">
+      <h2 id="form-title">{{ 'Create your account' if mode == 'register' else 'Sign in to TrainAI' }}</h2>
+      {% if created %}<p class="success-message" role="status">Your account is ready. Sign in to continue.</p>{% endif %}
+      <form data-auth="{{ mode }}" action="/auth/{{ mode }}" method="post" aria-describedby="form-message">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" autocomplete="username" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_]{3,32}" autocapitalize="none" spellcheck="false" aria-describedby="username-help">
+        <p id="username-help" class="field-help">3–32 letters, numbers, or underscores.</p>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" required minlength="15" maxlength="128" aria-describedby="password-help">
+        <p id="password-help" class="field-help">Use 15–128 characters. Spaces are welcome.</p>
+        <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+        <button class="button" type="submit">{{ 'Create account' if mode == 'register' else 'Sign in' }}</button>
+      </form>
+      <noscript><p>Enable JavaScript to sign in or create an account.</p></noscript>
+      <p class="auth-switch">{{ 'Already have an account?' if mode == 'register' else 'New here?' }} <a href="{{ '/login' if mode == 'register' else '/register' }}">{{ 'Sign in' if mode == 'register' else 'Create an account' }}</a></p>
+    </section>
+  </main>
+</body>
+</html>

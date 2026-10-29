@@ -36,6 +36,8 @@ class AuthFlowTests(unittest.TestCase):
                 self.assertNotEqual(identities[0]["user_id"], identities[1]["user_id"])
                 self.assertEqual(first.get("/auth/me", params={"user_id": identities[1]["user_id"]}).json(), identities[0])
                 self.assertEqual(second.get("/auth/me").json(), identities[1])
+                self.assertIn(identities[0]["username"], first.get("/account").text)
+                self.assertNotIn(identities[1]["username"], first.get("/account").text)
                 self.assertEqual(first.post("/auth/logout", headers=headers).status_code, 204)
                 self.assertIsNone(first.cookies.get(SESSION_COOKIE))
                 self.assertEqual(first.get("/auth/me").status_code, 401)

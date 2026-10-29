@@ -17,7 +17,7 @@ class WebShellTests(unittest.TestCase):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertIn('<html lang="en">', response.text)
-        self.assertIn("Accounts and planning are coming next", response.text)
+        self.assertIn("Account access is ready", response.text)
         self.assertIn("Not connected", response.text)
         self.assertNotIn("<form", response.text)
 

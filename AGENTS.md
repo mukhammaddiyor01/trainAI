@@ -24,11 +24,14 @@ Product defaults confirmed by the user:
 
 ## Current Milestone and Implementation Order
 
-The development rules were committed before application code. The initial web
-foundation is now implemented and verified: public introduction, local assets,
-web-only health, seven HTTP tests, and browser checks. See docs/verification.md.
-The next milestone is authentication, ownership, profiles, goals, and PostgreSQL.
-No private user data or AI features are accepted by the current shell.
+The development rules and initial web foundation were committed first. Account
+registration, Argon2id hashing, server-side sessions, login/logout, and responsive
+account pages are now implemented. All 29 checks passed with an isolated
+PostgreSQL cluster; the browser account flow was verified with synthetic data.
+The user provided DATABASE_URL in ignored .env; connectivity and explicit account
+migration 0001 succeeded. See docs/verification.md and docs/authentication.md.
+The next milestone is private profiles and goals using server-derived identity.
+No private fitness records, planning, or AI features are accepted yet.
 
 Implement small, independently verifiable steps, creating files only when needed:
 

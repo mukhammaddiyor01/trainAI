@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your account — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <script src="{{ url_for('static', path='/js/auth.js').path }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Account navigation"><a href="/">Home</a></nav></header>
+  <main id="main" class="wrap account-content">
+    {% if identity %}
+    <p>Signed in as <strong>{{ identity.username }}</strong></p>
+    <h1>Your next step<br>starts here.</h1>
+    <p class="lead">Your private account is ready. Profile setup and goal planning are the next update.</p>
+    <section class="account-next" aria-labelledby="next-title"><h2 id="next-title">Make it personal</h2><p>Your goals, available equipment, schedule, and food preferences will help shape your plan. Profile setup is not available yet.</p></section>
+    <form action="/auth/logout" method="post" data-logout><button class="button" type="submit">Sign out</button><p id="form-message" class="form-message" role="status" aria-live="polite"></p></form>
+    {% else %}
+    <h1>Your account<br>is unavailable.</h1>
+    <p class="lead">We couldn’t open your account right now. Try again shortly.</p>
+    <a class="button" href="/account">Try again</a>
+    {% endif %}
+  </main>
+</body>
+</html>

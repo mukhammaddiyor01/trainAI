@@ -4,6 +4,7 @@ Run with .venv/bin/python scripts/test_postgres.py. Requires local PostgreSQL
 binaries. Never connects to the application's configured database.
 """
 
+import argparse
 import os
 from pathlib import Path
 import shutil
@@ -17,6 +18,9 @@ def run(*args, **kwargs):
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--serve", action="store_true", help="Open a disposable browser-test server on port 8001")
+    serve = parser.parse_args().serve
     for name in ["initdb", "pg_ctl", "createdb"]:
         if not shutil.which(name):
             print("Install PostgreSQL binaries before running isolated database tests.")
@@ -51,9 +55,17 @@ def main() -> int:
             engine.dispose()
         environment = {**os.environ, "DATABASE_URL": url, "TRAINAI_TEST_DATABASE_URL": url}
         run(sys.executable, "-m", "alembic", "upgrade", "head", cwd=root, env=environment)
-        run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v", cwd=root, env=environment)
-        run(sys.executable, "-m", "alembic", "downgrade", "base", cwd=root, env=environment)
-        run(sys.executable, "-m", "alembic", "upgrade", "head", cwd=root, env=environment)
+        if serve:
+            print("Disposable browser test: http://127.0.0.1:8001 (Ctrl+C stops and removes test data).", flush=True)
+            try:
+                run(sys.executable, "-m", "uvicorn", "backend.main:app", "--host", "127.0.0.1",
+                    "--port", "8001", "--no-access-log", cwd=root, env=environment)
+            except KeyboardInterrupt:
+                pass
+        else:
+            run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v", cwd=root, env=environment)
+            run(sys.executable, "-m", "alembic", "downgrade", "base", cwd=root, env=environment)
+            run(sys.executable, "-m", "alembic", "upgrade", "head", cwd=root, env=environment)
     finally:
         if started:
             run("pg_ctl", "-D", str(data), "-m", "fast", "-w", "stop", stdout=subprocess.DEVNULL)

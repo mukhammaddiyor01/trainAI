@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from sqlalchemy.exc import SQLAlchemyError
 
+from backend.account_pages import router as account_pages_router
 from backend.accounts import InvalidCredentials, UsernameUnavailable
 from backend.auth_routes import router as auth_router
 from backend.config import DatabaseConfigurationError
@@ -67,7 +68,7 @@ def create_app() -> FastAPI:
         response.headers["Referrer-Policy"] = "no-referrer"
         response.headers["Permissions-Policy"] = "camera=(), microphone=()"
         response.headers["Content-Security-Policy"] = (
-            "default-src 'self'; script-src 'none'; style-src 'self'; "
+            "default-src 'self'; script-src 'self'; style-src 'self'; "
             "img-src 'self'; font-src 'self'; connect-src 'self'; "
             "frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
         )
@@ -79,6 +80,7 @@ def create_app() -> FastAPI:
     )
     app.include_router(router)
     app.include_router(auth_router)
+    app.include_router(account_pages_router)
     return app
 
 
