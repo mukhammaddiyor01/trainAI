@@ -29,3 +29,9 @@ class AccountPageTests(unittest.TestCase):
     def test_local_auth_assets_are_served(self):
         for path in ["/static/css/auth.css", "/static/js/auth.js"]:
             self.assertEqual(self.client.get(path).status_code, 200)
+
+
+    def test_profile_page_redirects_anonymous_visitors(self):
+        response = self.client.get("/profile", follow_redirects=False)
+        self.assertEqual(response.status_code, 303)
+        self.assertEqual(response.headers["location"], "/login")

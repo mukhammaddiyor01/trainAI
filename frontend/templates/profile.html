@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your basic profile — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/profile.css').path }}">
+  <script src="{{ url_for('static', path='/js/profile.js').path }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Profile navigation"><a href="/account">Your account</a><a href="/">Home</a></nav></header>
+  <main id="main" class="wrap profile-page">
+    <p>Start with the basics.</p>
+    <h1>A little context.<br>A better starting point.</h1>
+    <p class="lead">Save your age, measurements, and time zone. Your goals, schedule, and preferences will follow.</p>
+    <section class="auth-panel" aria-labelledby="profile-title">
+      <h2 id="profile-title">Your basic profile</h2>
+      <form id="profile-form" action="/api/profile" method="post" aria-describedby="profile-message">
+        <fieldset>
+          <legend>Profile details</legend>
+          <div class="profile-fields">
+            <div><label for="age">Age</label><input id="age" name="age" type="number" min="18" max="120" step="1" required value="{{ profile.age if profile else '' }}"><p class="field-help">This version is for adults aged 18 and over.</p></div>
+            <div><label for="timezone">Time zone</label><input id="timezone" name="timezone" type="text" list="timezones" maxlength="64" required placeholder="e.g. Asia/Seoul" value="{{ profile.timezone if profile else '' }}"><datalist id="timezones"><option value="Asia/Seoul"><option value="Asia/Tashkent"><option value="Europe/London"><option value="America/New_York"><option value="UTC"></datalist><p class="field-help">Choose your own IANA time zone.</p></div>
+            <div><label for="height_cm">Height (cm)</label><input id="height_cm" name="height_cm" type="number" min="50" max="300" step="any" required value="{{ profile.height_cm if profile else '' }}"></div>
+            <div><label for="weight_kg">Weight (kg)</label><input id="weight_kg" name="weight_kg" type="number" min="20" max="500" step="any" required value="{{ profile.weight_kg if profile else '' }}"></div>
+          </div>
+          <button class="button" type="submit">Save basic profile</button>
+        </fieldset>
+        <p id="profile-message" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+      <noscript><p>Enable JavaScript to save your profile.</p></noscript>
+    </section>
+    <p class="profile-scope">These details are private to your account. Saving them does not generate a plan or calculate nutrition targets yet.</p>
+  </main>
+</body>
+</html>

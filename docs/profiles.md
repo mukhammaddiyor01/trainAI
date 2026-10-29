@@ -34,3 +34,12 @@ strict ProfileInput schema before plain service validation. ProfileResponse expo
 only age, height_cm, weight_kg, and timezone. Reads return 404 until a profile exists.
 Two-user HTTP checks verify that query spoofing and body mass assignment cannot
 read or overwrite another user's profile. No plan or goal is created on save.
+
+## Browser form
+
+/profile redirects anonymous visitors and loads only the signed-in user's saved
+values. The responsive form submits bounded JSON through the protected API,
+disables fields during saving, times out after 15 seconds, and uses textContent
+for messages. Saving, reload persistence, invalid-time-zone rejection, and mobile
+layout were checked in a browser with a synthetic profile in a disposable cluster.
+The invalid update did not replace the previously saved profile.

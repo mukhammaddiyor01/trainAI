@@ -40,6 +40,7 @@ class ProfileApiTests(unittest.TestCase):
             with TestClient(app, base_url="http://127.0.0.1") as second:
                 first_id, second_id = self.sign_in(first), self.sign_in(second)
                 self.assertEqual(first.get("/api/profile").status_code, 404)
+                self.assertEqual(first.get("/profile").status_code, 200)
                 self.assertEqual(first.put("/api/profile", headers=headers, json=profile).status_code, 200)
                 self.assertEqual(second.get("/api/profile", params={"user_id": first_id}).status_code, 404)
                 for field, value in [("user_id", second_id), ("role", "admin")]:
@@ -54,3 +55,6 @@ class ProfileApiTests(unittest.TestCase):
                 for change in invalid:
                     self.assertEqual(first.put("/api/profile", headers=headers, json={**profile, **change}).status_code, 422)
                 self.assertEqual(first.get("/api/profile").json(), profile)
+                page = first.get("/profile")
+                self.assertIn('value="Asia/Seoul"', page.text)
+                self.assertIn('method="post"', page.text)
