@@ -5,6 +5,12 @@ loss, or weight maintenance. The intended workflow is:
 
 **Profile → weekly plan → daily log → weekly review → approved plan revision.**
 
+## Session handoff
+
+Read [COMPLETED_TASKS.md](COMPLETED_TASKS.md) for completed increments and the
+resume checkpoint. Before continuing implementation, read all project-owned
+Markdown files as required by [AGENTS.md](AGENTS.md).
+
 ## Current status
 
 The web foundation and account access are implemented: responsive English pages,

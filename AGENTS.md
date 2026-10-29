@@ -1,5 +1,22 @@
 # TrainAI — Project Development Rules
 
+## Required Session Startup and Handoff
+
+Before any implementation in a new or resumed session, read this file,
+COMPLETED_TASKS.md, README.md, and every project-owned Markdown file in the
+repository, including all docs/ files and Markdown added later. Discover the
+current inventory with rg; exclude .git, .venv, caches, and third-party dependency
+directories. Do not start the next feature until that reading is complete.
+
+Use COMPLETED_TASKS.md as the cumulative completed-work record and resume
+checkpoint. It records verified behavior, migrations, decisions, deferred work,
+and the next small increment. Earlier milestone observations in other documents
+are historical; reconcile any disagreement with current code and Git history.
+Inspect git status and preserve user changes before implementation. Update the
+completed-work record after each finished increment or session handoff. Never put
+secrets, private profiles, session tokens, or local connection values in it.
+This is a resume procedure, not authorization to schedule or start work later.
+
 ## Purpose and Product Scope
 
 Build an adult general-fitness application for gaining, losing, or maintaining
