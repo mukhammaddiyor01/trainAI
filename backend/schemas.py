@@ -1,0 +1,33 @@
+"""Strict HTTP contracts; secrets never belong in public response models."""
+
+from uuid import UUID
+
+from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator
+
+from backend.services.accounts import validate_password
+
+
+class Credentials(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    username: str = Field(min_length=3, max_length=128)
+    password: SecretStr = Field(min_length=15, max_length=128)
+
+    @field_validator("password")
+    @classmethod
+    def valid_password_text(cls, value: SecretStr) -> SecretStr:
+        password = value.get_secret_value()
+        validate_password(password)
+        try:
+            password.encode("utf-8")
+        except UnicodeError:
+            raise ValueError("Use valid text for the password.") from None
+        return value
+
+
+class AccountResponse(BaseModel):
+    # Ignore accidental extra fields so credentials cannot cross this boundary.
+    model_config = ConfigDict(extra="ignore")
+
+    user_id: UUID
+    username: str = Field(min_length=3, max_length=32, pattern=r"^[a-z0-9_]+$")

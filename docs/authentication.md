@@ -60,3 +60,13 @@ Registration, sign-in, invalid-password feedback, private account access, and
 logout were verified in a browser using the disposable database runner. Desktop
 and mobile layouts were inspected. The configured real database was migrated
 explicitly, but synthetic browser accounts were not added to it.
+
+## Strict validation contracts
+
+Authentication requests pass through a bounded UTF-8 JSON parser and a strict
+Pydantic Credentials dependency (the FastAPI equivalent of an input-validation
+pipe). Unknown fields, type coercion, duplicate JSON keys, non-finite values,
+compressed bodies, and invalid password text are rejected. Validation responses
+do not echo inputs. SecretStr hides passwords from schema representations.
+AccountResponse exposes only user_id and username, including on login; setting
+cookies no longer bypasses response-model validation.

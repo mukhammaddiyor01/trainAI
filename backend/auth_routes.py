@@ -1,9 +1,13 @@
 """Bounded same-origin authentication requests and server-derived identity."""
 
-import json
+from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import JSONResponse, Response
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import Response
+from pydantic import ValidationError
+
+from backend.request_validation import read_json
+from backend.schemas import AccountResponse, Credentials
 from starlette.concurrency import run_in_threadpool
 
 from backend.accounts import (account_for_token, authenticate_account, create_login_session,
@@ -19,32 +23,13 @@ def require_same_origin(request: Request) -> None:
         raise HTTPException(403, "Submit this request from the TrainAI page.")
 
 
-async def read_credentials(request: Request) -> tuple[str, str]:
+async def read_credentials(request: Request) -> Credentials:
     require_same_origin(request)
-    if request.headers.get("content-type", "").split(";", 1)[0].strip() != "application/json":
-        raise HTTPException(415, "Send credentials as JSON.")
-    content = bytearray()
-    async for chunk in request.stream():
-        if len(content) + len(chunk) > MAX_AUTH_BYTES:
-            raise HTTPException(413, "The sign-in request is too large.")
-        content.extend(chunk)
+    values = await read_json(request, MAX_AUTH_BYTES)
     try:
-        values = json.loads(content)
-    except (ValueError, UnicodeError, RecursionError):
+        return Credentials.model_validate(values)
+    except ValidationError:
         raise HTTPException(422, "Check the username and password fields.") from None
-    if not isinstance(values, dict) or set(values) != {"username", "password"}:
-        raise HTTPException(422, "Provide only username and password.")
-    username, password = values["username"], values["password"]
-    if not isinstance(username, str) or not isinstance(password, str):
-        raise HTTPException(422, "Username and password must be text.")
-    if len(username) > 128 or len(password) > 128:
-        raise HTTPException(422, "Check the username and password lengths.")
-    # Reject escaped surrogate characters before they reach Argon2's UTF-8 encoder.
-    try:
-        password.encode("utf-8")
-    except UnicodeError:
-        raise HTTPException(422, "Use valid text for the password.") from None
-    return username, password
 
 
 async def auth_work(request: Request, function, *args):
@@ -58,11 +43,10 @@ async def auth_work(request: Request, function, *args):
         slots.release()
 
 
-@router.post("/register", status_code=201)
-async def register(request: Request):
-    username, password = await read_credentials(request)
-    identity = await auth_work(request, register_account, username, password)
-    return {"user_id": str(identity.user_id), "username": identity.username}
+@router.post("/register", status_code=201, response_model=AccountResponse)
+async def register(request: Request, credentials: Annotated[Credentials, Depends(read_credentials)]):
+    identity = await auth_work(request, register_account, credentials.username, credentials.password.get_secret_value())
+    return AccountResponse(user_id=identity.user_id, username=identity.username)
 
 
 def sign_in(username: str, password: str, previous_token: str | None):
@@ -70,26 +54,24 @@ def sign_in(username: str, password: str, previous_token: str | None):
     return identity, create_login_session(identity, previous_token)
 
 
-@router.post("/login")
-async def login(request: Request):
-    username, password = await read_credentials(request)
+@router.post("/login", response_model=AccountResponse)
+async def login(request: Request, response: Response, credentials: Annotated[Credentials, Depends(read_credentials)]):
     identity, token = await auth_work(
-        request, sign_in, username, password, request.cookies.get(SESSION_COOKIE)
+        request, sign_in, credentials.username, credentials.password.get_secret_value(), request.cookies.get(SESSION_COOKIE)
     )
-    response = JSONResponse({"user_id": str(identity.user_id), "username": identity.username})
     response.set_cookie(
         SESSION_COOKIE, token, max_age=SESSION_SECONDS, httponly=True,
         secure=request.url.scheme == "https", samesite="strict", path="/",
     )
-    return response
+    return AccountResponse(user_id=identity.user_id, username=identity.username)
 
 
-@router.get("/me")
+@router.get("/me", response_model=AccountResponse)
 async def me(request: Request):
     identity = await run_in_threadpool(account_for_token, request.cookies.get(SESSION_COOKIE))
     if identity is None:
         raise HTTPException(401, "Sign in to continue.")
-    return {"user_id": str(identity.user_id), "username": identity.username}
+    return AccountResponse(user_id=identity.user_id, username=identity.username)
 
 
 @router.post("/logout", status_code=204)
