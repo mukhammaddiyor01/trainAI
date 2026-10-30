@@ -1,7 +1,7 @@
 # TrainAI — Completed Tasks and Session Handoff
 
-Last updated: 2026-10-29 (Asia/Seoul).
-Next planned session: 2026-10-30, when the user asks to continue.
+Last updated: 2026-10-30 (Asia/Seoul).
+Session resumed on 2026-10-30 after reading all project-owned Markdown files.
 
 ## Read Before Continuing
 
@@ -22,6 +22,7 @@ Current documentation:
 - [Database and migrations](docs/database.md)
 - [Authentication](docs/authentication.md)
 - [Basic profiles](docs/profiles.md)
+- [Weight goals](docs/goals.md)
 - [Security boundaries](docs/security.md)
 - [Verification history](docs/verification.md)
 
@@ -159,6 +160,18 @@ Do not automatically harmonize the other layers to the shorter value.
   cloud training remain outside the authorized scope.
 - Do not modify reference projects, expose private data, fabricate progress, or
   claim that the four-field basic profile is sufficient to generate a plan.
+
+## Session Progress — 2026-10-30
+
+- Read all 10 existing project Markdown documents before implementation and
+  inspected the branch, history, and local password-rule diff.
+- Asked the user to resolve the pending 8/15-character password policy; the local
+  edit remains untouched while that answer is pending.
+- Added plain Python gain/loss/maintenance goal rules and immutable goal values.
+  Three targeted rule tests passed. These checks do not claim the full application
+  suite passes with the unrelated password edit still present.
+- Goal persistence, HTTP, and UI are the next separate increments. Goals do not
+  generate a plan, calorie target, or guaranteed date.
 
 ## Next Work — Not Yet Completed
 
