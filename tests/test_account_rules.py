@@ -15,10 +15,10 @@ class AccountRuleTests(unittest.TestCase):
                 normalize_username(value)
 
     def test_password_bounds_and_whitespace_are_explicit(self):
-        validate_password("a" * 15)
+        validate_password("a" * 8)
         validate_password("a" * 128)
         validate_password("  synthetic passphrase  ")
-        for value in ["a" * 14, "a" * 129, "null\x00inside-password"]:
+        for value in ["a" * 7, "a" * 129, "null\x00inside-password"]:
             with self.subTest(length=len(value)), self.assertRaises(InvalidAccountInput):
                 validate_password(value)
 

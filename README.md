@@ -47,7 +47,7 @@ See [database setup](docs/database.md) before running explicit migrations:
 
 Open `/register` to create your own account, `/login` to sign in, and `/account`
 to view your private account. Open `/profile` to save your basic details. Passwords
-must be 15–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
+must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
 For all 53 checks, including PostgreSQL integration, use the disposable runner:
 

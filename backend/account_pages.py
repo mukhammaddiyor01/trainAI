@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from backend.guards import optional_account
 from backend.profiles import read_profile
 from backend.goals import read_goal
+from backend.services.accounts import MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH
 from starlette.concurrency import run_in_threadpool
 from backend.config import DatabaseConfigurationError
 from backend.routes import templates
@@ -17,6 +18,7 @@ router = APIRouter()
 def login_page(request: Request):
     return templates.TemplateResponse(request=request, name="auth.html", context={
         "mode": "login", "created": request.query_params.get("created") == "1",
+        "min_password_length": MIN_PASSWORD_LENGTH, "max_password_length": MAX_PASSWORD_LENGTH,
     })
 
 
@@ -24,6 +26,7 @@ def login_page(request: Request):
 def register_page(request: Request):
     return templates.TemplateResponse(request=request, name="auth.html", context={
         "mode": "register", "created": False,
+        "min_password_length": MIN_PASSWORD_LENGTH, "max_password_length": MAX_PASSWORD_LENGTH,
     })
 
 

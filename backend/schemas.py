@@ -5,14 +5,14 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator
 
-from backend.services.accounts import validate_password
+from backend.services.accounts import MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH, validate_password
 
 
 class Credentials(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
 
     username: str = Field(min_length=3, max_length=128)
-    password: SecretStr = Field(min_length=15, max_length=128)
+    password: SecretStr = Field(min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWORD_LENGTH)
 
     @field_validator("password")
     @classmethod

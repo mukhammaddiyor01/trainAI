@@ -128,19 +128,14 @@ develop. This handoff and its startup rule are a separate documentation commit.
 | bbce96b | Bounded database pool waits and verified SQL timeouts |
 | 0682f78 | Security/profile verification and dependency-audit documentation |
 
-## Uncommitted Change Observed During This Handoff
+## Historical Password Edit — Resolved on 2026-10-30
 
-A local edit appeared in backend/services/accounts.py while the documentation was
-being prepared: validate_password now accepts a minimum of 8 characters instead
-of the committed 15-character minimum. This edit was not made, reverted, tested,
-staged, or committed as part of the documentation task.
-
-The HTTP Credentials schema, browser forms, documentation, and existing tests
-still use a 15-character minimum. Therefore the last 53-test result describes the
-committed implementation before this local edit, not a newly verified working
-tree. Preserve the edit. At the next session, inspect the actual diff and clarify
-the intended password policy with the user before changing or committing it.
-Do not automatically harmonize the other layers to the shorter value.
+During the 2026-10-29 handoff, an uncommitted edit lowered the service minimum
+from 15 to 8 while the HTTP schema and UI still required 15. The edit was preserved.
+On 2026-10-30, the user explicitly selected an 8-character minimum. Service, schema,
+and rendered forms now use shared 8/128 constants. The policy fix includes an
+8-character registration/login check and 7-character rejection. No password-rule
+edit remains pending. The previous 53-test result remains a historical snapshot.
 
 ## Decisions to Preserve
 
@@ -165,8 +160,8 @@ Do not automatically harmonize the other layers to the shorter value.
 
 - Read all 10 existing project Markdown documents before implementation and
   inspected the branch, history, and local password-rule diff.
-- Asked the user to resolve the pending 8/15-character password policy; the local
-  edit remains untouched while that answer is pending.
+- Preserved the local 8/15 mismatch until the user selected 8. The authorized
+  policy fix now shares limits across service, schema, and UI.
 - Added plain Python gain/loss/maintenance goal rules and immutable goal values.
   Three targeted rule tests passed. These checks do not claim the full application
   suite passes with the unrelated password edit still present.
@@ -183,9 +178,11 @@ Do not automatically harmonize the other layers to the shorter value.
   page tests passed. Browser checks confirmed profile-first onboarding, invalid
   target feedback, save/reload, stable snapshots after a profile-weight change,
   maintenance without a target, and mobile layout. Synthetic test data was removed.
-- Goal rules, persistence, API, and UI are now implemented. The full committed-code
-  snapshot is the next verification step; the local password edit remains pending. Goals do not
-  generate a plan, calorie target, or guaranteed date.
+- Goal rules, persistence, API, and UI are now implemented. All 67 tests passed
+  against exact committed snapshot 15b413e, excluding the then-pending local
+  password edit. After the authorized 8-character policy fix, all 68 working-tree tests passed
+  in the isolated PostgreSQL runner, with no skipped checks.
+  Goals do not generate a plan, calorie target, or guaranteed date.
 
 ## Next Work — Not Yet Completed
 

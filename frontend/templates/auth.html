@@ -29,8 +29,8 @@
         <input id="username" name="username" type="text" autocomplete="username" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_]{3,32}" autocapitalize="none" spellcheck="false" aria-describedby="username-help">
         <p id="username-help" class="field-help">3–32 letters, numbers, or underscores.</p>
         <label for="password">Password</label>
-        <input id="password" name="password" type="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" required minlength="15" maxlength="128" aria-describedby="password-help">
-        <p id="password-help" class="field-help">Use 15–128 characters. Spaces are welcome.</p>
+        <input id="password" name="password" type="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" required minlength="{{ min_password_length }}" maxlength="{{ max_password_length }}" aria-describedby="password-help">
+        <p id="password-help" class="field-help">Use {{ min_password_length }}–{{ max_password_length }} characters. Spaces are welcome.</p>
         <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
         <button class="button" type="submit">{{ 'Create account' if mode == 'register' else 'Sign in' }}</button>
       </form>

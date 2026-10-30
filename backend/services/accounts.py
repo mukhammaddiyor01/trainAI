@@ -2,6 +2,9 @@
 
 import re
 
+MIN_PASSWORD_LENGTH = 8
+MAX_PASSWORD_LENGTH = 128
+
 
 class InvalidAccountInput(ValueError):
     """An account input does not meet the documented rules."""
@@ -16,5 +19,5 @@ def normalize_username(value: str) -> str:
 
 def validate_password(value: str) -> None:
     # Passwords are not trimmed or normalized; spaces and Unicode are allowed.
-    if not 15 <= len(value) <= 128 or "\x00" in value:
-        raise InvalidAccountInput("Use a password between 15 and 128 characters.")
+    if not MIN_PASSWORD_LENGTH <= len(value) <= MAX_PASSWORD_LENGTH or "\x00" in value:
+        raise InvalidAccountInput(f"Use a password between {MIN_PASSWORD_LENGTH} and {MAX_PASSWORD_LENGTH} characters.")

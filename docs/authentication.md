@@ -7,7 +7,7 @@ are normalized to lowercase, contain 3–32 ASCII letters, digits, or underscore
 and are unique in PostgreSQL. Email delivery and password recovery are not
 implemented. Account input rules are plain Python services.
 
-Passwords are 15–128 characters, support spaces and Unicode, and are neither
+Passwords are 8–128 characters, support spaces and Unicode, and are neither
 trimmed nor normalized. Argon2id uses the maintained argon2-cffi PasswordHasher
 defaults. Every hash has its own salt. Plaintext passwords never enter database
 records or logs. Oversized and invalid passwords fail before hashing.
@@ -95,3 +95,12 @@ running multiple workers or deploying. Proxy headers are not a source of identit
 
 See [security boundaries](security.md) for request/response limits, transport settings,
 rate-limit scope, and the deferred OAuth/OIDC requirements. OAuth remains disabled.
+
+## Password-policy decision — 2026-10-30
+
+The user explicitly selected an 8-character minimum. The service, strict
+Credentials schema, and server-rendered browser forms now share
+MIN_PASSWORD_LENGTH=8 and MAX_PASSWORD_LENGTH=128 from the plain account service.
+This resolves the earlier local 8/15 mismatch. Tests cover 7-character rejection
+and an 8-character registration/login round trip. Argon2id, session protections,
+and attempt/resource limits are unchanged. OAuth and MFA are not implemented.

@@ -19,6 +19,8 @@ class AccountPageTests(unittest.TestCase):
                 self.assertIn('method="post"', response.text)
                 self.assertIn(f'autocomplete="{autocomplete}"', response.text)
                 self.assertIn('type="password"', response.text)
+                self.assertIn('minlength="8"', response.text)
+                self.assertIn('maxlength="128"', response.text)
                 self.assertIn('role="status"', response.text)
 
     def test_anonymous_account_page_redirects_to_sign_in(self):

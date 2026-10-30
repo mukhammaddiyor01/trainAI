@@ -42,3 +42,15 @@ class AuthFlowTests(unittest.TestCase):
                 self.assertIsNone(first.cookies.get(SESSION_COOKIE))
                 self.assertEqual(first.get("/auth/me").status_code, 401)
                 self.assertEqual(second.get("/auth/me").status_code, 200)
+
+
+    def test_eight_character_password_registers_and_signs_in_but_seven_is_rejected(self):
+        with TestClient(create_app(), base_url="http://127.0.0.1") as client:
+            headers = {"origin": "http://127.0.0.1"}
+            values = {"username": "minimum_" + uuid4().hex[:18], "password": "Ab9!xy12"}
+            short = client.post("/auth/register", headers=headers, json={**values, "password": "Ab9!xy1"})
+            self.assertEqual(short.status_code, 422)
+            self.assertNotIn("Ab9!xy1", short.text)
+            self.assertEqual(client.post("/auth/register", headers=headers, json=values).status_code, 201)
+            self.assertEqual(client.post("/auth/login", headers=headers, json=values).status_code, 200)
+            self.assertEqual(client.get("/auth/me").status_code, 200)
