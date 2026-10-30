@@ -20,6 +20,9 @@ from backend.services.accounts import InvalidAccountInput
 from backend.routes import router
 from backend.profile_routes import router as profile_router
 from backend.services.profiles import InvalidProfile
+from backend.services.goals import InvalidGoal
+from backend.goals import GoalProfileRequired
+from backend.goal_routes import router as goal_router
 from backend.rate_limits import AttemptLimiter
 from backend.http_limits import HttpLimitsMiddleware
 
@@ -46,11 +49,11 @@ def create_app() -> FastAPI:
         status = 422
         if isinstance(error, InvalidCredentials):
             status = 401
-        elif isinstance(error, UsernameUnavailable):
+        elif isinstance(error, (UsernameUnavailable, GoalProfileRequired)):
             status = 409
         return JSONResponse({"detail": str(error)}, status_code=status)
 
-    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable, InvalidProfile]:
+    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable, InvalidProfile, InvalidGoal, GoalProfileRequired]:
         app.add_exception_handler(error_type, account_error)
 
     async def persistence_error(request, error):
@@ -96,6 +99,7 @@ def create_app() -> FastAPI:
     app.include_router(auth_router)
     app.include_router(account_pages_router)
     app.include_router(profile_router)
+    app.include_router(goal_router)
     return app
 
 

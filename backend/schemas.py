@@ -1,6 +1,7 @@
 """Strict HTTP contracts; secrets never belong in public response models."""
 
 from uuid import UUID
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator
 
@@ -44,3 +45,14 @@ class ProfileInput(BaseModel):
 
 class ProfileResponse(ProfileInput):
     """An explicit four-field response without owner IDs or internal metadata."""
+
+
+class GoalInput(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    direction: Literal["gain", "lose", "maintain"]
+    target_weight_kg: float | None = Field(default=None, ge=20, le=500, allow_inf_nan=False)
+
+
+class GoalResponse(GoalInput):
+    starting_weight_kg: float = Field(ge=20, le=500, allow_inf_nan=False)

@@ -176,7 +176,10 @@ Do not automatically harmonize the other layers to the shorter value.
 - Added migration 0003 and owner-scoped goal storage with profile locking and
   stable starting-weight snapshots. Five targeted PostgreSQL checks passed,
   including concurrent retries, constraints, and migration/model parity.
-- Goal HTTP and UI are the next separate increments. Goals do not
+- Added the protected strict goal API. Four targeted HTTP/ownership checks
+  passed, covering missing profiles, forged owner/starting-weight fields,
+  two-user isolation, invalid update rollback, and maintenance without a target.
+- Goal UI is the next separate increment. Goals do not
   generate a plan, calorie target, or guaranteed date.
 
 ## Next Work — Not Yet Completed

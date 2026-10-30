@@ -31,3 +31,13 @@ the current profile weight. This records intent only; goal progress or completio
 is not inferred. Concurrent identical saves produce one row. SQL constraints
 reject missing gain/loss targets, invalid directions, inconsistent target weights,
 and goals without an owning profile. No goal history is implemented yet.
+
+## Protected API
+
+GET /api/goal reads only the authenticated owner's goal; absent goals return 404.
+PUT /api/goal accepts only direction and optional target_weight_kg, with the
+shared session/origin guards, a 2048-byte body cap, strict schema validation,
+and existing time/rate/response limits. The owner and starting weight are always
+selected by the server. A missing profile returns 409; invalid changes return 422
+and preserve the saved goal. Responses expose only direction, starting_weight_kg,
+and target_weight_kg. No plan, progress, or completion date is returned.
