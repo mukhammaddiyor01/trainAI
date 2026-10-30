@@ -48,3 +48,23 @@ class Profile(Base):
     weight_kg: Mapped[float] = mapped_column(Float)
     timezone: Mapped[str] = mapped_column(String(64))
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class Goal(Base):
+    __tablename__ = "goals"
+    __table_args__ = (
+        CheckConstraint("direction IN ('gain', 'lose', 'maintain')", name="ck_goals_direction"),
+        CheckConstraint("starting_weight_kg BETWEEN 20 AND 500", name="ck_goals_starting_weight"),
+        CheckConstraint("target_weight_kg IS NULL OR target_weight_kg BETWEEN 20 AND 500", name="ck_goals_target_weight"),
+        CheckConstraint(
+            "(direction = 'maintain' AND target_weight_kg IS NULL) OR "
+            "(direction = 'gain' AND target_weight_kg IS NOT NULL AND target_weight_kg > starting_weight_kg) OR "
+            "(direction = 'lose' AND target_weight_kg IS NOT NULL AND target_weight_kg < starting_weight_kg)",
+            name="ck_goals_target_direction",
+        ),
+    )
+
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("profiles.user_id", ondelete="CASCADE"), primary_key=True)
+    direction: Mapped[str] = mapped_column(String(16))
+    starting_weight_kg: Mapped[float] = mapped_column(Float)
+    target_weight_kg: Mapped[float | None] = mapped_column(Float)

@@ -20,3 +20,14 @@ Changing the goal intentionally will use the profile weight at that save.
 
 This feature is one onboarding step. Goals and the four basic profile fields
 alone remain insufficient to produce a personalized workout or nutrition plan.
+
+## Persistence and retries
+
+Migration 0003 creates one current goal per saved profile. The authenticated
+profile's weight is read under a row lock, serializing goal saves and profile
+edits. Identical direction/target retries preserve the stored starting weight,
+even if a later profile edit crosses the target. An intentional change uses
+the current profile weight. This records intent only; goal progress or completion
+is not inferred. Concurrent identical saves produce one row. SQL constraints
+reject missing gain/loss targets, invalid directions, inconsistent target weights,
+and goals without an owning profile. No goal history is implemented yet.

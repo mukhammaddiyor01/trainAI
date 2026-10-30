@@ -173,7 +173,10 @@ Do not automatically harmonize the other layers to the shorter value.
 - Added an explicit --pattern option to the isolated PostgreSQL runner. Its
   default remains full discovery. Two targeted profile-storage checks and the
   migration round trip passed; this is not a full-suite result.
-- Goal persistence, HTTP, and UI are the next separate increments. Goals do not
+- Added migration 0003 and owner-scoped goal storage with profile locking and
+  stable starting-weight snapshots. Five targeted PostgreSQL checks passed,
+  including concurrent retries, constraints, and migration/model parity.
+- Goal HTTP and UI are the next separate increments. Goals do not
   generate a plan, calorie target, or guaranteed date.
 
 ## Next Work — Not Yet Completed
