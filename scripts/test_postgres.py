@@ -21,7 +21,9 @@ def run(*args, **kwargs):
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--serve", action="store_true", help="Open a disposable browser-test server on port 8001")
-    serve = parser.parse_args().serve
+    parser.add_argument("--pattern", default="test*.py", help="Explicit unittest file pattern for a small increment")
+    arguments = parser.parse_args()
+    serve = arguments.serve
     for name in ["initdb", "pg_ctl", "createdb"]:
         if not shutil.which(name):
             print("Install PostgreSQL binaries before running isolated database tests.")
@@ -64,7 +66,7 @@ def main() -> int:
             except KeyboardInterrupt:
                 pass
         else:
-            run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v", cwd=root, env=environment)
+            run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", arguments.pattern, "-v", cwd=root, env=environment)
             run(sys.executable, "-m", "alembic", "downgrade", "base", cwd=root, env=environment)
             run(sys.executable, "-m", "alembic", "upgrade", "head", cwd=root, env=environment)
     finally:

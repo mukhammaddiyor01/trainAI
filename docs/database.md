@@ -67,3 +67,9 @@ PostgreSQL statement_timeout and lock_timeout settings are active. Slow queries
 and pool failures become generic persistence errors, without leaking parameters.
 Large future administrative migrations may need an explicit reviewed operator
 configuration; never remove runtime bounds silently.
+
+For a single independently developed increment, an explicit test pattern is
+available, for example `scripts/test_postgres.py --pattern test_profile_storage.py`.
+The default still discovers the full suite. A targeted result is not a full-suite
+result and must be reported as such. Both modes use the isolated cluster and
+perform migration round trips.

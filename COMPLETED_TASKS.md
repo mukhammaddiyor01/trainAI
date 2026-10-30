@@ -170,6 +170,9 @@ Do not automatically harmonize the other layers to the shorter value.
 - Added plain Python gain/loss/maintenance goal rules and immutable goal values.
   Three targeted rule tests passed. These checks do not claim the full application
   suite passes with the unrelated password edit still present.
+- Added an explicit --pattern option to the isolated PostgreSQL runner. Its
+  default remains full discovery. Two targeted profile-storage checks and the
+  migration round trip passed; this is not a full-suite result.
 - Goal persistence, HTTP, and UI are the next separate increments. Goals do not
   generate a plan, calorie target, or guaranteed date.
 
