@@ -16,7 +16,7 @@
     <p>Signed in as <strong>{{ identity.username }}</strong></p>
     <h1>Your next step<br>starts here.</h1>
     <p class="lead">Your private account is ready. Add your basic profile to begin.</p>
-    <section class="account-next" aria-labelledby="next-title"><h2 id="next-title">Make it personal</h2><p>Start with your age, height, weight, and time zone. Goals and other planning preferences will follow.</p><a href="/profile">Edit your basic profile</a></section>
+    <section class="account-next" aria-labelledby="next-title"><h2 id="next-title">Make it personal</h2><p>Start with your age, height, weight, and time zone. Then choose a weight goal. Other planning preferences will follow.</p><a href="/profile">Edit your basic profile</a> · <a href="/goal">Set your goal</a></section>
     <form action="/auth/logout" method="post" data-logout><button class="button" type="submit">Sign out</button><p id="form-message" class="form-message" role="status" aria-live="polite"></p></form>
     {% else %}
     <h1>Your account<br>is unavailable.</h1>

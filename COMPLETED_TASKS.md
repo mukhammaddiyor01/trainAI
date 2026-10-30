@@ -179,7 +179,12 @@ Do not automatically harmonize the other layers to the shorter value.
 - Added the protected strict goal API. Four targeted HTTP/ownership checks
   passed, covering missing profiles, forged owner/starting-weight fields,
   two-user isolation, invalid update rollback, and maintenance without a target.
-- Goal UI is the next separate increment. Goals do not
+- Added the responsive goal page and profile/account navigation. Two targeted
+  page tests passed. Browser checks confirmed profile-first onboarding, invalid
+  target feedback, save/reload, stable snapshots after a profile-weight change,
+  maintenance without a target, and mobile layout. Synthetic test data was removed.
+- Goal rules, persistence, API, and UI are now implemented. The full committed-code
+  snapshot is the next verification step; the local password edit remains pending. Goals do not
   generate a plan, calorie target, or guaranteed date.
 
 ## Next Work — Not Yet Completed

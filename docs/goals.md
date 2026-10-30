@@ -41,3 +41,16 @@ and existing time/rate/response limits. The owner and starting weight are always
 selected by the server. A missing profile returns 409; invalid changes return 422
 and preserve the saved goal. Responses expose only direction, starting_weight_kg,
 and target_weight_kg. No plan, progress, or completion date is returned.
+
+## Browser flow
+
+/goal redirects anonymous visitors to sign-in and accounts without a profile to
+/profile. The responsive form supports gain, loss, and maintenance. Maintenance
+hides and disables the target input; edits clear stale success feedback. All
+messages use textContent and requests have a timeout and duplicate-submit guard.
+No weights are placed in URLs. Successful saves reload server-rendered values.
+
+Browser checks used only synthetic data in the disposable cluster: profile-first
+onboarding, invalid gain rejection, valid gain save, saved-value reload, profile
+weight changes without snapshot rewriting, identical-save stability, maintenance
+without a target, and mobile layout without horizontal overflow.

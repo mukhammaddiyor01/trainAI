@@ -15,7 +15,7 @@
   <main id="main" class="wrap profile-page">
     <p>Start with the basics.</p>
     <h1>A little context.<br>A better starting point.</h1>
-    <p class="lead">Save your age, measurements, and time zone. Your goals, schedule, and preferences will follow.</p>
+    <p class="lead">Save your age, measurements, and time zone. Choose your goal next. Schedule and preferences will follow.</p>
     <section class="auth-panel" aria-labelledby="profile-title">
       <h2 id="profile-title">Your basic profile</h2>
       <form id="profile-form" action="/api/profile" method="post" aria-describedby="profile-message">
@@ -33,6 +33,7 @@
       </form>
       <noscript><p>Enable JavaScript to save your profile.</p></noscript>
     </section>
+    <p id="goal-next" class="goal-next" {% if not profile %}hidden{% endif %}><a href="/goal">Next: set your weight goal</a></p>
     <p class="profile-scope">These details are private to your account. Saving them does not generate a plan or calculate nutrition targets yet.</p>
   </main>
 </body>

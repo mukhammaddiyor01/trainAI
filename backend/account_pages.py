@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.exc import SQLAlchemyError
 from backend.guards import optional_account
 from backend.profiles import read_profile
+from backend.goals import read_goal
 from starlette.concurrency import run_in_threadpool
 from backend.config import DatabaseConfigurationError
 from backend.routes import templates
@@ -49,3 +50,21 @@ async def profile_page(request: Request):
         return templates.TemplateResponse(request=request, name="account.html", status_code=503,
                                           context={"identity": None})
     return templates.TemplateResponse(request=request, name="profile.html", context={"profile": details})
+
+
+@router.get("/goal", response_class=HTMLResponse)
+async def goal_page(request: Request):
+    try:
+        identity = await optional_account(request)
+        if identity is None:
+            return RedirectResponse("/login", status_code=303)
+        profile = await run_in_threadpool(read_profile, identity.user_id)
+        if profile is None:
+            return RedirectResponse("/profile", status_code=303)
+        goal = await run_in_threadpool(read_goal, identity.user_id)
+    except (DatabaseConfigurationError, SQLAlchemyError):
+        return templates.TemplateResponse(request=request, name="account.html", status_code=503,
+                                          context={"identity": None})
+    return templates.TemplateResponse(request=request, name="goal.html", context={
+        "profile": profile, "goal": goal, "saved": request.query_params.get("saved") == "1",
+    })

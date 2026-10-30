@@ -35,7 +35,9 @@ if (profileForm) {
         return;
       }
       message.classList.add("success");
-      message.textContent = "Basic profile saved. Goals and preferences come next.";
+      message.textContent = "Basic profile saved. You can now set your goal.";
+      const next = document.getElementById("goal-next");
+      if (next) next.hidden = false;
     } catch (error) {
       message.textContent = error.name === "AbortError"
         ? "The request timed out. Try again."

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your weight goal — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/profile.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/goal.css').path }}">
+  <script src="{{ url_for('static', path='/js/goal.js').path }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Goal navigation"><a href="/profile">Your profile</a><a href="/account">Your account</a></nav></header>
+  <main id="main" class="wrap profile-page goal-page">
+    <p>Your direction.</p>
+    <h1>Choose a goal.<br>Keep the context.</h1>
+    <p class="lead">Record what you want to work toward. Your schedule and preferences come next.</p>
+    <section class="auth-panel" aria-labelledby="goal-title">
+      <h2 id="goal-title">Your weight goal</h2>
+      {% if saved %}<p id="goal-saved-notice" class="success-message" role="status">Goal saved. Planning preferences come next.</p>{% endif %}
+      <dl class="goal-context">
+        <div><dt>Current profile weight</dt><dd>{{ profile.weight_kg }} kg</dd></div>
+        <div><dt>{{ 'Goal starting weight' if goal else 'Weight for new goal' }}</dt><dd>{{ goal.starting_weight_kg if goal else profile.weight_kg }} kg</dd></div>
+      </dl>
+      <form id="goal-form" action="/api/goal" method="post" aria-describedby="goal-message">
+        <fieldset>
+          <legend>Goal details</legend>
+          <label for="direction">What would you like to work toward?</label>
+          <select id="direction" name="direction" required>
+            <option value="" disabled {% if not goal %}selected{% endif %}>Choose a goal</option>
+            <option value="gain" {% if goal and goal.direction == 'gain' %}selected{% endif %}>Gain weight</option>
+            <option value="lose" {% if goal and goal.direction == 'lose' %}selected{% endif %}>Lose weight</option>
+            <option value="maintain" {% if goal and goal.direction == 'maintain' %}selected{% endif %}>Maintain weight</option>
+          </select>
+          <div id="target-group" {% if not goal or goal.direction == 'maintain' %}hidden{% endif %}>
+            <label for="target_weight_kg">Target weight (kg)</label>
+            <input id="target_weight_kg" name="target_weight_kg" type="number" min="20" max="500" step="any" {% if not goal or goal.direction == 'maintain' %}disabled{% else %}required{% endif %} value="{{ goal.target_weight_kg if goal and goal.target_weight_kg is not none else '' }}" aria-describedby="target-help">
+            <p id="target-help" class="field-help">Gain targets must be higher; loss targets must be lower than the starting weight.</p>
+          </div>
+          <p class="field-help goal-explanation">Keeping the same goal preserves its starting weight. A changed direction or target uses your current profile weight. Maintenance does not use a target weight.</p>
+          <button class="button" type="submit">Save goal</button>
+        </fieldset>
+        <p id="goal-message" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+      <noscript><p>Enable JavaScript to save your goal.</p></noscript>
+    </section>
+    <p class="profile-scope">This records your intent, not a recommendation or a guarantee. Saving a goal does not create a plan, calorie target, progress estimate, or completion date.</p>
+  </main>
+</body>
+</html>

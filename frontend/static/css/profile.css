@@ -9,3 +9,5 @@
 @media (max-width: 700px) { .profile-page { padding-block: 30px; } .profile-fields { grid-template-columns: 1fr; } .profile-page .auth-panel .button { width: 100%; } }
 
 .profile-page .form-message.success { color: var(--ink); }
+
+.profile-page .goal-next { margin-top: 22px; font-size: 14px; }
