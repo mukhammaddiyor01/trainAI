@@ -2,7 +2,7 @@
 
 The first profile increment stores age, height in centimeters, weight in kilograms,
 and an explicitly selected IANA time zone. It does not calculate calories, interpret
-health conditions, or generate a fitness plan. Goals, training availability,
+health conditions, or generate a fitness plan. Weight goals are now implemented separately; training availability,
 equipment, food preferences, allergies, and other planning inputs follow in separate
 increments. These four fields alone must never trigger a personal plan.
 

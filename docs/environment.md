@@ -74,3 +74,11 @@ needed for the security or profile increment. All 53 isolated checks passed.
 The configured database was explicitly upgraded to revision 0002 after revision
 and conflict checks. PyPA pip-audit 2.10.1 reported no known advisories across all
 29 pinned packages on 2026-10-29. See docs/security.md for scope and limitations.
+
+## Goal verification — 2026-10-30
+
+No new dependencies were installed. All 68 working-tree tests passed in disposable
+PostgreSQL after the user selected the shared 8-character password minimum. The
+configured database was explicitly upgraded to 0003 after revision/conflict checks.
+Goal browser checks used synthetic data only. The 2026-10-29 dependency-advisory
+snapshot remains historical and was not rerun for these dependency-free changes.

@@ -28,14 +28,15 @@ Current documentation:
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete suite passed 53 tests. If documents disagree, inspect Git
+the latest complete working-tree suite passed 68 tests on 2026-10-30. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
 
 The application supports account registration, sign-in/sign-out, private session
 identity, and a basic private profile containing age, height, weight, and IANA time
-zone. Goals and full planning preferences have not been implemented.
+zone, plus gain/loss/maintenance weight goals. Full planning preferences have not
+been implemented.
 
 | Area | Completed behavior |
 | --- | --- |
@@ -45,6 +46,7 @@ zone. Goals and full planning preferences have not been implemented.
 | Sessions | Random 32-byte tokens, SHA-256 digests in storage, 24-hour expiry, login rotation, logout revocation, HttpOnly/host-only/SameSite cookies |
 | Guards | Shared same-origin write checks and server-derived account identity; browser user_id, role, or forged Bearer values do not establish identity |
 | Validation | Strict Pydantic request/response contracts, unknown-field rejection, no coercion, bounded UTF-8 JSON, duplicate-key/non-finite/compressed-body rejection |
+| Weight goals | Server-selected starting snapshot, gain/loss/maintenance rules, one owner-scoped current goal, guarded API, responsive form, concurrent-retry protection |
 | Basic profile | Plain Python validation, one owner-keyed profile per user, atomic saves, SQL bounds, protected API, responsive form, saved-value reload |
 | HTTP controls | API/login rate limits, Retry-After, body/metadata/response bounds, safe response-validation errors, proxy-header rejection, local server limits |
 | Database budgets | At most 10 pool connections, 3-second checkout wait, 5-second connection/statement bounds, 2-second lock bound |
@@ -59,16 +61,16 @@ height 50–300 cm, weight 20–500 kg. These are not medical reference ranges.
 - The user supplied DATABASE_URL in the ignored local .env. Never print, copy into
   documentation, overwrite, or commit that value.
 - The configured database connection was verified. Migration 0001 created users
-  and login_sessions; migration 0002 added profiles. Both were applied explicitly.
-- Current expected migration revision: 0002. Existing accounts were preserved.
+  and login_sessions; migration 0002 added profiles; migration 0003 added goals. All were applied explicitly.
+- Current expected migration revision: 0003. Existing accounts were preserved.
 - Synthetic browser accounts and profiles were created only in disposable test
   clusters; those clusters were stopped and removed.
 - The main local server was left running at http://127.0.0.1:8000. Do not assume
   its process survives until the next session or stop an unrelated process.
 - Canonical launcher: `.venv/bin/python -m backend` from the repository root.
-- Useful routes: /register, /login, /account, /profile, /health.
+- Useful routes: /register, /login, /account, /profile, /goal, /health.
 - APIs: POST /auth/register, POST /auth/login, GET /auth/me, POST /auth/logout,
-  GET /api/profile, and PUT /api/profile.
+  GET/PUT /api/profile, and GET/PUT /api/goal.
 
 ## Verification Already Performed
 
@@ -78,7 +80,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Result: 53 tests passed, none skipped. Coverage includes account/session isolation,
+Latest result: 68 working-tree tests passed, none skipped (2026-10-30). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.
@@ -94,14 +96,16 @@ invalid update preserved the old profile. Desktop/mobile layouts were inspected.
 Live HTTP checks confirmed no Server header, no-store responses, and rejection
 of spoofed X-Forwarded-For headers. Details are in docs/verification.md.
 
-This handoff update changes documentation only; it does not represent a new test
-run. Re-run relevant checks when code or runtime configuration changes.
+The 2026-10-29 handoff itself was documentation-only. The latest 2026-10-30
+implementation was verified with the complete working-tree suite. Re-run relevant
+checks when code or runtime configuration changes.
 
 ## Git Checkpoint and Completed Increments
 
 Repository: https://github.com/mukhammaddiyor01/trainAI
 
-Before this documentation update, develop and origin/develop pointed to 0682f78.
+The original 2026-10-29 handoff followed 0682f78 and was committed as dfe7b23.
+The latest code increment before this checkpoint update is e5ce7d5 on develop.
 Master remains at a8ddfd9, the initial web setup. Subsequent work belongs only on
 develop. This handoff and its startup rule are a separate documentation commit.
 
@@ -127,6 +131,13 @@ develop. This handoff and its startup rule are a separate documentation commit.
 | 6e4f6e8 | Separate cookie namespaces for disposable browser tests |
 | bbce96b | Bounded database pool waits and verified SQL timeouts |
 | 0682f78 | Security/profile verification and dependency-audit documentation |
+| dfe7b23 | Completed-work record and mandatory Markdown reading procedure |
+| d211438 | Plain gain/loss/maintenance goal rules |
+| 0430a53 | Explicit targeted isolated PostgreSQL checks |
+| 5005558 | Stable owner-scoped goal snapshots and migration 0003 |
+| fcd81ac | Strict guarded goal API |
+| 15b413e | Responsive goal onboarding and saved context |
+| e5ce7d5 | User-selected 8-character password policy across all layers |
 
 ## Historical Password Edit — Resolved on 2026-10-30
 
@@ -183,20 +194,23 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   password edit. After the authorized 8-character policy fix, all 68 working-tree tests passed
   in the isolated PostgreSQL runner, with no skipped checks.
   Goals do not generate a plan, calorie target, or guaranteed date.
+- Applied migration 0003 explicitly to the configured database, preserving users
+  and profiles. The local runtime was restarted with the current code; anonymous goal-page/API
+  access and the rendered 8-character minimum were checked on the live server.
 
 ## Next Work — Not Yet Completed
 
-The immediate next milestone is goals and planning preferences. Start with the
-smallest independently testable increment after reading all Markdown files:
+The goal milestone is complete. Next, add planning preferences in small,
+independently verified increments:
 
-1. Define plain Python goal rules for gain, loss, and maintenance; decide how to
-   represent current versus target weight without promising a result/date.
-2. Add only the persistence and reviewed migration needed by that goal feature.
-3. Add a strict, bounded API using existing guards and owner-scoped queries;
-   test two-user isolation, invalid input, and mass assignment.
-4. Add the corresponding usable UI and verify it before its separate commit.
-5. Introduce experience, activity, equipment, available days, duration, food
-   preferences, allergies, budget, preparation time, and meal times incrementally.
+1. Plain Python rules for training experience, activity, equipment, available
+   weekdays, and session duration.
+2. The minimum required owner-scoped persistence and reviewed migration.
+3. A strict bounded API with existing guards and two-user isolation checks.
+4. A usable UI and browser verification, committed separately.
+5. Food preferences, allergies, budget, preparation time, and meal schedules in
+   later small increments. Verify calculation-specific methods before computing
+   any calorie or nutrition target.
 
 Later work remains: sourced exercise/food catalogs; verified calculation methods;
 deterministic plans; daily logs; weekly review and approved plan versions;

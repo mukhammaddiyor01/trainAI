@@ -73,3 +73,26 @@ service on 2026-10-29, exiting 0 with no known vulnerabilities. The full public
 package report is saved as docs/dependency-audit.json. No code, .env, or private
 profile data was sent for the audit. The audit tool used a separate temporary
 virtual environment, not the application's runtime environment.
+
+## Goal increment and selected password policy — 2026-10-30
+
+Read all 10 existing project Markdown files before implementation. Preserved the
+local password edit until the user explicitly selected an 8-character minimum.
+Independent goal-rule, storage, API, and page tests were run with explicit patterns.
+All 67 tests passed against exact committed snapshot 15b413e while excluding the
+then-unresolved user edit. After aligning service/schema/rendered forms to the
+selected policy and adding a minimum-length login check, all 68 working-tree tests
+passed with no skips in disposable PostgreSQL. Migration round trips also passed.
+
+Goal coverage includes missing-profile rejection, owner isolation, forged owner
+and starting-weight fields, invalid target rollback, stable snapshots across
+profile edits, concurrent identical saves, and PostgreSQL shape constraints.
+
+Browser checks used only synthetic records in a disposable cluster: profile-first
+redirect, profile save, invalid gain target rejection, valid goal save/reload,
+profile weight changes with preserved goal baseline, identical goal retries,
+maintenance without a target field, stale-success-message clearing, mobile layout,
+and logout. Temporary clusters were removed. The real database was upgraded
+explicitly to 0003 after conflict/revision checks; existing data was preserved.
+No new dependencies or model downloads were introduced; the 2026-10-29 advisory
+audit is historical and was not rerun for these code-only changes.

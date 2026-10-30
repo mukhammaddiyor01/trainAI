@@ -96,3 +96,25 @@ It exited 0 and reported no known vulnerabilities. The JSON report is stored in
 temporary environment; no application secrets or private data were supplied.
 Version pins are recorded, but the installation is not yet a hash-locked supply
 chain workflow. Advisory results can change after this snapshot.
+
+## Goal and password increment — 2026-10-30
+
+/api/goal uses the shared identity/origin guards, strict two-field input, a
+2048-byte body limit, and existing API rate/time/response limits. Starting weight
+and ownership come from the server. SQL constraints and profile row locks protect
+goal shape and concurrent retries. Two-user and mass-assignment tests passed.
+The user selected an 8-character password minimum; shared constants now keep the
+service, input schema, and browser forms consistent. OAuth remains deferred.
+
+## Weight goals — 2026-10-30
+
+Goal input accepts only direction and optional target_weight_kg, capped at
+2048 bytes. Shared auth/origin guards and API rate/time/response limits apply.
+Ownership and starting weight are server-selected; SQL constraints and profile
+row locks enforce consistency and stable identical-save retries. Responses contain
+only direction, starting_weight_kg, and target_weight_kg. Cross-user access and
+forged owner/starting-weight fields were tested.
+
+The user's 8-character minimum decision is implemented through shared password
+constants in the service, HTTP schema, and rendered forms. Argon2id, cookie/session
+controls, and rate limits remain active. OAuth remains deferred.
