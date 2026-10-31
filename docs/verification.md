@@ -157,3 +157,34 @@ local food script 200. Checked responses used no-store and omitted Server header
 No synthetic profiles or food preferences were written to the configured database.
 Food safety assessment, monetary pricing, calorie targets, generated plans, and
 AI remain outside this implemented milestone.
+
+
+## Catalog seed milestone — 2026-10-31
+
+Read all 13 existing project Markdown documents before implementation. Reviewed
+and pinned six exercise records to upstream commit
+f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5 with its Unlicense notice. Reviewed four
+official USDA SR Legacy nutrient records with CC0 provenance, source IDs, per-100-g
+edible basis, raw/cooked identity, retained API responses, and SHA-256 hashes.
+
+Four exercise tests, six food tests, five use-rule tests, and two offline-check
+tests passed. Coverage includes incomplete upstream equipment labels, source
+metadata/value/unit parity, missing nutrients, corrupt evidence, ambiguous JSON,
+unknown IDs, unsupported fields, strict portion mass, and blocked food selection.
+The offline check passed with sockets denied and an unusable DATABASE_URL. It
+reports six exercise/four nutrient records and unavailable food selection.
+
+Live source-link verification found USDA website detail paths returned 404; links
+were corrected to the documented API resources that supplied the records. Runtime
+loads remain offline. USDA public-demo limits apply only to explicit source access.
+
+The complete disposable PostgreSQL runner passed 116 tests, none skipped, including
+migration round trips. `pip check` passed. No schema/dependency/UI/HTTP changes were
+introduced, no browser check was repeated, and the configured database was not used.
+The historical advisory audit was not rerun. These are metadata/nutrient seeds,
+not approved food-allergen composition, clinical safety review, exercise dosage,
+daily calorie targets, or generated workout/nutrition plans.
+
+Final source-audit refinement additionally rejects prepared nutrient/name drift
+against retained USDA values even when the source hash remains unchanged. Its
+regression passed, then the complete suite was rerun and passed all 116 checks.

@@ -31,7 +31,7 @@ Current documentation:
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete working-tree suite passed 99 tests on 2026-10-31. If documents disagree, inspect Git
+the latest complete working-tree suite passed 116 tests on 2026-10-31. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
@@ -40,7 +40,8 @@ The application supports account registration, sign-in/sign-out, private session
 identity, and a basic private profile containing age, height, weight, and IANA time
 zone, gain/loss/maintenance weight goals, and private training preferences.
 Private food preferences and custom local meal schedules are implemented.
-Calculation-specific inputs, sourced catalogs, and generated plans are still pending.
+Six sourced exercise metadata records and four USDA nutrient seeds are implemented.
+Calculation-specific inputs, food composition/allergen review, and plans remain pending.
 
 | Area | Completed behavior |
 | --- | --- |
@@ -50,6 +51,7 @@ Calculation-specific inputs, sourced catalogs, and generated plans are still pen
 | Sessions | Random 32-byte tokens, SHA-256 digests in storage, 24-hour expiry, login rotation, logout revocation, HttpOnly/host-only/SameSite cookies |
 | Guards | Shared same-origin write checks and server-derived account identity; browser user_id, role, or forged Bearer values do not establish identity |
 | Validation | Strict Pydantic request/response contracts, unknown-field rejection, no coercion, bounded UTF-8 JSON, duplicate-key/non-finite/compressed-body rejection |
+| Catalog seeds | Six pinned exercise records, complete equipment requirements, four sourced nutrient records, raw/cooked identity, exact-ID lookup, gram scaling, explicit blocked-food readiness, offline evidence check |
 | Food preferences | Explicit allergy states and bounded names, diet, spending style, preparation allowance, custom local meal times, private atomic storage, guarded API, responsive form |
 | Training preferences | Self-reported experience/activity, explicit equipment, Monday-based weekdays, bounded duration, owner-scoped atomic storage, strict API, responsive form |
 | Weight goals | Server-selected starting snapshot, gain/loss/maintenance rules, one owner-scoped current goal, guarded API, responsive form, concurrent-retry protection |
@@ -88,7 +90,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Latest result: 99 working-tree tests passed, none skipped (2026-10-31). Coverage includes account/session isolation,
+Latest result: 116 working-tree tests passed, none skipped (2026-10-31). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.
@@ -114,8 +116,8 @@ Repository: https://github.com/mukhammaddiyor01/trainAI
 
 The original 2026-10-29 handoff followed 0682f78 and was committed as dfe7b23.
 The 2026-10-30 handoff is a1a045d; the training-preference checkpoint is 335862a.
-The latest implementation commit is bfc4c4d on develop, following the separate
-food-rule, storage, and API increments below.
+The food-preference checkpoint is b5d4a3c. The latest implementation commit is
+d49579e on develop, following the separate catalog increments below.
 Master remains at a8ddfd9, the initial web setup. Subsequent work belongs only on
 develop. Each verified milestone ends with a separate documentation checkpoint.
 
@@ -159,6 +161,13 @@ develop. Each verified milestone ends with a separate documentation checkpoint.
 | 9fd6e57 | Private food-preference storage and migration 0005 |
 | bb5a2d0 | Strict guarded food-preference API and allowlisted responses |
 | bfc4c4d | Food onboarding and editable local meal times |
+| b5d4a3c | Verified food-preference checkpoint and next catalog inputs |
+| 7755ab0 | Pinned exercise seeds and complete equipment validation |
+| ec3355b | Sourced USDA nutrients and explicit unknown composition |
+| a4436f8 | Exact catalog lookup, gram scaling, and readiness boundaries |
+| 135a9ff | Verified official USDA API provenance links |
+| 6175ce8 | Explicit offline source-evidence verification |
+| d49579e | Reject prepared food nutrient/name drift against retained source |
 
 ## Historical Password Edit — Resolved on 2026-10-30
 
@@ -313,23 +322,36 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   parity and food snapshot digests. Two operator tests passed, including denied
   sockets and an unusable DATABASE_URL. The command reports 6 exercise and 4
   food nutrient records while clearly stating food selection is unavailable.
+  Operator-check increment committed as 6175ce8.
+- All 16 catalog checks passed; the complete isolated PostgreSQL suite passed
+  115 tests, none skipped, including migration round trips. `pip check` passed.
+  No dependencies/schema/UI/HTTP changes were introduced; configured migration
+  remains 0005. The user database was not used, and browser/advisory checks were
+  not repeated for this backend/data-only milestone.
+- Strengthened food loading to compare identity, nutrient IDs, units, and amounts
+  against the retained response, beyond matching its digest. A new regression
+  rejects edited prepared values/names even when the original source hash stays
+  unchanged. Six targeted food tests and the offline check passed. Fix committed
+  as d49579e. All 17 catalog checks and the final complete 116-test suite passed,
+  none skipped; the extra full run followed the source-parity change.
 
 ## Next Work — Not Yet Completed
 
-The food-preference collection milestone is complete. Continue the original
+The reference catalog seed milestone is complete. Continue the original
 profile → weekly plan → daily logging → weekly review → approved revision flow:
 
-1. Review a small exercise/food catalog with source, license, stable IDs, units,
-   equipment, ingredients, diet restrictions, and explicit allergen metadata.
-2. Define catalog validation and reject unknown IDs/missing required metadata.
-   Unsure allergy status or unmapped reported names must block food selection.
-3. Review calculation methods and required missing profile inputs before adding
-   deterministic targets. Never turn descriptive activity/budget labels into
-   invented multipliers, prices, or medical conclusions.
-4. Build deterministic plan rules only after inputs/catalogs are sufficient, then
-   add owner-scoped persistence, guarded API, and UI in separate verified commits.
+1. Review ingredient/diet/allergen composition evidence and a deliberately bounded
+   allergy-name mapping. Current USDA seeds are nutrition-only and must remain
+   blocked from food selection until that review is complete.
+2. Review calculation methods and required missing profile inputs before adding
+   deterministic targets. Descriptive activity/budget labels are not verified
+   multipliers, prices, or medical conclusions.
+3. Review exercise prescription rules and user limitations before turning equipment
+   candidates into workouts. Upstream source levels are not suitability approval.
+4. Build deterministic plan rules after inputs/catalogs are sufficient; then add
+   owner-scoped persistence, guarded API, and UI in separate verified commits.
 
-Later work remains: sourced exercise/food catalogs; verified calculation methods;
+Later work remains: catalog expansion/composition review; verified calculation methods;
 deterministic plans; daily logs; weekly review and approved plan versions;
 TinyLlama/tokenizer integration; licensed datasets; LoRA/SFT and evaluation;
 OpenCV plus a separately reviewed pose model; complete fitness-flow verification.

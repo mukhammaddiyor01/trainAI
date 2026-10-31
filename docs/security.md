@@ -145,3 +145,18 @@ not instructions, diagnoses, or verified ingredient/allergen mappings. No defaul
 absence of allergy is inferred. Invalid updates preserve stored values. Two-user,
 revocation, ambiguous/oversized JSON, and HTML-escaping checks passed. OAuth and
 the single-process limiter scope are unchanged.
+
+
+## Bundled catalogs — 2026-10-31
+
+Reference records live outside frontend/static and have no new HTTP endpoints.
+Catalog loading reads fixed bundled files with byte/record bounds, rejects duplicate
+JSON keys, non-finite values, missing/unknown metadata, unsupported units/licenses,
+and duplicate IDs. Exercise records are checked against retained source metadata;
+food response snapshots are verified against SHA-256 digests and imported
+identity/nutrient/unit values are compared with those responses. Source URLs are
+provenance text and never fetched by the runtime. Import review used only public
+records and the documented USDA DEMO_KEY; no private keys/profiles were supplied.
+Operator checks work offline with database access unavailable. Incomplete food
+composition/diet/allergen review blocks automatic selection; untrusted source text
+is never executed or promoted into AI instructions or personalized guidance.

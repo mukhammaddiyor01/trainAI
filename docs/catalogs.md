@@ -106,9 +106,30 @@ catalog loading is offline and never follows these links.
 
 Run `.venv/bin/python -m backend.check_catalogs`. It validates both local catalogs,
 compares exercise source IDs/revisions and preserved metadata with selected source
-evidence, and checks food snapshot hashes. Exit 0 means the bundled contracts and
-evidence pass; it does not mean food selection or planning is available. Failure
+evidence, and checks food snapshot hashes plus imported identity/nutrient/unit
+parity. Exit 0 means the bundled contracts and evidence pass; it does not mean food selection or planning is available. Failure
 returns exit 1 with a generic diagnostic. The command reports 6 exercise records,
 4 nutrient records, and unavailable food selection. It does not read DATABASE_URL,
 connect to a database, fetch URLs, alter a schema, or run automatically at startup.
 Two operator-check tests passed, including socket denial and safe failure output.
+
+
+## Milestone verification — 2026-10-31
+
+All 17 catalog checks passed. The complete isolated PostgreSQL application suite
+then passed 116 tests, none skipped, including migration downgrade/upgrade.
+`pip check` found no broken requirements. No dependencies or schema changes were
+introduced. The configured database remains at 0005 and was not used for catalog
+checks. No UI or HTTP endpoint changed, so browser verification was not repeated.
+The historical dependency-advisory audit was not rerun.
+
+Next: review ingredient/diet/allergen composition evidence and explicit allergy
+mapping before opening food selection; review calculation inputs/methods before
+setting daily targets. Exercise prescriptions and plan generation require their
+own reviewed rules. Catalog presence alone must not trigger either feature.
+
+
+Final source-audit refinement: food loading also compares source identity, source
+nutrient IDs, units, and amounts with the retained response. Editing a prepared
+nutrient amount or name while keeping the original snapshot hash now fails.
+The new regression passed; all 116 application checks passed after this change.

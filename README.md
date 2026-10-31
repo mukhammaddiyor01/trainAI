@@ -18,7 +18,9 @@ registration, Argon2id password hashing, server-side sessions, sign-in/sign-out,
 and private account identity. PostgreSQL schema changes use explicit Alembic
 migrations. A private basic profile stores age, height, weight, and time zone.
 Owner-scoped gain, loss, and maintenance goals and training preferences are available.
-Food preferences and custom local meal times are also available.
+Food preferences and custom local meal times are also available. A small offline
+catalog contains six sourced exercise metadata records and four USDA nutrient
+records with explicit raw/cooked identity and source evidence.
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
@@ -55,7 +57,7 @@ activity, available equipment, weekdays, and session duration. Use
 and meal times in your profile zone. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 99 checks, including PostgreSQL integration, use the disposable runner:
+For all 116 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
@@ -114,13 +116,24 @@ See [database configuration](docs/database.md), [architecture](docs/architecture
 [food preferences](docs/food-preferences.md), and
 [development rules](AGENTS.md).
 
+## Offline catalog check
+
+```bash
+.venv/bin/python -m backend.check_catalogs
+```
+
+This validates bundled source evidence without network or database access. Exact
+IDs, complete equipment requirements, and gram-based nutrient scaling are available
+in plain services. Current foods have unresolved ingredient/diet/allergen metadata,
+so they are blocked from automatic selection. See [catalog provenance](docs/catalogs.md).
+
 ## Next milestone
 
-Review small sourced exercise and food catalogs with provenance and ingredient,
-allergen, and diet metadata. Review calculation-specific inputs and methods before
-computing targets or generating plans. Unknown allergy information must remain
-unknown. Metric units, explicit IANA time zones, Monday weeks, and custom local
-meal times are confirmed product defaults.
+Review food composition, ingredient/allergen/diet evidence, and allergy-name
+mapping. Review calculation-specific inputs and methods before computing targets
+or generating plans. Unknown allergy information must remain unknown. Metric
+units, explicit IANA time zones, Monday weeks, and custom local meal times are
+confirmed product defaults.
 Use only synthetic data in tests; never commit real profiles or activity records.
 
 ## Security controls

@@ -46,7 +46,7 @@ training and food preferences are implemented.
 The profile currently includes age, height, weight, and an explicit IANA time zone.
 Strict input/response schemas, shared authentication/origin guards, ownership-scoped
 profile operations, request/rate/resource limits, and safe errors are verified.
-All 99 working-tree checks passed with isolated PostgreSQL on 2026-10-31.
+All 116 working-tree checks passed with isolated PostgreSQL on 2026-10-31.
 Browser profile and training-preference flows were verified using synthetic data; the configured real database was upgraded
 explicitly to migration 0005. See docs/verification.md, docs/profiles.md, and
 docs/security.md and docs/goals.md. Goals keep a server-selected starting-weight
@@ -55,12 +55,16 @@ experience, activity, equipment, available weekdays, and session duration with
 owner-scoped storage, strict API limits, and responsive UI. See
 docs/training-preferences.md. Food preferences now record explicit allergy status,
 reported names, diet, spending style, preparation allowance, and local meal times;
-see docs/food-preferences.md. Next, review small sourced catalogs and required
-calculation inputs before deterministic planning. Unsure allergy status and
-unmapped reported names must not silently permit automatic food selection.
+see docs/food-preferences.md. Six pinned exercise metadata records and four USDA
+SR Legacy nutrient seeds are available through explicit offline catalog loading;
+see docs/catalogs.md. Complete equipment filtering, exact-ID lookup, and gram
+scaling preserve unknowns and raw/cooked identity. Food composition/diet/allergen
+metadata is unresolved, so current foods remain blocked from automatic selection.
+Next, review composition evidence and calculation-specific inputs before planning.
+Unsure allergy status and unmapped names must not silently permit food selection.
 The user selected an 8-character password minimum, shared
 across service, schema, and rendered forms; the earlier mismatch is resolved.
-No calorie calculations, generated plans, logging, or AI features are active.
+No daily calorie targets, generated plans, logging, or AI features are active.
 OAuth is explicitly deferred by the user; keep local authentication for now.
 
 Implement small, independently verifiable steps, creating files only when needed:
