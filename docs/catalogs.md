@@ -38,4 +38,38 @@ An equipment query requires all items for a movement; a gym label grants nothing
 It returns candidates only, not a scheduled or prescribed workout.
 
 Initial verification: four targeted exercise-catalog tests passed on 2026-10-31.
-Food data and its separate review boundary follow in a later small increment.
+
+
+## USDA food nutrient seed
+
+Four SR Legacy records were retrieved from the official USDA FoodData Central
+API on 2026-10-31 using the documented public DEMO_KEY: 173944 (banana, raw),
+171688 (apple with skin, raw), 168878 (regular enriched long-grain white rice,
+cooked), and 168877 (regular enriched long-grain white rice, raw). Source data are
+published under CC0-1.0. No private API key or user/profile data was supplied.
+The seed keeps every exact description; source IDs and preparation state differ
+for raw and cooked rice. It is a small historical reference, not a latest-product
+or local-price database.
+
+- [Official API guide and CC0 declaration](https://fdc.nal.usda.gov/api-guide/)
+- [Official data-type documentation](https://fdc.nal.usda.gov/data-documentation/)
+- [SR Legacy documentation, nutrient basis p. 12](https://www.ars.usda.gov/ARSUserFiles/80400525/Data/SR-Legacy/SR-Legacy_Doc.pdf)
+- [Bundled food seed](../data/catalogs/foods.json)
+
+Each record retains retrieval date, release label, source URL, and SHA-256 of the
+complete retained API response under data/catalogs/sources/usda-sr-legacy. Loading
+verifies the snapshot digest. Tests compare imported descriptions and amounts
+against source nutrient IDs/units. Supported source IDs: 1008 (kcal), 1003 (protein
+g), 1004 (fat g), 1005 (carbohydrate g), each per 100 g edible portion. Missing
+values remain None; no macro formula fills absent energy or other nutrients.
+Units must match IDs; kJ is never silently read as kcal.
+
+Ingredient composition, diet tags, and allergen tags are explicitly unknown in
+these nutrient-only records. An empty allergen set would claim knowledge the
+source does not supply. None is retained instead. These records are not approved
+for automatic food selection, allergy safety, or meal generation. A separate
+composition/allergen review is required before that boundary can open.
+
+Five targeted food-catalog tests passed on 2026-10-31, including source-value/unit
+parity, raw/cooked identity, missing values, malformed metadata, and snapshot
+corruption. No dependencies, schemas, HTTP endpoints, or private records changed.

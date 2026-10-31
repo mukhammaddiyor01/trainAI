@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "food-fdc-173944",
+      "name": "Bananas, raw",
+      "preparation_state": "raw",
+      "basis_g": 100,
+      "nutrients": [
+        {
+          "id": 1008,
+          "unit": "kcal",
+          "amount": 89.0
+        },
+        {
+          "id": 1003,
+          "unit": "g",
+          "amount": 1.09
+        },
+        {
+          "id": 1004,
+          "unit": "g",
+          "amount": 0.33
+        },
+        {
+          "id": 1005,
+          "unit": "g",
+          "amount": 22.84
+        }
+      ],
+      "ingredient_ids": null,
+      "diet_tags": null,
+      "allergen_tags": null,
+      "review_status": "nutrition_only",
+      "source_id": 173944,
+      "source_release": "SR Legacy April 2018",
+      "source_url": "https://fdc.nal.usda.gov/food-details/173944/nutrients",
+      "source_sha256": "ecb7d42310e6867b0f757e79dc5402c67f5378724e61edecc89103695fe4404d",
+      "license": "CC0-1.0",
+      "retrieved_on": "2026-10-31"
+    },
+    {
+      "id": "food-fdc-171688",
+      "name": "Apples, raw, with skin (Includes foods for USDA's Food Distribution Program)",
+      "preparation_state": "raw",
+      "basis_g": 100,
+      "nutrients": [
+        {
+          "id": 1008,
+          "unit": "kcal",
+          "amount": 52.0
+        },
+        {
+          "id": 1003,
+          "unit": "g",
+          "amount": 0.26
+        },
+        {
+          "id": 1004,
+          "unit": "g",
+          "amount": 0.17
+        },
+        {
+          "id": 1005,
+          "unit": "g",
+          "amount": 13.81
+        }
+      ],
+      "ingredient_ids": null,
+      "diet_tags": null,
+      "allergen_tags": null,
+      "review_status": "nutrition_only",
+      "source_id": 171688,
+      "source_release": "SR Legacy April 2018",
+      "source_url": "https://fdc.nal.usda.gov/food-details/171688/nutrients",
+      "source_sha256": "1086790918dbafe5d0e8c340395d0cbbe204ff848b42eec5a1ca350104dcea38",
+      "license": "CC0-1.0",
+      "retrieved_on": "2026-10-31"
+    },
+    {
+      "id": "food-fdc-168878",
+      "name": "Rice, white, long-grain, regular, enriched, cooked",
+      "preparation_state": "cooked",
+      "basis_g": 100,
+      "nutrients": [
+        {
+          "id": 1008,
+          "unit": "kcal",
+          "amount": 130.0
+        },
+        {
+          "id": 1003,
+          "unit": "g",
+          "amount": 2.69
+        },
+        {
+          "id": 1004,
+          "unit": "g",
+          "amount": 0.28
+        },
+        {
+          "id": 1005,
+          "unit": "g",
+          "amount": 28.17
+        }
+      ],
+      "ingredient_ids": null,
+      "diet_tags": null,
+      "allergen_tags": null,
+      "review_status": "nutrition_only",
+      "source_id": 168878,
+      "source_release": "SR Legacy April 2018",
+      "source_url": "https://fdc.nal.usda.gov/food-details/168878/nutrients",
+      "source_sha256": "58a9d7cfdb6b8ebac79121d0a67c0b2857b2eda06752ce41c0427b3b22ac3bac",
+      "license": "CC0-1.0",
+      "retrieved_on": "2026-10-31"
+    },
+    {
+      "id": "food-fdc-168877",
+      "name": "Rice, white, long-grain, regular, raw, enriched",
+      "preparation_state": "raw",
+      "basis_g": 100,
+      "nutrients": [
+        {
+          "id": 1008,
+          "unit": "kcal",
+          "amount": 365.0
+        },
+        {
+          "id": 1003,
+          "unit": "g",
+          "amount": 7.13
+        },
+        {
+          "id": 1004,
+          "unit": "g",
+          "amount": 0.66
+        },
+        {
+          "id": 1005,
+          "unit": "g",
+          "amount": 79.95
+        }
+      ],
+      "ingredient_ids": null,
+      "diet_tags": null,
+      "allergen_tags": null,
+      "review_status": "nutrition_only",
+      "source_id": 168877,
+      "source_release": "SR Legacy April 2018",
+      "source_url": "https://fdc.nal.usda.gov/food-details/168877/nutrients",
+      "source_sha256": "3294c75fb301d16a761db20d4e78a5e2cd0415671cb81d982856d7df8e33669c",
+      "license": "CC0-1.0",
+      "retrieved_on": "2026-10-31"
+    }
+  ]
+}

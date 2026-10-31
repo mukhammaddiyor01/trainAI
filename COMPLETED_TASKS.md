@@ -293,7 +293,13 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   omitted by upstream single labels were recorded explicitly.
 - Four targeted catalog tests passed, covering provenance, equipment subsets,
   malformed metadata, duplicate IDs, JSON ambiguity, and resource bounds.
-  This is not an exercise prescription. Food seeds remain pending.
+  This is not an exercise prescription. Exercise increment committed as 7755ab0.
+- Retrieved four public USDA SR Legacy nutrient records with exact descriptions,
+  100-g edible basis, raw/cooked distinctions, source IDs, retained responses,
+  retrieval dates, CC0-1.0 provenance, and SHA-256 evidence. Missing composition,
+  diet, and allergen metadata remain unknown; no automatic food selection is
+  enabled. Five targeted tests passed for values/units, unknowns, identity,
+  malformed records, and corrupt evidence.
 
 ## Next Work — Not Yet Completed
 

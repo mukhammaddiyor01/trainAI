@@ -1,9 +1,10 @@
 """Read only bundled catalog files; never download or import data at startup."""
 
+import hashlib
 import json
 from pathlib import Path
 
-from backend.services.catalogs import InvalidCatalog, validate_exercise
+from backend.services.catalogs import InvalidCatalog, validate_exercise, validate_food
 
 CATALOG_ROOT = Path(__file__).resolve().parent.parent / "data" / "catalogs"
 MAX_CATALOG_BYTES = 256 * 1024
@@ -54,3 +55,16 @@ def load_records(filename: str, validator):
 
 def load_exercises():
     return load_records("exercises.json", validate_exercise)
+
+
+def load_foods():
+    foods = load_records("foods.json", validate_food)
+    for food in foods:
+        try:
+            with (CATALOG_ROOT / "sources" / "usda-sr-legacy" / f"{food.source_id}.json").open("rb") as source:
+                evidence = source.read(512 * 1024 + 1)
+        except OSError:
+            raise InvalidCatalog("Food source evidence is unavailable.") from None
+        if len(evidence) > 512 * 1024 or hashlib.sha256(evidence).hexdigest() != food.source_sha256:
+            raise InvalidCatalog("Food source evidence does not match its recorded digest.")
+    return foods
