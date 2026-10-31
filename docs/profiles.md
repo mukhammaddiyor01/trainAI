@@ -4,8 +4,9 @@ The first profile increment stores age, height in centimeters, weight in kilogra
 and an explicitly selected IANA time zone. It does not calculate calories, interpret
 health conditions, or generate a fitness plan. Weight goals are implemented
 separately; training availability and equipment are recorded in
-[training preferences](training-preferences.md). Food preferences, allergies, and
-other planning inputs follow in separate increments. These four fields alone
+[training preferences](training-preferences.md). Diet, reported allergies, and
+meal timing are recorded in [food preferences](food-preferences.md).
+Calculation-specific inputs still require a reviewed method and a separate increment. These four fields alone
 must never trigger a personal plan.
 
 Supported input bounds are application validation limits, not medical reference

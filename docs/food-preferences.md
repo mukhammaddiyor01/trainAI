@@ -91,3 +91,13 @@ stale-success clearing, and logout protection. Desktop (1280) and mobile (390)
 viewport inspections found no horizontal overflow; console inspection returned no
 warnings/errors. Temporary viewport overrides were reset and the owned test cluster
 was stopped and removed. The application database was not used for these checks.
+
+
+## Current runtime checkpoint
+
+After the isolated checks, the configured database was explicitly upgraded from
+0004 to 0005 after revision/conflict checks. Existing tables were not modified.
+The canonical loopback runtime was restarted with the new routes. Anonymous
+page/API guards and local asset/security headers passed live checks. No synthetic
+user or food records were added to the configured database. Dependencies were
+unchanged; `pip check` passed. Current milestone: preference collection only.

@@ -127,3 +127,33 @@ script 200; checked responses used no-store and omitted Server headers.
 No synthetic records were written to the configured database. Dependencies were
 unchanged; the 2026-10-29 advisory audit was not rerun. Food preferences, calculations,
 generated plans, AI, and camera work remain unimplemented.
+
+
+## Food-preference milestone — 2026-10-31
+
+Story: a signed-in user records diet, explicit allergy information, spending style,
+preparation time, and local meal times; the guarded API persists one private row
+and the page reloads canonical stored values.
+
+Five plain-rule tests, four storage tests, five API tests, and two page tests
+passed. The first page run found a conditional Jinja expression error; it was
+corrected before verification continued. The complete disposable PostgreSQL suite
+then passed 99 tests, none skipped, including migration downgrade/upgrade.
+
+Browser → API → PostgreSQL → rendered page was checked with synthetic data:
+profile-first redirect; unsure status; listed allergy names; duplicate rejection;
+explicit clearing to none_reported; meal-time sorting, adding/removing within 1–8
+entries; zero preparation; reload persistence; stale-success clearing; and logout.
+Reported-name escaping was checked by the page test. At inspected 1280 and 390
+viewports there was no horizontal overflow; browser console returned no warnings
+or errors. Overrides were reset; the owned test cluster and synthetic data were
+removed. `pip check` passed; dependencies did not change and the 2026-10-29
+advisory snapshot was not rerun.
+
+The configured database was explicitly upgraded 0004 → 0005 after conflict checks.
+Existing tables were not modified. The restarted loopback runtime returned /login
+200, anonymous /food-preferences 303 to /login, /api/food-preferences 401, and the
+local food script 200. Checked responses used no-store and omitted Server headers.
+No synthetic profiles or food preferences were written to the configured database.
+Food safety assessment, monetary pricing, calorie targets, generated plans, and
+AI remain outside this implemented milestone.

@@ -38,7 +38,8 @@ history and current code before proceeding. Do not silently assume which is righ
 The application supports account registration, sign-in/sign-out, private session
 identity, and a basic private profile containing age, height, weight, and IANA time
 zone, gain/loss/maintenance weight goals, and private training preferences.
-Food preferences and calculation-specific planning inputs are still pending.
+Private food preferences and custom local meal schedules are implemented.
+Calculation-specific inputs, sourced catalogs, and generated plans are still pending.
 
 | Area | Completed behavior |
 | --- | --- |
@@ -48,6 +49,7 @@ Food preferences and calculation-specific planning inputs are still pending.
 | Sessions | Random 32-byte tokens, SHA-256 digests in storage, 24-hour expiry, login rotation, logout revocation, HttpOnly/host-only/SameSite cookies |
 | Guards | Shared same-origin write checks and server-derived account identity; browser user_id, role, or forged Bearer values do not establish identity |
 | Validation | Strict Pydantic request/response contracts, unknown-field rejection, no coercion, bounded UTF-8 JSON, duplicate-key/non-finite/compressed-body rejection |
+| Food preferences | Explicit allergy states and bounded names, diet, spending style, preparation allowance, custom local meal times, private atomic storage, guarded API, responsive form |
 | Training preferences | Self-reported experience/activity, explicit equipment, Monday-based weekdays, bounded duration, owner-scoped atomic storage, strict API, responsive form |
 | Weight goals | Server-selected starting snapshot, gain/loss/maintenance rules, one owner-scoped current goal, guarded API, responsive form, concurrent-retry protection |
 | Basic profile | Plain Python validation, one owner-keyed profile per user, atomic saves, SQL bounds, protected API, responsive form, saved-value reload |
@@ -65,16 +67,17 @@ height 50–300 cm, weight 20–500 kg. These are not medical reference ranges.
   documentation, overwrite, or commit that value.
 - The configured database connection was verified. Migration 0001 created users
   and login_sessions; migration 0002 added profiles; migration 0003 added goals;
-  migration 0004 added training preferences. All were applied explicitly.
-- Current expected migration revision: 0004. Existing accounts were preserved.
+  migration 0004 added training preferences; migration 0005 added food preferences.
+  All were applied explicitly.
+- Current expected migration revision: 0005. Existing accounts were preserved.
 - Synthetic browser accounts and profiles were created only in disposable test
   clusters; those clusters were stopped and removed.
 - The main local server was left running at http://127.0.0.1:8000. Do not assume
   its process survives until the next session or stop an unrelated process.
 - Canonical launcher: `.venv/bin/python -m backend` from the repository root.
-- Useful routes: /register, /login, /account, /profile, /goal, /training-preferences, /health.
+- Useful routes: /register, /login, /account, /profile, /goal, /training-preferences, /food-preferences, /health.
 - APIs: POST /auth/register, POST /auth/login, GET /auth/me, POST /auth/logout,
-  GET/PUT /api/profile, GET/PUT /api/goal, and GET/PUT /api/training-preferences.
+  GET/PUT /api/profile, GET/PUT /api/goal, GET/PUT /api/training-preferences, and GET/PUT /api/food-preferences.
 
 ## Verification Already Performed
 
@@ -109,8 +112,9 @@ checks when code or runtime configuration changes.
 Repository: https://github.com/mukhammaddiyor01/trainAI
 
 The original 2026-10-29 handoff followed 0682f78 and was committed as dfe7b23.
-The 2026-10-30 handoff is a1a045d. The latest implementation commit is a5352bb
-on develop, following the separate rule, storage, and API increments below.
+The 2026-10-30 handoff is a1a045d; the training-preference checkpoint is 335862a.
+The latest implementation commit is bfc4c4d on develop, following the separate
+food-rule, storage, and API increments below.
 Master remains at a8ddfd9, the initial web setup. Subsequent work belongs only on
 develop. Each verified milestone ends with a separate documentation checkpoint.
 
@@ -149,6 +153,11 @@ develop. Each verified milestone ends with a separate documentation checkpoint.
 | a2c320d | Owner-scoped preference storage and migration 0004 |
 | bbc60c9 | Guarded preference API, strict validation, and request bounds |
 | a5352bb | Responsive preference onboarding and saved selections |
+| 335862a | Verified training-preference checkpoint and next food inputs |
+| d79209d | Plain food-preference rules and explicit allergy states |
+| 9fd6e57 | Private food-preference storage and migration 0005 |
+| bb5a2d0 | Strict guarded food-preference API and allowlisted responses |
+| bfc4c4d | Food onboarding and editable local meal times |
 
 ## Historical Password Edit — Resolved on 2026-10-30
 
@@ -266,20 +275,28 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   layouts had no horizontal overflow; console inspection returned no warnings or
   errors. Temporary test records and the owned cluster were removed.
 - All 99 application tests passed, none skipped, with isolated PostgreSQL and
-  migration round trips. The configured database remains at 0004 in this step.
+  migration round trips. UI committed as bfc4c4d.
+- Explicitly applied additive migration 0005 after verifying revision 0004 and
+  no table conflict; existing tables were not modified. No synthetic data was
+  written to the configured database. `pip check` passed.
+- Restarted the owned loopback runtime with food routes. Anonymous page/API
+  guards, local script delivery, no-store responses, and absent Server headers
+  passed live checks. Dependencies were unchanged; advisory audit not rerun.
 
 ## Next Work — Not Yet Completed
 
-The training-preference milestone is complete. Next, collect food preferences,
-allergies, budget, preparation time, and customizable meal schedules in small,
-independently verified increments:
+The food-preference collection milestone is complete. Continue the original
+profile → weekly plan → daily logging → weekly review → approved revision flow:
 
-1. Define plain Python input rules and explicit meanings for food preferences.
-2. Add the minimum owner-scoped persistence and a reviewed additive migration.
-3. Expose a strict bounded API with guards and two-user isolation checks.
-4. Add the English UI and verify saving/reloading in a disposable browser flow.
-5. Review calculation-specific inputs and sourced methods before computing any
-   calorie or nutrition targets. Never treat preference labels as multipliers.
+1. Review a small exercise/food catalog with source, license, stable IDs, units,
+   equipment, ingredients, diet restrictions, and explicit allergen metadata.
+2. Define catalog validation and reject unknown IDs/missing required metadata.
+   Unsure allergy status or unmapped reported names must block food selection.
+3. Review calculation methods and required missing profile inputs before adding
+   deterministic targets. Never turn descriptive activity/budget labels into
+   invented multipliers, prices, or medical conclusions.
+4. Build deterministic plan rules only after inputs/catalogs are sufficient, then
+   add owner-scoped persistence, guarded API, and UI in separate verified commits.
 
 Later work remains: sourced exercise/food catalogs; verified calculation methods;
 deterministic plans; daily logs; weekly review and approved plan versions;

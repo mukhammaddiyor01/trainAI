@@ -18,7 +18,8 @@ registration, Argon2id password hashing, server-side sessions, sign-in/sign-out,
 and private account identity. PostgreSQL schema changes use explicit Alembic
 migrations. A private basic profile stores age, height, weight, and time zone.
 Owner-scoped gain, loss, and maintenance goals and training preferences are available.
-Food preferences, fitness planning, logging, AI inference, training,
+Food preferences and custom local meal times are also available.
+Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
 ## Local setup
@@ -49,10 +50,12 @@ See [database setup](docs/database.md) before running explicit migrations:
 Open `/register` to create your own account, `/login` to sign in, and `/account`
 to view your private account. Open `/profile` to save your basic details, then
 `/goal` to record your weight goal. Use `/training-preferences` to save experience,
-activity, available equipment, weekdays, and session duration. Passwords
+activity, available equipment, weekdays, and session duration. Use
+`/food-preferences` for diet, reported allergies, spending style, preparation time,
+and meal times in your profile zone. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 83 checks, including PostgreSQL integration, use the disposable runner:
+For all 99 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
@@ -107,14 +110,17 @@ authentication controllers, and private account pages are now present. Fitness
 services and AI/vision adapters will be introduced with their features.
 See [database configuration](docs/database.md), [architecture](docs/architecture.md),
 [environment](docs/environment.md), [authentication](docs/authentication.md),
-[goals](docs/goals.md), [training preferences](docs/training-preferences.md), and
+[goals](docs/goals.md), [training preferences](docs/training-preferences.md),
+[food preferences](docs/food-preferences.md), and
 [development rules](AGENTS.md).
 
 ## Next milestone
 
-Add food preferences, allergies, meal timing, budget, and preparation time in
-small increments using the authenticated server-side identity. Metric units, user-selected IANA time zones, Monday week
-boundaries, and customizable meal schedules are confirmed product defaults.
+Review small sourced exercise and food catalogs with provenance and ingredient,
+allergen, and diet metadata. Review calculation-specific inputs and methods before
+computing targets or generating plans. Unknown allergy information must remain
+unknown. Metric units, explicit IANA time zones, Monday weeks, and custom local
+meal times are confirmed product defaults.
 Use only synthetic data in tests; never commit real profiles or activity records.
 
 ## Security controls

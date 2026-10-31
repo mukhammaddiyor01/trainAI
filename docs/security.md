@@ -23,6 +23,7 @@ Plain business services remain independent of these HTTP controls.
 
 | Boundary | Limit / behavior |
 | --- | --- |
+| Food-preference bodies | 8192 bytes, strict six-field input, authenticated owner only |
 | Training-preference bodies | 4096 bytes, strict five-field input, authenticated owner only |
 | Basic profile bodies | 8192 bytes, strict four-field input, authenticated owner only |
 | Credential bodies | 2048 bytes, including streamed/chunked bodies |
@@ -131,3 +132,16 @@ Invalid saves preserve stored values. Tests cover two-user isolation, revoked
 access, malformed and oversized requests, and missing-profile rejection. SQL
 constraints and atomic upserts protect complete selections and concurrent retries.
 OAuth remains deferred and the limiter remains single-process local memory.
+
+
+## Food preferences — 2026-10-31
+
+The food API uses the shared identity/origin guards, 8192-byte bounded parser,
+strict schemas, and six-field response allowlist. Unknown owner/role/time-zone or
+storage fields cannot establish identity or overwrite a different owner's row.
+Existing rate/time/response budgets remain active. Reported names are private
+text data; errors do not echo them and Jinja escapes them in the form. They are
+not instructions, diagnoses, or verified ingredient/allergen mappings. No default
+absence of allergy is inferred. Invalid updates preserve stored values. Two-user,
+revocation, ambiguous/oversized JSON, and HTML-escaping checks passed. OAuth and
+the single-process limiter scope are unchanged.

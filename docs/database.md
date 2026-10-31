@@ -83,3 +83,13 @@ downgrade, and upgrade, with migration/model parity checks. After confirming
 revision 0003 and no table conflict, the configured database was explicitly
 upgraded to 0004. Existing tables were not modified; no synthetic records were
 written to the configured database. See [training preferences](training-preferences.md).
+
+
+## Food-preference migration — 2026-10-31
+
+Migration 0005 adds food_preferences with one owner-keyed row per basic profile.
+SQL bounds cover choices, preparation, arrays, and explicit allergy-state/list
+consistency. Disposable upgrade/downgrade/upgrade and metadata parity passed.
+After checking revision 0004 and no food_preferences table conflict, the configured
+database was explicitly upgraded to 0005. Existing tables were not modified and
+no synthetic records were written there. See [food preferences](food-preferences.md).
