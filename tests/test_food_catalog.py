@@ -19,6 +19,7 @@ class FoodCatalogTests(unittest.TestCase):
         for food in foods:
             evidence = json.loads((CATALOG_ROOT / "sources" / "usda-sr-legacy" / f"{food.source_id}.json").read_bytes())
             self.assertEqual(food.name, evidence["description"])
+            self.assertEqual(food.source_url, f"https://api.nal.usda.gov/fdc/v1/food/{food.source_id}?api_key=DEMO_KEY")
             self.assertEqual(evidence["dataType"], "SR Legacy")
             nutrients = {item["nutrient"]["id"]: item for item in evidence["foodNutrients"]}
             for key, attribute, unit in [(1008,"energy_kcal","kcal"), (1003,"protein_g","g"), (1004,"fat_g","g"), (1005,"carbohydrate_g","g")]:

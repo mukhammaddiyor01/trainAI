@@ -304,6 +304,11 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   and readiness blockers for unresolved composition/diet/allergen metadata and
   allergy status/mapping. All current foods remain blocked from automatic
   selection. Five targeted use-rule tests passed. No plans or daily targets exist.
+  Use-rule increment committed as a4436f8.
+- Source-link verification found USDA web detail routes returned 404. Replaced
+  them with the documented, successfully retrieved official API resource URLs
+  using USDA's public DEMO_KEY. Five food-source tests passed after correction;
+  runtime catalog loading remains offline.
 
 ## Next Work — Not Yet Completed
 

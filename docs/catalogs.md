@@ -92,3 +92,11 @@ allergen filtering is claimed; the gate prevents incomplete data entering a futu
 selector. Composition review and a complete selector remain separate future work.
 Five targeted use-rule tests passed: known/unknown IDs, source-based gram scaling,
 raw/cooked separation, missing nutrients, strict portion inputs, and blocked seeds.
+
+
+Source-link verification found the candidate USDA web detail routes returned 404.
+Food source URLs therefore use the official documented /fdc/v1/food/{fdcId} API
+with its public demonstration key, matching the responses actually retrieved.
+DEMO_KEY is explicitly public in USDA's guide, not a user's private credential;
+clicking these source links is subject to USDA's public-demo rate limits. Runtime
+catalog loading is offline and never follows these links.

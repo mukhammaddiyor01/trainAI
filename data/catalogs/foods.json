@@ -34,7 +34,7 @@
       "review_status": "nutrition_only",
       "source_id": 173944,
       "source_release": "SR Legacy April 2018",
-      "source_url": "https://fdc.nal.usda.gov/food-details/173944/nutrients",
+      "source_url": "https://api.nal.usda.gov/fdc/v1/food/173944?api_key=DEMO_KEY",
       "source_sha256": "ecb7d42310e6867b0f757e79dc5402c67f5378724e61edecc89103695fe4404d",
       "license": "CC0-1.0",
       "retrieved_on": "2026-10-31"
@@ -72,7 +72,7 @@
       "review_status": "nutrition_only",
       "source_id": 171688,
       "source_release": "SR Legacy April 2018",
-      "source_url": "https://fdc.nal.usda.gov/food-details/171688/nutrients",
+      "source_url": "https://api.nal.usda.gov/fdc/v1/food/171688?api_key=DEMO_KEY",
       "source_sha256": "1086790918dbafe5d0e8c340395d0cbbe204ff848b42eec5a1ca350104dcea38",
       "license": "CC0-1.0",
       "retrieved_on": "2026-10-31"
@@ -110,7 +110,7 @@
       "review_status": "nutrition_only",
       "source_id": 168878,
       "source_release": "SR Legacy April 2018",
-      "source_url": "https://fdc.nal.usda.gov/food-details/168878/nutrients",
+      "source_url": "https://api.nal.usda.gov/fdc/v1/food/168878?api_key=DEMO_KEY",
       "source_sha256": "58a9d7cfdb6b8ebac79121d0a67c0b2857b2eda06752ce41c0427b3b22ac3bac",
       "license": "CC0-1.0",
       "retrieved_on": "2026-10-31"
@@ -148,7 +148,7 @@
       "review_status": "nutrition_only",
       "source_id": 168877,
       "source_release": "SR Legacy April 2018",
-      "source_url": "https://fdc.nal.usda.gov/food-details/168877/nutrients",
+      "source_url": "https://api.nal.usda.gov/fdc/v1/food/168877?api_key=DEMO_KEY",
       "source_sha256": "3294c75fb301d16a761db20d4e78a5e2cd0415671cb81d982856d7df8e33669c",
       "license": "CC0-1.0",
       "retrieved_on": "2026-10-31"

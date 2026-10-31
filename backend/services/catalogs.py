@@ -105,7 +105,7 @@ def validate_food(record: dict) -> FoodDetails:
     food_id = record["source_id"]
     if type(food_id) is not int or not 1 <= food_id <= 99999999 or record["id"] != f"food-fdc-{food_id}":
         raise InvalidCatalog("Food IDs must match the sourced USDA record.")
-    expected_url = f"https://fdc.nal.usda.gov/food-details/{food_id}/nutrients"
+    expected_url = f"https://api.nal.usda.gov/fdc/v1/food/{food_id}?api_key=DEMO_KEY"
     if record["source_url"] != expected_url or record["source_release"] != "SR Legacy April 2018" or record["license"] != "CC0-1.0":
         raise InvalidCatalog("Food provenance or reviewed license is unsupported.")
     digest = text(record["source_sha256"], 64)
