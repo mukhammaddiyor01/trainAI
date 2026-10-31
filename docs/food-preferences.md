@@ -52,3 +52,16 @@ Four targeted disposable PostgreSQL tests passed: round trips and owner isolatio
 full replacement and invalid-update preservation, concurrent retries, SQL bounds,
 and migration/model parity. Disposable migration downgrade/upgrade passed. The
 configured application database remains at 0004 at this increment.
+
+
+## Protected API
+
+GET/PUT /api/food-preferences expose only the six preference fields. Shared guards
+resolve the owner from the session; writes require the exact same Origin. The
+8192-byte bounded JSON reader, strict schema, and plain service reject unknown
+owner/role/time-zone/storage fields, coercion, malformed data, and inconsistent
+allergy states. A basic profile is required before saving (409); missing saved
+preferences return 404. Existing API rate/time/response limits apply. Invalid
+updates preserve prior values; errors never echo reported allergy text.
+Five targeted API tests passed in disposable PostgreSQL, including two-user
+isolation, revocation, canonical response values, and malformed/oversized requests.

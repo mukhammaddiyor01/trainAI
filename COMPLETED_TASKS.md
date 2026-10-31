@@ -251,7 +251,11 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   migration 0005. Four targeted PostgreSQL tests and disposable migration round
   trips passed, covering SQL bounds, allergy consistency, two-owner isolation,
   replacement, concurrent retries, and metadata parity. The configured database
-  remains at 0004. Guarded API and UI are pending.
+  remains at 0004. Storage committed as 9fd6e57.
+- Added the guarded six-field food-preference API with an 8192-byte request cap.
+  Five targeted tests passed: exact Origin/session guards, owner isolation,
+  strict fields/types, redacted errors, canonical responses, invalid-update
+  preservation, and malformed/oversized JSON. UI is pending.
 
 ## Next Work — Not Yet Completed
 

@@ -1,7 +1,7 @@
 """Strict HTTP contracts; secrets never belong in public response models."""
 
 from uuid import UUID
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator
 
@@ -70,3 +70,18 @@ class TrainingPreferencesInput(BaseModel):
 
 class TrainingPreferencesResponse(TrainingPreferencesInput):
     """Only the five preference fields; no ownership or storage internals."""
+
+
+class FoodPreferencesInput(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    diet: Literal["mixed", "vegetarian", "vegan"]
+    allergy_status: Literal["unsure", "none_reported", "listed"]
+    allergies: list[Annotated[str, Field(min_length=1, max_length=64)]] = Field(max_length=20)
+    budget_level: Literal["economical", "standard", "flexible"]
+    prep_minutes: int = Field(ge=0, le=180)
+    meal_times: list[Annotated[str, Field(min_length=5, max_length=5)]] = Field(min_length=1, max_length=8)
+
+
+class FoodPreferencesResponse(FoodPreferencesInput):
+    """Six public preference fields, without owner IDs or persistence internals."""
