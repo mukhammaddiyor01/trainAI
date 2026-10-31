@@ -29,7 +29,7 @@ Current documentation:
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete working-tree suite passed 68 tests on 2026-10-30. If documents disagree, inspect Git
+the latest complete working-tree suite passed 83 tests on 2026-10-31. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
@@ -81,7 +81,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Latest result: 68 working-tree tests passed, none skipped (2026-10-30). Coverage includes account/session isolation,
+Latest result: 83 working-tree tests passed, none skipped (2026-10-31). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.
@@ -217,7 +217,14 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - Added GET/PUT /api/training-preferences with shared guards, a 4096-byte body
   cap, strict schemas, and five-field responses. Five targeted tests passed,
   including two-user isolation, invalid-update preservation, malformed/oversized
-  input, owner/role injection, and revoked access. UI remains pending.
+  input, owner/role injection, and revoked access. API committed as bbc60c9.
+- Added the responsive English preference form and navigation. Two targeted page
+  tests passed. Browser verification confirmed profile-first onboarding, empty-day
+  rejection, bodyweight save/reload, equipment/duration edits, stale-success
+  clearing, desktop/mobile layouts without horizontal overflow, and logout.
+  Synthetic records and the disposable cluster were removed.
+- All 83 tests passed with no skips in isolated PostgreSQL, including migration
+  round trips. The configured real database has not been migrated in this step.
 
 ## Next Work — Not Yet Completed
 

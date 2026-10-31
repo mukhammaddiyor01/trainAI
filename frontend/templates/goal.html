@@ -16,10 +16,10 @@
   <main id="main" class="wrap profile-page goal-page">
     <p>Your direction.</p>
     <h1>Choose a goal.<br>Keep the context.</h1>
-    <p class="lead">Record what you want to work toward. Your schedule and preferences come next.</p>
+    <p class="lead">Record what you want to work toward. Then add your training availability and equipment.</p>
     <section class="auth-panel" aria-labelledby="goal-title">
       <h2 id="goal-title">Your weight goal</h2>
-      {% if saved %}<p id="goal-saved-notice" class="success-message" role="status">Goal saved. Planning preferences come next.</p>{% endif %}
+      {% if saved %}<p id="goal-saved-notice" class="success-message" role="status">Goal saved. Add your training preferences next.</p>{% endif %}
       <dl class="goal-context">
         <div><dt>Current profile weight</dt><dd>{{ profile.weight_kg }} kg</dd></div>
         <div><dt>{{ 'Goal starting weight' if goal else 'Weight for new goal' }}</dt><dd>{{ goal.starting_weight_kg if goal else profile.weight_kg }} kg</dd></div>
@@ -46,6 +46,7 @@
       </form>
       <noscript><p>Enable JavaScript to save your goal.</p></noscript>
     </section>
+    <p class="goal-next"><a href="/training-preferences">Next: training preferences</a></p>
     <p class="profile-scope">This records your intent, not a recommendation or a guarantee. Saving a goal does not create a plan, calorie target, progress estimate, or completion date.</p>
   </main>
 </body>

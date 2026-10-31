@@ -1,0 +1,17 @@
+.training-page .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.training-background { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.training-page select { width: 100%; min-width: 0; padding: 13px 12px; border: 1px solid #89988d; border-radius: 5px; background: var(--white); color: var(--ink); font: inherit; font-size: 16px; }
+.training-page select:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.training-page .training-section { margin-block: 28px; padding-top: 16px; border-top: 1px solid var(--line); }
+.training-page .training-section legend { font-size: 16px; font-weight: 600; color: var(--ink); padding-right: 14px; }
+.weekday-choices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+.equipment-choices { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; margin-top: 14px; }
+.training-page label.training-choice { display: flex; align-items: center; gap: 9px; min-height: 44px; margin: 0; padding: 8px; cursor: pointer; }
+.training-page .training-choice input { appearance: auto; width: 18px; height: 18px; margin: 0; padding: 0; flex: 0 0 auto; accent-color: var(--ink); }
+.training-choice:has(input:checked) { background: #edf4de; border-radius: 5px; }
+.duration-field { max-width: 370px; }
+@media (max-width: 700px) {
+  .training-background { grid-template-columns: 1fr; gap: 0; }
+  .weekday-choices { grid-template-columns: 1fr 1fr; }
+  .equipment-choices { grid-template-columns: 1fr; }
+}

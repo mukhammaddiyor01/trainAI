@@ -41,3 +41,25 @@ Unknown owner/role/storage fields fail validation. Existing rate, time, response
 and browser security limits apply. Invalid saves preserve prior values.
 Five targeted API checks passed in disposable PostgreSQL, including two-user
 isolation, malformed/oversized JSON, revoked access, and response allowlisting.
+
+
+## Browser flow
+
+/training-preferences redirects anonymous visitors to /login and accounts without
+profiles to /profile. Account and goal pages link to the form. Saved selections
+are rendered by the server; empty selections do not invent user preferences.
+Native labeled selects, grouped checkboxes, and an integer duration input support
+keyboard use. The form rejects no selected days before requesting a save. Writes
+use a POST fallback action (no private query fields) and JavaScript PUT, with a
+15-second timeout, disabled fields during saving, textContent feedback, and stale
+success clearing on edits. A successful save reloads stored server values.
+
+Two targeted page tests passed. Browser verification used synthetic accounts in
+a disposable cluster: profile-first redirect, empty-weekday rejection, bodyweight
+save/reload, equipment/duration changes, saved-value persistence, stale-success
+clearing, desktop/mobile inspection, and logout redirect. No horizontal overflow
+was found at inspected effective widths of 1163 and 354 CSS pixels (requested
+1280/390 viewport overrides; browser zoom changes effective sizes). Browser
+console inspection returned no warnings or errors. The temporary cluster was
+stopped and removed. All 83 application tests passed in isolated PostgreSQL on
+2026-10-31, including migration round trips. No dependency changes were needed.

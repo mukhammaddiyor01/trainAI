@@ -6,6 +6,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from backend.guards import optional_account
 from backend.profiles import read_profile
 from backend.goals import read_goal
+from backend.training_preferences import read_training_preferences
+from backend.services.training_preferences import MIN_SESSION_MINUTES, MAX_SESSION_MINUTES
 from backend.services.accounts import MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH
 from starlette.concurrency import run_in_threadpool
 from backend.config import DatabaseConfigurationError
@@ -70,4 +72,23 @@ async def goal_page(request: Request):
                                           context={"identity": None})
     return templates.TemplateResponse(request=request, name="goal.html", context={
         "profile": profile, "goal": goal, "saved": request.query_params.get("saved") == "1",
+    })
+
+
+@router.get("/training-preferences", response_class=HTMLResponse)
+async def training_preferences_page(request: Request):
+    try:
+        identity = await optional_account(request)
+        if identity is None:
+            return RedirectResponse("/login", status_code=303)
+        profile = await run_in_threadpool(read_profile, identity.user_id)
+        if profile is None:
+            return RedirectResponse("/profile", status_code=303)
+        preferences = await run_in_threadpool(read_training_preferences, identity.user_id)
+    except (DatabaseConfigurationError, SQLAlchemyError):
+        return templates.TemplateResponse(request=request, name="account.html", status_code=503,
+                                          context={"identity": None})
+    return templates.TemplateResponse(request=request, name="training-preferences.html", context={
+        "preferences": preferences, "saved": preferences is not None and request.query_params.get("saved") == "1",
+        "min_session_minutes": MIN_SESSION_MINUTES, "max_session_minutes": MAX_SESSION_MINUTES,
     })
