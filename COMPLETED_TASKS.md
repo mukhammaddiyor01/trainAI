@@ -1,7 +1,37 @@
 # TrainAI — Completed Tasks and Session Handoff
 
 Last updated: 2026-10-31 (Asia/Seoul).
-Latest continuation on 2026-10-31 began by reading all 13 existing project-owned Markdown files.
+The latest implementation continuation read all 13 Markdown files that existed
+at its start. The current inventory contains 14 project-owned Markdown files.
+
+## Latest Session Handoff — 2026-10-31
+
+Next planned continuation: 2026-11-01 (Asia/Seoul), when the user resumes work.
+Before starting the next feature, discover and read every project-owned Markdown
+file, including new files added after this checkpoint. Follow the inventory and
+startup rules below and in AGENTS.md; then inspect Git status and user changes.
+
+- Completed: authenticated multi-user accounts, private basic profiles, stable
+  weight goals, training preferences, food preferences, and custom meal times.
+- Security: shared session/origin guards, strict input/output contracts,
+  owner-scoped persistence, bounded requests/responses, and rate/resource limits.
+  Local login remains active; OAuth is deferred by the user's choice.
+- Catalogs: 6 pinned exercise metadata records and 4 USDA nutrient records,
+  source/license evidence, complete equipment filtering, exact-ID lookup,
+  gram-based scaling, and explicit offline evidence verification.
+- Latest verification: 116 complete isolated PostgreSQL tests passed, none skipped;
+  17 are catalog checks. Migration revision remains 0005. The dependency advisory
+  audit remains the historical 2026-10-29 snapshot.
+- Git checkpoint: implementation d49579e, verified catalog documentation fc89ac6;
+  both were pushed to origin/develop. The working tree was clean before this
+  documentation-only handoff. Master remains at a8ddfd9.
+- Next increment: review food ingredient/diet/allergen composition evidence and
+  bounded allergy-name mapping. Keep current nutrient-only food records blocked
+  from automatic selection. Review missing calculation inputs and methods before
+  daily targets, and prescription rules/limitations before workout generation.
+- This handoff changes documentation only; application tests were not rerun.
+  No automatic task or scheduled continuation was created. Runtime availability
+  must be checked again when work resumes.
 
 ## Read Before Continuing
 
@@ -117,7 +147,8 @@ Repository: https://github.com/mukhammaddiyor01/trainAI
 The original 2026-10-29 handoff followed 0682f78 and was committed as dfe7b23.
 The 2026-10-30 handoff is a1a045d; the training-preference checkpoint is 335862a.
 The food-preference checkpoint is b5d4a3c. The latest implementation commit is
-d49579e on develop, following the separate catalog increments below.
+d49579e on develop, followed by verified catalog documentation fc89ac6.
+Both were pushed to origin/develop; the separate increments are listed below.
 Master remains at a8ddfd9, the initial web setup. Subsequent work belongs only on
 develop. Each verified milestone ends with a separate documentation checkpoint.
 
@@ -168,6 +199,7 @@ develop. Each verified milestone ends with a separate documentation checkpoint.
 | 135a9ff | Verified official USDA API provenance links |
 | 6175ce8 | Explicit offline source-evidence verification |
 | d49579e | Reject prepared food nutrient/name drift against retained source |
+| fc89ac6 | Verified catalog milestone and planning-readiness checkpoint |
 
 ## Historical Password Edit — Resolved on 2026-10-30
 
