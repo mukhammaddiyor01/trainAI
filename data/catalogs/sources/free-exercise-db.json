@@ -1,0 +1,161 @@
+{
+  "source_revision": "f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5",
+  "records": [
+    {
+      "name": "Bodyweight Squat",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "secondaryMuscles": [
+        "glutes",
+        "hamstrings"
+      ],
+      "instructions": [
+        "Stand with your feet shoulder width apart. You can place your hands behind your head. This will be your starting position.",
+        "Begin the movement by flexing your knees and hips, sitting back with your hips.",
+        "Continue down to full depth if you are able,and quickly reverse the motion until you return to the starting position. As you squat, keep your head and chest up and push your knees out."
+      ],
+      "category": "strength",
+      "images": [
+        "Bodyweight_Squat/0.jpg",
+        "Bodyweight_Squat/1.jpg"
+      ],
+      "id": "Bodyweight_Squat"
+    },
+    {
+      "name": "Pushups",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "instructions": [
+        "Lie on the floor face down and place your hands about 36 inches apart while holding your torso up at arms length.",
+        "Next, lower yourself downward until your chest almost touches the floor as you inhale.",
+        "Now breathe out and press your upper body back up to the starting position while squeezing your chest.",
+        "After a brief pause at the top contracted position, you can begin to lower yourself downward again for as many repetitions as needed."
+      ],
+      "category": "strength",
+      "images": [
+        "Pushups/0.jpg",
+        "Pushups/1.jpg"
+      ],
+      "id": "Pushups"
+    },
+    {
+      "name": "Plank",
+      "force": "static",
+      "level": "beginner",
+      "mechanic": "isolation",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "secondaryMuscles": [],
+      "instructions": [
+        "Get into a prone position on the floor, supporting your weight on your toes and your forearms. Your arms are bent and directly below the shoulder.",
+        "Keep your body straight at all times, and hold this position as long as possible. To increase difficulty, an arm or leg can be raised."
+      ],
+      "category": "strength",
+      "images": [
+        "Plank/0.jpg",
+        "Plank/1.jpg"
+      ],
+      "id": "Plank"
+    },
+    {
+      "name": "Dumbbell Bench Press",
+      "force": "push",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "instructions": [
+        "Lie down on a flat bench with a dumbbell in each hand resting on top of your thighs. The palms of your hands will be facing each other.",
+        "Then, using your thighs to help raise the dumbbells up, lift the dumbbells one at a time so that you can hold them in front of you at shoulder width.",
+        "Once at shoulder width, rotate your wrists forward so that the palms of your hands are facing away from you. The dumbbells should be just to the sides of your chest, with your upper arm and forearm creating a 90 degree angle. Be sure to maintain full control of the dumbbells at all times. This will be your starting position.",
+        "Then, as you breathe out, use your chest to push the dumbbells up. Lock your arms at the top of the lift and squeeze your chest, hold for a second and then begin coming down slowly. Tip: Ideally, lowering the weight should take about twice as long as raising it.",
+        "Repeat the movement for the prescribed amount of repetitions of your training program."
+      ],
+      "category": "strength",
+      "images": [
+        "Dumbbell_Bench_Press/0.jpg",
+        "Dumbbell_Bench_Press/1.jpg"
+      ],
+      "id": "Dumbbell_Bench_Press"
+    },
+    {
+      "name": "One-Arm Dumbbell Row",
+      "force": "pull",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "middle back"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "lats",
+        "shoulders"
+      ],
+      "instructions": [
+        "Choose a flat bench and place a dumbbell on each side of it.",
+        "Place the right leg on top of the end of the bench, bend your torso forward from the waist until your upper body is parallel to the floor, and place your right hand on the other end of the bench for support.",
+        "Use the left hand to pick up the dumbbell on the floor and hold the weight while keeping your lower back straight. The palm of the hand should be facing your torso. This will be your starting position.",
+        "Pull the resistance straight up to the side of your chest, keeping your upper arm close to your side and keeping the torso stationary. Breathe out as you perform this step. Tip: Concentrate on squeezing the back muscles once you reach the full contracted position. Also, make sure that the force is performed with the back muscles and not the arms. Finally, the upper torso should remain stationary and only the arms should move. The forearms should do no other work except for holding the dumbbell; therefore do not try to pull the dumbbell up using the forearms.",
+        "Lower the resistance straight down to the starting position. Breathe in as you perform this step.",
+        "Repeat the movement for the specified amount of repetitions.",
+        "Switch sides and repeat again with the other arm."
+      ],
+      "category": "strength",
+      "images": [
+        "One-Arm_Dumbbell_Row/0.jpg",
+        "One-Arm_Dumbbell_Row/1.jpg"
+      ],
+      "id": "One-Arm_Dumbbell_Row"
+    },
+    {
+      "name": "Pullups",
+      "force": "pull",
+      "level": "beginner",
+      "mechanic": "compound",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "middle back"
+      ],
+      "instructions": [
+        "Grab the pull-up bar with the palms facing forward using the prescribed grip. Note on grips: For a wide grip, your hands need to be spaced out at a distance wider than your shoulder width. For a medium grip, your hands need to be spaced out at a distance equal to your shoulder width and for a close grip at a distance smaller than your shoulder width.",
+        "As you have both arms extended in front of you holding the bar at the chosen grip width, bring your torso back around 30 degrees or so while creating a curvature on your lower back and sticking your chest out. This is your starting position.",
+        "Pull your torso up until the bar touches your upper chest by drawing the shoulders and the upper arms down and back. Exhale as you perform this portion of the movement. Tip: Concentrate on squeezing the back muscles once you reach the full contracted position. The upper torso should remain stationary as it moves through space and only the arms should move. The forearms should do no other work other than hold the bar.",
+        "After a second on the contracted position, start to inhale and slowly lower your torso back to the starting position when your arms are fully extended and the lats are fully stretched.",
+        "Repeat this motion for the prescribed amount of repetitions."
+      ],
+      "category": "strength",
+      "images": [
+        "Pullups/0.jpg",
+        "Pullups/1.jpg"
+      ],
+      "id": "Pullups"
+    }
+  ]
+}

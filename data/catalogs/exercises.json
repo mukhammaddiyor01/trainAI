@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "exercise-bodyweight-squat",
+      "name": "Bodyweight Squat",
+      "required_equipment": [],
+      "force": "push",
+      "source_level": "beginner",
+      "primary_muscles": [
+        "quadriceps"
+      ],
+      "source_id": "Bodyweight_Squat",
+      "source_revision": "f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5",
+      "source_url": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Bodyweight_Squat.json",
+      "license": "Unlicense",
+      "equipment_review": "Reviewed source instructions: no additional equipment is required."
+    },
+    {
+      "id": "exercise-pushups",
+      "name": "Pushups",
+      "required_equipment": [],
+      "force": "push",
+      "source_level": "beginner",
+      "primary_muscles": [
+        "chest"
+      ],
+      "source_id": "Pushups",
+      "source_revision": "f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5",
+      "source_url": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Pushups.json",
+      "license": "Unlicense",
+      "equipment_review": "Reviewed source instructions: no additional equipment is required."
+    },
+    {
+      "id": "exercise-plank",
+      "name": "Plank",
+      "required_equipment": [],
+      "force": "static",
+      "source_level": "beginner",
+      "primary_muscles": [
+        "abdominals"
+      ],
+      "source_id": "Plank",
+      "source_revision": "f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5",
+      "source_url": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Plank.json",
+      "license": "Unlicense",
+      "equipment_review": "Reviewed source instructions: no additional equipment is required."
+    },
+    {
+      "id": "exercise-dumbbell-bench-press",
+      "name": "Dumbbell Bench Press",
+      "required_equipment": [
+        "dumbbells",
+        "bench"
+      ],
+      "force": "push",
+      "source_level": "beginner",
+      "primary_muscles": [
+        "chest"
+      ],
+      "source_id": "Dumbbell_Bench_Press",
+      "source_revision": "f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5",
+      "source_url": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Dumbbell_Bench_Press.json",
+      "license": "Unlicense",
+      "equipment_review": "Source equipment names dumbbells; instructions additionally require a flat bench."
+    },
+    {
+      "id": "exercise-one-arm-dumbbell-row",
+      "name": "One-Arm Dumbbell Row",
+      "required_equipment": [
+        "dumbbells",
+        "bench"
+      ],
+      "force": "pull",
+      "source_level": "beginner",
+      "primary_muscles": [
+        "middle back"
+      ],
+      "source_id": "One-Arm_Dumbbell_Row",
+      "source_revision": "f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5",
+      "source_url": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/One-Arm_Dumbbell_Row.json",
+      "license": "Unlicense",
+      "equipment_review": "Source equipment names dumbbells; instructions additionally require a flat bench."
+    },
+    {
+      "id": "exercise-pullups",
+      "name": "Pullups",
+      "required_equipment": [
+        "pull_up_bar"
+      ],
+      "force": "pull",
+      "source_level": "beginner",
+      "primary_muscles": [
+        "lats"
+      ],
+      "source_id": "Pullups",
+      "source_revision": "f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5",
+      "source_url": "https://github.com/yuhonas/free-exercise-db/blob/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/exercises/Pullups.json",
+      "license": "Unlicense",
+      "equipment_review": "Source labels equipment as body only; instructions explicitly require a pull-up bar."
+    }
+  ]
+}

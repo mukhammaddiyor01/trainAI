@@ -1,7 +1,7 @@
 # TrainAI — Completed Tasks and Session Handoff
 
 Last updated: 2026-10-31 (Asia/Seoul).
-Latest continuation on 2026-10-31 began by reading all 12 existing project-owned Markdown files.
+Latest continuation on 2026-10-31 began by reading all 13 existing project-owned Markdown files.
 
 ## Read Before Continuing
 
@@ -25,6 +25,7 @@ Current documentation:
 - [Weight goals](docs/goals.md)
 - [Training preferences](docs/training-preferences.md)
 - [Food preferences](docs/food-preferences.md)
+- [Catalog seeds](docs/catalogs.md)
 - [Security boundaries](docs/security.md)
 - [Verification history](docs/verification.md)
 
@@ -282,6 +283,17 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - Restarted the owned loopback runtime with food routes. Anonymous page/API
   guards, local script delivery, no-store responses, and absent Server headers
   passed live checks. Dependencies were unchanged; advisory audit not rerun.
+
+## Catalog Continuation — 2026-10-31
+
+- Read all 13 existing Markdown files; develop was clean at b5d4a3c.
+- Verified the exercise source's pinned commit and Unlicense dedication. Added
+  six metadata seeds with retained source/license evidence, strict local loading,
+  plain immutable values, and complete equipment requirements. Bench/bar needs
+  omitted by upstream single labels were recorded explicitly.
+- Four targeted catalog tests passed, covering provenance, equipment subsets,
+  malformed metadata, duplicate IDs, JSON ambiguity, and resource bounds.
+  This is not an exercise prescription. Food seeds remain pending.
 
 ## Next Work — Not Yet Completed
 
