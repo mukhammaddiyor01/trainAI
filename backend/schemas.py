@@ -56,3 +56,17 @@ class GoalInput(BaseModel):
 
 class GoalResponse(GoalInput):
     starting_weight_kg: float = Field(ge=20, le=500, allow_inf_nan=False)
+
+
+class TrainingPreferencesInput(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    experience: Literal["beginner", "intermediate", "advanced"]
+    activity: Literal["mostly_seated", "lightly_active", "moderately_active", "very_active"]
+    equipment: list[Literal["dumbbells", "barbell", "resistance_bands", "bench", "pull_up_bar", "cable_machine", "weight_machines"]] = Field(max_length=7)
+    weekdays: list[int] = Field(min_length=1, max_length=7)
+    session_minutes: int = Field(ge=10, le=180)
+
+
+class TrainingPreferencesResponse(TrainingPreferencesInput):
+    """Only the five preference fields; no ownership or storage internals."""

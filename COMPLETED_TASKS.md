@@ -213,7 +213,11 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   migration 0004. Four targeted disposable PostgreSQL tests passed, covering
   round trips, two-owner isolation, concurrent retries, SQL bounds, and model
   parity; migration downgrade/upgrade also passed in the disposable cluster.
-  API and UI remain pending. The configured real database is still at 0003.
+  Persistence committed as a2c320d. The configured real database is still at 0003.
+- Added GET/PUT /api/training-preferences with shared guards, a 4096-byte body
+  cap, strict schemas, and five-field responses. Five targeted tests passed,
+  including two-user isolation, invalid-update preservation, malformed/oversized
+  input, owner/role injection, and revoked access. UI remains pending.
 
 ## Next Work — Not Yet Completed
 

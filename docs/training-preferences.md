@@ -28,3 +28,16 @@ selections cannot exist in a row. Bit positions are fixed in the persistence
 module and must not change without a migration. Plain service/API values remain
 named equipment and Monday-based weekday integers. Bodyweight is the empty set.
 No preference history is retained yet. API and browser controls follow separately.
+
+
+## Protected API
+
+GET/PUT /api/training-preferences derive ownership from the shared session guard.
+Writes require the exact same Origin, bounded JSON up to 4096 bytes, strict types,
+exactly five allowlisted fields, and plain service validation. A saved basic
+profile is required (409 if absent); GET returns 404 until preferences are saved.
+Responses contain only experience, activity, equipment, weekdays, and session_minutes.
+Unknown owner/role/storage fields fail validation. Existing rate, time, response,
+and browser security limits apply. Invalid saves preserve prior values.
+Five targeted API checks passed in disposable PostgreSQL, including two-user
+isolation, malformed/oversized JSON, revoked access, and response allowlisting.

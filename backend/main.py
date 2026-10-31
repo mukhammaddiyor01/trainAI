@@ -21,6 +21,8 @@ from backend.routes import router
 from backend.profile_routes import router as profile_router
 from backend.services.profiles import InvalidProfile
 from backend.services.goals import InvalidGoal
+from backend.services.training_preferences import InvalidTrainingPreferences
+from backend.training_preference_routes import router as training_preference_router
 from backend.goals import GoalProfileRequired
 from backend.goal_routes import router as goal_router
 from backend.rate_limits import AttemptLimiter
@@ -53,7 +55,7 @@ def create_app() -> FastAPI:
             status = 409
         return JSONResponse({"detail": str(error)}, status_code=status)
 
-    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable, InvalidProfile, InvalidGoal, GoalProfileRequired]:
+    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable, InvalidProfile, InvalidGoal, GoalProfileRequired, InvalidTrainingPreferences]:
         app.add_exception_handler(error_type, account_error)
 
     async def persistence_error(request, error):
@@ -100,6 +102,7 @@ def create_app() -> FastAPI:
     app.include_router(account_pages_router)
     app.include_router(profile_router)
     app.include_router(goal_router)
+    app.include_router(training_preference_router)
     return app
 
 
