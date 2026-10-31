@@ -76,3 +76,14 @@ class FoodCatalogTests(unittest.TestCase):
         with patch("backend.catalogs.decode_catalog",return_value=[record]):
             with self.assertRaises(InvalidCatalog):
                 load_foods()
+
+    def test_changed_nutrients_or_name_cannot_pass_with_an_unchanged_source_hash(self):
+        record = deepcopy(self.records[0])
+        record["nutrients"][0]["amount"] = 90
+        with patch("backend.catalogs.decode_catalog",return_value=[record]):
+            with self.assertRaises(InvalidCatalog):
+                load_foods()
+        record = self.records[0] | dict(name="Different food")
+        with patch("backend.catalogs.decode_catalog",return_value=[record]):
+            with self.assertRaises(InvalidCatalog):
+                load_foods()

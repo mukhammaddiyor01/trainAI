@@ -4,7 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from backend.services.catalogs import InvalidCatalog, strings, validate_exercise, validate_food
+from backend.services.catalogs import InvalidCatalog, NUTRIENT_UNITS, strings, validate_exercise, validate_food
 
 CATALOG_ROOT = Path(__file__).resolve().parent.parent / "data" / "catalogs"
 MAX_CATALOG_BYTES = 256 * 1024
@@ -93,4 +93,32 @@ def load_foods():
             raise InvalidCatalog("Food source evidence is unavailable.") from None
         if len(evidence) > 512 * 1024 or hashlib.sha256(evidence).hexdigest() != food.source_sha256:
             raise InvalidCatalog("Food source evidence does not match its recorded digest.")
+        try:
+            original = json.loads(evidence.decode("utf-8"), object_pairs_hook=unique_keys, parse_constant=reject_constant)
+        except (UnicodeError, ValueError, RecursionError):
+            raise InvalidCatalog("Food source evidence is invalid JSON.") from None
+        if (type(original) is not dict or original.get("fdcId") != food.source_id
+                or original.get("description") != food.name or original.get("dataType") != "SR Legacy"):
+            raise InvalidCatalog("Food identity does not match retained source evidence.")
+        entries = original.get("foodNutrients")
+        if type(entries) is not list or len(entries) > 500:
+            raise InvalidCatalog("Food source nutrients are invalid or oversized.")
+        observed = {}
+        for entry in entries:
+            if type(entry) is not dict or type(entry.get("nutrient")) is not dict:
+                raise InvalidCatalog("Food source nutrient metadata is invalid.")
+            nutrient = entry["nutrient"]
+            key = nutrient.get("id")
+            if type(key) is not int:
+                raise InvalidCatalog("Food source nutrient ID is invalid.")
+            if key not in NUTRIENT_UNITS:
+                continue
+            unit, amount = nutrient.get("unitName"), entry.get("amount")
+            if (key in observed or type(unit) is not str or unit.lower() != NUTRIENT_UNITS[key]
+                    or (amount is not None and type(amount) not in (int, float))):
+                raise InvalidCatalog("Food source nutrient units or values are invalid.")
+            observed[key] = amount
+        expected = {1008: food.energy_kcal, 1003: food.protein_g, 1004: food.fat_g, 1005: food.carbohydrate_g}
+        if any(observed.get(key) != amount for key, amount in expected.items()):
+            raise InvalidCatalog("Food nutrient values do not match retained source evidence.")
     return foods
