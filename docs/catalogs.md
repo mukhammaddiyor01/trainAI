@@ -73,3 +73,22 @@ composition/allergen review is required before that boundary can open.
 Five targeted food-catalog tests passed on 2026-10-31, including source-value/unit
 parity, raw/cooked identity, missing values, malformed metadata, and snapshot
 corruption. No dependencies, schemas, HTTP endpoints, or private records changed.
+
+
+## Lookup, portion units, and planning boundary
+
+Use exact internal IDs through exercise_by_id/food_by_id; unknown IDs and free
+text do not substitute for reviewed records. nutrition_for_grams scales each
+available source nutrient by grams/100. It accepts finite positive mass up to
+10000 g (an application input bound), returns the source food/preparation identity,
+and preserves missing nutrients as None. It does not infer a household serving,
+convert cooked/raw mass, compute daily needs, or create a plan.
+
+food_selection_blockers records unresolved composition, ingredient, diet, allergen,
+and nutrient data. Unsure allergy status and listed names without reviewed mapping
+also block selection. require_food_selection_review rejects all four current food
+seeds even when the user reports no known allergies. No clinical safety or actual
+allergen filtering is claimed; the gate prevents incomplete data entering a future
+selector. Composition review and a complete selector remain separate future work.
+Five targeted use-rule tests passed: known/unknown IDs, source-based gram scaling,
+raw/cooked separation, missing nutrients, strict portion inputs, and blocked seeds.

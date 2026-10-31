@@ -299,7 +299,11 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   retrieval dates, CC0-1.0 provenance, and SHA-256 evidence. Missing composition,
   diet, and allergen metadata remain unknown; no automatic food selection is
   enabled. Five targeted tests passed for values/units, unknowns, identity,
-  malformed records, and corrupt evidence.
+  malformed records, and corrupt evidence. Food increment committed as ec3355b.
+- Added exact-ID lookup, explicit gram scaling with preserved unknown nutrients,
+  and readiness blockers for unresolved composition/diet/allergen metadata and
+  allergy status/mapping. All current foods remain blocked from automatic
+  selection. Five targeted use-rule tests passed. No plans or daily targets exist.
 
 ## Next Work — Not Yet Completed
 
