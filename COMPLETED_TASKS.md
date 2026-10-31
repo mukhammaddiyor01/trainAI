@@ -1,7 +1,7 @@
 # TrainAI — Completed Tasks and Session Handoff
 
 Last updated: 2026-10-31 (Asia/Seoul).
-Session resumed on 2026-10-31 after reading all 11 existing project-owned Markdown files.
+Latest continuation on 2026-10-31 began by reading all 12 existing project-owned Markdown files.
 
 ## Read Before Continuing
 
@@ -24,6 +24,7 @@ Current documentation:
 - [Basic profiles](docs/profiles.md)
 - [Weight goals](docs/goals.md)
 - [Training preferences](docs/training-preferences.md)
+- [Food preferences](docs/food-preferences.md)
 - [Security boundaries](docs/security.md)
 - [Verification history](docs/verification.md)
 
@@ -238,6 +239,15 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - Started the canonical loopback runtime and verified anonymous page/API guards,
   script delivery, no-store responses, and absent Server headers. The local
   process was left running; verify availability again next session.
+
+## Food-Preference Continuation — 2026-10-31
+
+- Read all 12 existing Markdown files and confirmed a clean develop at 335862a.
+- Added plain food-preference rules and immutable values: explicit allergy status,
+  bounded reported names, diet, spending style, preparation time, and custom
+  local-clock meal times. Five targeted rule tests passed. No prices, calorie
+  targets, food safety assessment, or meal plans are computed.
+- Persistence, guarded API, and UI are pending at this increment.
 
 ## Next Work — Not Yet Completed
 
