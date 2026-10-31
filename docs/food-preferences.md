@@ -36,3 +36,19 @@ must block automatic food selection, not silently become unrestricted eating.
 Missing ingredient/allergen information remains unknown. An AI must not infer
 allergen safety from free text or a diet label. Current preferences do not
 constitute complete calculation inputs or medical clearance.
+
+
+## Persistence
+
+Migration 0005 adds one row per basic profile, with an owner primary/foreign key,
+cascading deletion, and atomic full-row upserts. Concurrent identical saves keep
+one row. No preference history is retained. PostgreSQL checks constrain choices,
+preparation bounds, allergy-state/list consistency, array dimensions/counts/nulls,
+and meal-minute bounds. Meal times are stored as integer minutes after midnight
+and returned as canonical HH:MM strings. Text normalization and duplicate/name
+validation remain in the plain service and are repeated before persistence.
+
+Four targeted disposable PostgreSQL tests passed: round trips and owner isolation,
+full replacement and invalid-update preservation, concurrent retries, SQL bounds,
+and migration/model parity. Disposable migration downgrade/upgrade passed. The
+configured application database remains at 0004 at this increment.

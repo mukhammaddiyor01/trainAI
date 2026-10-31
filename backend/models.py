@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Float, SmallInteger, String, Text, func
+from sqlalchemy import ARRAY, CheckConstraint, DateTime, ForeignKey, Float, SmallInteger, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.database import Base
@@ -86,3 +86,28 @@ class TrainingPreferences(Base):
     equipment_mask: Mapped[int] = mapped_column(SmallInteger)
     weekday_mask: Mapped[int] = mapped_column(SmallInteger)
     session_minutes: Mapped[int] = mapped_column(SmallInteger)
+
+
+class FoodPreferences(Base):
+    __tablename__ = "food_preferences"
+    __table_args__ = (
+        CheckConstraint("diet IN ('mixed', 'vegetarian', 'vegan')", name="ck_food_diet"),
+        CheckConstraint("allergy_status IN ('unsure', 'none_reported', 'listed')", name="ck_food_allergy_status"),
+        CheckConstraint("budget_level IN ('economical', 'standard', 'flexible')", name="ck_food_budget"),
+        CheckConstraint("prep_minutes BETWEEN 0 AND 180", name="ck_food_preparation"),
+        CheckConstraint("cardinality(allergies) <= 20 AND array_position(allergies, NULL) IS NULL "
+                        "AND (cardinality(allergies) = 0 OR array_ndims(allergies) = 1)", name="ck_food_allergy_array"),
+        CheckConstraint("(allergy_status = 'listed' AND cardinality(allergies) > 0) OR "
+                        "(allergy_status IN ('unsure', 'none_reported') AND cardinality(allergies) = 0)", name="ck_food_allergy_consistency"),
+        CheckConstraint("cardinality(meal_minutes) BETWEEN 1 AND 8 AND array_ndims(meal_minutes) = 1 "
+                        "AND array_position(meal_minutes, NULL) IS NULL "
+                        "AND 0 <= ALL(meal_minutes) AND 1439 >= ALL(meal_minutes)", name="ck_food_meal_times"),
+    )
+
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("profiles.user_id", ondelete="CASCADE"), primary_key=True)
+    diet: Mapped[str] = mapped_column(String(16))
+    allergy_status: Mapped[str] = mapped_column(String(16))
+    allergies: Mapped[list[str]] = mapped_column(ARRAY(String(64)))
+    budget_level: Mapped[str] = mapped_column(String(16))
+    prep_minutes: Mapped[int] = mapped_column(SmallInteger)
+    meal_minutes: Mapped[list[int]] = mapped_column(ARRAY(SmallInteger))

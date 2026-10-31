@@ -247,7 +247,11 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   bounded reported names, diet, spending style, preparation time, and custom
   local-clock meal times. Five targeted rule tests passed. No prices, calorie
   targets, food safety assessment, or meal plans are computed.
-- Persistence, guarded API, and UI are pending at this increment.
+- Rules committed as d79209d. Added owner-scoped atomic persistence and additive
+  migration 0005. Four targeted PostgreSQL tests and disposable migration round
+  trips passed, covering SQL bounds, allergy consistency, two-owner isolation,
+  replacement, concurrent retries, and metadata parity. The configured database
+  remains at 0004. Guarded API and UI are pending.
 
 ## Next Work — Not Yet Completed
 
