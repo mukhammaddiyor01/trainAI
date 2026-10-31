@@ -1,7 +1,7 @@
 # TrainAI — Completed Tasks and Session Handoff
 
-Last updated: 2026-10-30 (Asia/Seoul).
-Session resumed on 2026-10-30 after reading all project-owned Markdown files.
+Last updated: 2026-10-31 (Asia/Seoul).
+Session resumed on 2026-10-31 after reading all 11 existing project-owned Markdown files.
 
 ## Read Before Continuing
 
@@ -23,6 +23,7 @@ Current documentation:
 - [Authentication](docs/authentication.md)
 - [Basic profiles](docs/profiles.md)
 - [Weight goals](docs/goals.md)
+- [Training preferences](docs/training-preferences.md)
 - [Security boundaries](docs/security.md)
 - [Verification history](docs/verification.md)
 
@@ -200,13 +201,22 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   and profiles. The local runtime was restarted with the current code; anonymous goal-page/API
   access and the rendered 8-character minimum were checked on the live server.
 
+## Session Progress — 2026-10-31
+
+- Read all 11 existing project Markdown files before implementation; develop was
+  clean and synchronized with origin/develop at a1a045d.
+- Added plain Python training-preference validation, immutable values, and
+  explicit application bounds. Four targeted service tests passed, covering
+  malformed collections, duplicates, strict types, and detached input values.
+  No activity multipliers or exercise recommendations are computed.
+- Preference persistence, API, and UI are still pending at this increment.
+
 ## Next Work — Not Yet Completed
 
 The goal milestone is complete. Next, add planning preferences in small,
 independently verified increments:
 
-1. Plain Python rules for training experience, activity, equipment, available
-   weekdays, and session duration.
+1. Plain Python training-preference rules are complete (2026-10-31).
 2. The minimum required owner-scoped persistence and reviewed migration.
 3. A strict bounded API with existing guards and two-user isolation checks.
 4. A usable UI and browser verification, committed separately.
@@ -233,7 +243,7 @@ workout/nutrition plans are implemented or verified yet.
 - Next planned continuation: 2026-10-31 (Asia/Seoul), when the user resumes work.
   First read every project-owned Markdown file, including any newly added files;
   then inspect user changes, branch state, and runtime availability.
-- The first next implementation increment is plain Python training-preference
+- At this handoff, the first next implementation increment was plain Python training-preference
   validation. Persistence, API, and UI follow as separate verified commits.
   Do not start those features as part of this handoff.
 - This file preserves the project checkpoint for the next session. No automatic
