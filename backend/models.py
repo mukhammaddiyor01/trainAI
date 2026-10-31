@@ -68,3 +68,21 @@ class Goal(Base):
     direction: Mapped[str] = mapped_column(String(16))
     starting_weight_kg: Mapped[float] = mapped_column(Float)
     target_weight_kg: Mapped[float | None] = mapped_column(Float)
+
+
+class TrainingPreferences(Base):
+    __tablename__ = "training_preferences"
+    __table_args__ = (
+        CheckConstraint("experience IN ('beginner', 'intermediate', 'advanced')", name="ck_training_experience"),
+        CheckConstraint("activity IN ('mostly_seated', 'lightly_active', 'moderately_active', 'very_active')", name="ck_training_activity"),
+        CheckConstraint("equipment_mask BETWEEN 0 AND 127", name="ck_training_equipment"),
+        CheckConstraint("weekday_mask BETWEEN 1 AND 127", name="ck_training_weekdays"),
+        CheckConstraint("session_minutes BETWEEN 10 AND 180", name="ck_training_duration"),
+    )
+
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("profiles.user_id", ondelete="CASCADE"), primary_key=True)
+    experience: Mapped[str] = mapped_column(String(16))
+    activity: Mapped[str] = mapped_column(String(24))
+    equipment_mask: Mapped[int] = mapped_column(SmallInteger)
+    weekday_mask: Mapped[int] = mapped_column(SmallInteger)
+    session_minutes: Mapped[int] = mapped_column(SmallInteger)

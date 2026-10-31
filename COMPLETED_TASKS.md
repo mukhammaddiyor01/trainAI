@@ -209,7 +209,11 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   explicit application bounds. Four targeted service tests passed, covering
   malformed collections, duplicates, strict types, and detached input values.
   No activity multipliers or exercise recommendations are computed.
-- Preference persistence, API, and UI are still pending at this increment.
+- Preference rules committed as fba243c. Added owner-scoped storage and reviewed
+  migration 0004. Four targeted disposable PostgreSQL tests passed, covering
+  round trips, two-owner isolation, concurrent retries, SQL bounds, and model
+  parity; migration downgrade/upgrade also passed in the disposable cluster.
+  API and UI remain pending. The configured real database is still at 0003.
 
 ## Next Work — Not Yet Completed
 

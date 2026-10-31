@@ -18,4 +18,13 @@ calculation; no activity multipliers or generated workouts are attached.
 Duplicates, unknown choices, malformed collections, coercible numeric strings,
 boolean days/durations, and non-integer durations are rejected. Valid collections
 are sorted and copied into immutable tuples, preventing later caller mutation.
-Persistence, API access, and browser controls follow in separate increments.
+## Persistence
+
+Migration 0004 adds one owner-keyed row per basic profile, with a cascading
+foreign key and SQL checks for choices, available days, equipment, and duration.
+Atomic upserts replace the complete selection; concurrent retries keep one row.
+Equipment and weekdays use bounded seven-bit sets in storage, so duplicate
+selections cannot exist in a row. Bit positions are fixed in the persistence
+module and must not change without a migration. Plain service/API values remain
+named equipment and Monday-based weekday integers. Bodyweight is the empty set.
+No preference history is retained yet. API and browser controls follow separately.
