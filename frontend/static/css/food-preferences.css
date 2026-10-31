@@ -1,0 +1,12 @@
+.food-page select, .food-page textarea { width: 100%; min-width: 0; border: 1px solid #89988d; border-radius: 5px; padding: 13px 12px; font: inherit; font-size: 16px; color: var(--ink); background: var(--white); }
+.food-page textarea { resize: vertical; }
+.food-page select:focus-visible, .food-page textarea:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.food-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-block: 12px 30px; }
+.food-page .meal-section { margin-block: 28px; padding-top: 16px; border-top: 1px solid var(--line); }
+.food-page .meal-section legend { padding-right: 14px; font-size: 16px; font-weight: 600; color: var(--ink); }
+.meal-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 16px; max-width: 420px; }
+.food-page input[type=time] { min-width: 0; }
+.remove-meal, .add-meal { min-height: 44px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: var(--paper); font: inherit; font-size: 13px; cursor: pointer; }
+.add-meal { margin-top: 16px; }
+.remove-meal:disabled, .add-meal:disabled { cursor: default; opacity: .5; }
+@media (max-width: 700px) { .food-columns { grid-template-columns: 1fr; gap: 0; } .meal-row { gap: 10px; } }

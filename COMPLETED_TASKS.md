@@ -30,7 +30,7 @@ Current documentation:
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete working-tree suite passed 83 tests on 2026-10-31. If documents disagree, inspect Git
+the latest complete working-tree suite passed 99 tests on 2026-10-31. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
@@ -84,7 +84,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Latest result: 83 working-tree tests passed, none skipped (2026-10-31). Coverage includes account/session isolation,
+Latest result: 99 working-tree tests passed, none skipped (2026-10-31). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.
@@ -255,7 +255,18 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - Added the guarded six-field food-preference API with an 8192-byte request cap.
   Five targeted tests passed: exact Origin/session guards, owner isolation,
   strict fields/types, redacted errors, canonical responses, invalid-update
-  preservation, and malformed/oversized JSON. UI is pending.
+  preservation, and malformed/oversized JSON. API committed as bb5a2d0.
+- Added the English food-preference form, conditional reported-name field, local
+  meal-time editor, profile-zone context, and account/training navigation. Fixed
+  the template conditional caught by the initial page check; both page tests
+  then passed, including reported-name HTML escaping.
+- Browser checks used synthetic data: unsure/listed/none_reported transitions,
+  duplicate-name rejection, canonical save/reload, explicit allergy-list clearing,
+  meal-time add/remove bounds, stale-success clearing, and logout. Desktop/mobile
+  layouts had no horizontal overflow; console inspection returned no warnings or
+  errors. Temporary test records and the owned cluster were removed.
+- All 99 application tests passed, none skipped, with isolated PostgreSQL and
+  migration round trips. The configured database remains at 0004 in this step.
 
 ## Next Work — Not Yet Completed
 

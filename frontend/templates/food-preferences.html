@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your food preferences — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/profile.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/food-preferences.css').path }}">
+  <script src="{{ url_for('static', path='/js/food-preferences.js').path }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Food navigation"><a href="/training-preferences">Training preferences</a><a href="/account">Your account</a></nav></header>
+  <main id="main" class="wrap profile-page food-page">
+    <h1>Food that fits<br>your day.</h1>
+    <p class="lead">Record how you eat, what you avoid, and when you have time for meals.</p>
+    <section class="auth-panel" aria-labelledby="food-title">
+      <h2 id="food-title">Your food preferences</h2>
+      {% if saved %}<p id="food-saved-notice" class="success-message" role="status">Food preferences saved.</p>{% endif %}
+      <form id="food-form" action="/api/food-preferences" method="post" aria-describedby="food-message">
+        <fieldset id="food-fields">
+          <legend>Food and meal details</legend>
+          <label for="diet">Eating preference</label>
+          <select id="diet" name="diet" required aria-describedby="diet-help">
+            <option value="" disabled {% if not preferences %}selected{% endif %}>Choose an eating preference</option>
+            {% for value, label in [('mixed', 'Mixed'), ('vegetarian', 'Vegetarian'), ('vegan', 'Vegan')] %}
+            <option value="{{ value }}" {% if preferences and preferences.diet == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <p id="diet-help" class="field-help">Vegetarian excludes meat and fish. Vegan excludes animal-derived foods.</p>
+          <label for="allergy_status">Food allergy status</label>
+          <select id="allergy_status" name="allergy_status" required>
+            <option value="" disabled {% if not preferences %}selected{% endif %}>Choose your allergy status</option>
+            {% for value, label in [('unsure', 'I am not sure'), ('none_reported', 'I have no known food allergies'), ('listed', 'I have food allergies')] %}
+            <option value="{{ value }}" {% if preferences and preferences.allergy_status == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <div id="allergy-group" {% if not preferences or preferences.allergy_status != 'listed' %}hidden{% endif %}>
+            <label for="allergies">Reported food allergies</label>
+            <textarea id="allergies" name="allergies" rows="4" maxlength="{{ max_allergies * (max_allergy_length + 1) }}" {% if preferences and preferences.allergy_status == 'listed' %}required{% else %}disabled{% endif %} aria-describedby="allergy-help">{{ preferences.allergies | join('
+') if preferences else '' }}</textarea>
+            <p id="allergy-help" class="field-help">One name per line, up to {{ max_allergies }} names and {{ max_allergy_length }} characters each.</p>
+          </div>
+          <div class="food-columns">
+            <div><label for="budget_level">Food spending preference</label>
+              <select id="budget_level" name="budget_level" required aria-describedby="budget-help">
+                <option value="" disabled {% if not preferences %}selected{% endif %}>Choose a spending preference</option>
+                {% for value, label in [('economical', 'Economical'), ('standard', 'Standard'), ('flexible', 'Flexible')] %}
+                <option value="{{ value }}" {% if preferences and preferences.budget_level == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+              <p id="budget-help" class="field-help">Your spending style; this does not set a monetary budget.</p>
+            </div>
+            <div><label for="prep_minutes">Preparation per meal (minutes)</label>
+              <input id="prep_minutes" name="prep_minutes" type="number" min="0" max="{{ max_prep_minutes }}" step="1" required value="{{ preferences.prep_minutes if preferences else '' }}" aria-describedby="prep-help">
+              <p id="prep-help" class="field-help">Enter 0–{{ max_prep_minutes }} whole minutes. Zero means no cooking time.</p>
+            </div>
+          </div>
+          <fieldset class="meal-section" aria-describedby="meal-help">
+            <legend>Your meal times</legend>
+            <p id="meal-help" class="field-help">Choose 1–{{ max_meals }} times in your profile time zone: <strong>{{ timezone }}</strong>. These are your preferred times, not a recommended meal schedule.</p>
+            <div id="meal-rows" data-max-meals="{{ max_meals }}">
+              {% for time in (preferences.meal_times if preferences else ['']) %}
+              <div class="meal-row" data-meal-row>
+                <div><label for="meal-{{ loop.index0 }}">Meal time {{ loop.index }}</label><input id="meal-{{ loop.index0 }}" type="time" name="meal_time" required step="60" value="{{ time }}"></div>
+                <button class="remove-meal" type="button" data-remove-meal aria-label="Remove meal time {{ loop.index }}" {% if loop.length == 1 %}disabled{% endif %}>Remove</button>
+              </div>
+              {% endfor %}
+            </div>
+            <button id="add-meal" class="add-meal" type="button">Add meal time</button>
+          </fieldset>
+          <button class="button" type="submit">Save food preferences</button>
+        </fieldset>
+        <p id="food-message" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+      <noscript><p>Enable JavaScript to save food preferences and edit meal times.</p></noscript>
+    </section>
+    <p class="profile-scope">These details are private to your account. Saving them does not generate a meal plan, assess allergy safety, or calculate calorie targets.</p>
+  </main>
+</body>
+</html>

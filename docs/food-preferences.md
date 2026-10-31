@@ -65,3 +65,29 @@ preferences return 404. Existing API rate/time/response limits apply. Invalid
 updates preserve prior values; errors never echo reported allergy text.
 Five targeted API tests passed in disposable PostgreSQL, including two-user
 isolation, revocation, canonical response values, and malformed/oversized requests.
+
+
+## Browser flow and verification
+
+/food-preferences requires sign-in and a saved basic profile. Account and training
+pages link to it. The form requires an explicit diet, allergy status, spending
+style, preparation allowance, and at least one chosen meal time. Reported names
+are shown only for listed status; selecting another status sends an empty list.
+Native time controls display the browser's local format and submit HH:MM values.
+Users can add/remove times within 1–8 entries. Profile time zone is shown; it is
+never inferred from browser/server time. No existing profile is overwritten.
+
+Writes use JavaScript PUT, bounded JSON, a 15-second timeout, disabled fields,
+textContent feedback, and server-rendered reload on success. Native form method
+is POST to prevent private fields entering query strings. JavaScript is required.
+Jinja escapes reported names; private values are not written to browser storage.
+
+Two targeted page tests passed after correcting a conditional template expression.
+The complete isolated PostgreSQL suite passed 99 tests, none skipped, on 2026-10-31.
+Browser checks with synthetic data confirmed profile-first redirection, unsure
+status persistence, chronological meal reload, duplicate-name rejection, listed
+allergy save/reload, explicit clearing to none_reported, 1–8 meal editor bounds,
+stale-success clearing, and logout protection. Desktop (1280) and mobile (390)
+viewport inspections found no horizontal overflow; console inspection returned no
+warnings/errors. Temporary viewport overrides were reset and the owned test cluster
+was stopped and removed. The application database was not used for these checks.
