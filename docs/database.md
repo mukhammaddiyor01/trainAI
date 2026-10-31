@@ -73,3 +73,13 @@ available, for example `scripts/test_postgres.py --pattern test_profile_storage.
 The default still discovers the full suite. A targeted result is not a full-suite
 result and must be reported as such. Both modes use the isolated cluster and
 perform migration round trips.
+
+
+## Training-preference migration — 2026-10-31
+
+Migration 0004 adds training_preferences with one row per saved profile and
+bounded SQL choices/selection sets. It was tested through isolated upgrade,
+downgrade, and upgrade, with migration/model parity checks. After confirming
+revision 0003 and no table conflict, the configured database was explicitly
+upgraded to 0004. Existing tables were not modified; no synthetic records were
+written to the configured database. See [training preferences](training-preferences.md).

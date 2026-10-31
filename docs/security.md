@@ -23,6 +23,7 @@ Plain business services remain independent of these HTTP controls.
 
 | Boundary | Limit / behavior |
 | --- | --- |
+| Training-preference bodies | 4096 bytes, strict five-field input, authenticated owner only |
 | Basic profile bodies | 8192 bytes, strict four-field input, authenticated owner only |
 | Credential bodies | 2048 bytes, including streamed/chunked bodies |
 | Body arrival | 10 seconds total, then 408 |
@@ -118,3 +119,15 @@ forged owner/starting-weight fields were tested.
 The user's 8-character minimum decision is implemented through shared password
 constants in the service, HTTP schema, and rendered forms. Argon2id, cookie/session
 controls, and rate limits remain active. OAuth remains deferred.
+
+
+## Training preferences — 2026-10-31
+
+GET/PUT /api/training-preferences use server-derived identity and owner-scoped
+queries. PUT requires the exact same Origin, bounded JSON, strict schemas, and
+plain validation; unknown owner/role/storage fields are rejected. Responses expose
+only the five named preferences. Existing rate/time/response limits apply.
+Invalid saves preserve stored values. Tests cover two-user isolation, revoked
+access, malformed and oversized requests, and missing-profile rejection. SQL
+constraints and atomic upserts protect complete selections and concurrent retries.
+OAuth remains deferred and the limiter remains single-process local memory.

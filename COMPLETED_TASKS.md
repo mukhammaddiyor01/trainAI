@@ -36,8 +36,8 @@ history and current code before proceeding. Do not silently assume which is righ
 
 The application supports account registration, sign-in/sign-out, private session
 identity, and a basic private profile containing age, height, weight, and IANA time
-zone, plus gain/loss/maintenance weight goals. Full planning preferences have not
-been implemented.
+zone, gain/loss/maintenance weight goals, and private training preferences.
+Food preferences and calculation-specific planning inputs are still pending.
 
 | Area | Completed behavior |
 | --- | --- |
@@ -47,6 +47,7 @@ been implemented.
 | Sessions | Random 32-byte tokens, SHA-256 digests in storage, 24-hour expiry, login rotation, logout revocation, HttpOnly/host-only/SameSite cookies |
 | Guards | Shared same-origin write checks and server-derived account identity; browser user_id, role, or forged Bearer values do not establish identity |
 | Validation | Strict Pydantic request/response contracts, unknown-field rejection, no coercion, bounded UTF-8 JSON, duplicate-key/non-finite/compressed-body rejection |
+| Training preferences | Self-reported experience/activity, explicit equipment, Monday-based weekdays, bounded duration, owner-scoped atomic storage, strict API, responsive form |
 | Weight goals | Server-selected starting snapshot, gain/loss/maintenance rules, one owner-scoped current goal, guarded API, responsive form, concurrent-retry protection |
 | Basic profile | Plain Python validation, one owner-keyed profile per user, atomic saves, SQL bounds, protected API, responsive form, saved-value reload |
 | HTTP controls | API/login rate limits, Retry-After, body/metadata/response bounds, safe response-validation errors, proxy-header rejection, local server limits |
@@ -62,16 +63,17 @@ height 50–300 cm, weight 20–500 kg. These are not medical reference ranges.
 - The user supplied DATABASE_URL in the ignored local .env. Never print, copy into
   documentation, overwrite, or commit that value.
 - The configured database connection was verified. Migration 0001 created users
-  and login_sessions; migration 0002 added profiles; migration 0003 added goals. All were applied explicitly.
-- Current expected migration revision: 0003. Existing accounts were preserved.
+  and login_sessions; migration 0002 added profiles; migration 0003 added goals;
+  migration 0004 added training preferences. All were applied explicitly.
+- Current expected migration revision: 0004. Existing accounts were preserved.
 - Synthetic browser accounts and profiles were created only in disposable test
   clusters; those clusters were stopped and removed.
 - The main local server was left running at http://127.0.0.1:8000. Do not assume
   its process survives until the next session or stop an unrelated process.
 - Canonical launcher: `.venv/bin/python -m backend` from the repository root.
-- Useful routes: /register, /login, /account, /profile, /goal, /health.
+- Useful routes: /register, /login, /account, /profile, /goal, /training-preferences, /health.
 - APIs: POST /auth/register, POST /auth/login, GET /auth/me, POST /auth/logout,
-  GET/PUT /api/profile, and GET/PUT /api/goal.
+  GET/PUT /api/profile, GET/PUT /api/goal, and GET/PUT /api/training-preferences.
 
 ## Verification Already Performed
 
@@ -97,8 +99,8 @@ invalid update preserved the old profile. Desktop/mobile layouts were inspected.
 Live HTTP checks confirmed no Server header, no-store responses, and rejection
 of spoofed X-Forwarded-For headers. Details are in docs/verification.md.
 
-The 2026-10-29 handoff itself was documentation-only. The latest 2026-10-30
-implementation was verified with the complete working-tree suite. Re-run relevant
+The 2026-10-29 and end-of-day 2026-10-30 handoffs were documentation-only.
+The latest 2026-10-31 implementation passed the complete working-tree suite. Re-run relevant
 checks when code or runtime configuration changes.
 
 ## Git Checkpoint and Completed Increments
@@ -106,10 +108,10 @@ checks when code or runtime configuration changes.
 Repository: https://github.com/mukhammaddiyor01/trainAI
 
 The original 2026-10-29 handoff followed 0682f78 and was committed as dfe7b23.
-The latest implementation commit is e5ce7d5; checkpoint documentation followed
-in 222f637. Both are on develop and were pushed to origin/develop.
+The 2026-10-30 handoff is a1a045d. The latest implementation commit is a5352bb
+on develop, following the separate rule, storage, and API increments below.
 Master remains at a8ddfd9, the initial web setup. Subsequent work belongs only on
-develop. This end-of-day handoff is a separate documentation-only increment.
+develop. Each verified milestone ends with a separate documentation checkpoint.
 
 | Commit | Completed increment |
 | --- | --- |
@@ -141,6 +143,11 @@ develop. This end-of-day handoff is a separate documentation-only increment.
 | 15b413e | Responsive goal onboarding and saved context |
 | e5ce7d5 | User-selected 8-character password policy across all layers |
 | 222f637 | Verified goal milestone, resolved password decision, and next preference steps |
+| a1a045d | End-of-day handoff and next-session checklist |
+| fba243c | Plain training-preference rules and immutable selections |
+| a2c320d | Owner-scoped preference storage and migration 0004 |
+| bbc60c9 | Guarded preference API, strict validation, and request bounds |
+| a5352bb | Responsive preference onboarding and saved selections |
 
 ## Historical Password Edit — Resolved on 2026-10-30
 
@@ -224,20 +231,26 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   clearing, desktop/mobile layouts without horizontal overflow, and logout.
   Synthetic records and the disposable cluster were removed.
 - All 83 tests passed with no skips in isolated PostgreSQL, including migration
-  round trips. The configured real database has not been migrated in this step.
+  round trips. UI committed as a5352bb.
+- After confirming revision 0003 and no table conflict, explicitly applied the
+  additive migration 0004 to the configured database. No existing tables were
+  modified and no synthetic records were written there. `pip check` passed.
+- Started the canonical loopback runtime and verified anonymous page/API guards,
+  script delivery, no-store responses, and absent Server headers. The local
+  process was left running; verify availability again next session.
 
 ## Next Work — Not Yet Completed
 
-The goal milestone is complete. Next, add planning preferences in small,
+The training-preference milestone is complete. Next, collect food preferences,
+allergies, budget, preparation time, and customizable meal schedules in small,
 independently verified increments:
 
-1. Plain Python training-preference rules are complete (2026-10-31).
-2. The minimum required owner-scoped persistence and reviewed migration.
-3. A strict bounded API with existing guards and two-user isolation checks.
-4. A usable UI and browser verification, committed separately.
-5. Food preferences, allergies, budget, preparation time, and meal schedules in
-   later small increments. Verify calculation-specific methods before computing
-   any calorie or nutrition target.
+1. Define plain Python input rules and explicit meanings for food preferences.
+2. Add the minimum owner-scoped persistence and a reviewed additive migration.
+3. Expose a strict bounded API with guards and two-user isolation checks.
+4. Add the English UI and verify saving/reloading in a disposable browser flow.
+5. Review calculation-specific inputs and sourced methods before computing any
+   calorie or nutrition targets. Never treat preference labels as multipliers.
 
 Later work remains: sourced exercise/food catalogs; verified calculation methods;
 deterministic plans; daily logs; weekly review and approved plan versions;

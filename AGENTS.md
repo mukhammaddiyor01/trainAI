@@ -41,16 +41,20 @@ Product defaults confirmed by the user:
 
 ## Current Milestone and Implementation Order
 
-The web foundation, account access, private basic profile, and weight goals are implemented.
+The web foundation, account access, private basic profile, weight goals, and
+training preferences are implemented.
 The profile currently includes age, height, weight, and an explicit IANA time zone.
 Strict input/response schemas, shared authentication/origin guards, ownership-scoped
 profile operations, request/rate/resource limits, and safe errors are verified.
-All 68 working-tree checks passed with an isolated PostgreSQL cluster on 2026-10-30. The browser profile flow
-was verified using synthetic data; the configured real database was upgraded
-explicitly to migration 0003. See docs/verification.md, docs/profiles.md, and
+All 83 working-tree checks passed with isolated PostgreSQL on 2026-10-31.
+Browser profile and training-preference flows were verified using synthetic data; the configured real database was upgraded
+explicitly to migration 0004. See docs/verification.md, docs/profiles.md, and
 docs/security.md and docs/goals.md. Goals keep a server-selected starting-weight
-snapshot across profile edits and identical retries. The next small increments add
-planning preferences. The user selected an 8-character password minimum, shared
+snapshot across profile edits and identical retries. Training preferences record
+experience, activity, equipment, available weekdays, and session duration with
+owner-scoped storage, strict API limits, and responsive UI. See
+docs/training-preferences.md. Next, add food preferences in small increments.
+The user selected an 8-character password minimum, shared
 across service, schema, and rendered forms; the earlier mismatch is resolved.
 No calorie calculations, generated plans, logging, or AI features are active.
 OAuth is explicitly deferred by the user; keep local authentication for now.

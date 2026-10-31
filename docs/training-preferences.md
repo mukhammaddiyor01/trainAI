@@ -18,6 +18,7 @@ calculation; no activity multipliers or generated workouts are attached.
 Duplicates, unknown choices, malformed collections, coercible numeric strings,
 boolean days/durations, and non-integer durations are rejected. Valid collections
 are sorted and copied into immutable tuples, preventing later caller mutation.
+
 ## Persistence
 
 Migration 0004 adds one owner-keyed row per basic profile, with a cascading
@@ -27,7 +28,7 @@ Equipment and weekdays use bounded seven-bit sets in storage, so duplicate
 selections cannot exist in a row. Bit positions are fixed in the persistence
 module and must not change without a migration. Plain service/API values remain
 named equipment and Monday-based weekday integers. Bodyweight is the empty set.
-No preference history is retained yet. API and browser controls follow separately.
+No preference history is retained yet. API and browser controls are described below.
 
 
 ## Protected API
@@ -50,7 +51,8 @@ profiles to /profile. Account and goal pages link to the form. Saved selections
 are rendered by the server; empty selections do not invent user preferences.
 Native labeled selects, grouped checkboxes, and an integer duration input support
 keyboard use. The form rejects no selected days before requesting a save. Writes
-use a POST fallback action (no private query fields) and JavaScript PUT, with a
+declare POST as the native form method to avoid private query fields; saving
+requires JavaScript PUT, with a
 15-second timeout, disabled fields during saving, textContent feedback, and stale
 success clearing on edits. A successful save reloads stored server values.
 

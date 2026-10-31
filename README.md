@@ -17,8 +17,8 @@ The web foundation and account access are implemented: responsive English pages,
 registration, Argon2id password hashing, server-side sessions, sign-in/sign-out,
 and private account identity. PostgreSQL schema changes use explicit Alembic
 migrations. A private basic profile stores age, height, weight, and time zone.
-Owner-scoped gain, loss, and maintenance goals are available.
-Planning preferences, fitness planning, logging, AI inference, training,
+Owner-scoped gain, loss, and maintenance goals and training preferences are available.
+Food preferences, fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
 ## Local setup
@@ -47,10 +47,12 @@ See [database setup](docs/database.md) before running explicit migrations:
 ```
 
 Open `/register` to create your own account, `/login` to sign in, and `/account`
-to view your private account. Open `/profile` to save your basic details, then `/goal` to record your weight goal. Passwords
+to view your private account. Open `/profile` to save your basic details, then
+`/goal` to record your weight goal. Use `/training-preferences` to save experience,
+activity, available equipment, weekdays, and session duration. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 68 checks, including PostgreSQL integration, use the disposable runner:
+For all 83 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
@@ -81,14 +83,18 @@ backend/
   routes.py               Public page and health controllers
   auth_routes.py          Bounded authentication API
   profile_routes.py       Private profile API
+  goal_routes.py          Private goal API
+  training_preference_routes.py  Private training-preference API
   account_pages.py        Authenticated browser pages
   guards.py               Session and same-origin guards
   schemas.py              Strict input and public output contracts
-  profiles.py             Owner-scoped persistence
-  services/profiles.py     Plain Python profile validation
-  models.py               Account, session, and profile records
+  profiles.py             Owner-scoped profile persistence
+  goals.py                Stable owner-scoped goal snapshots
+  training_preferences.py Owner-scoped preference persistence
+  services/               Plain Python profile, goal, and preference validation
+  models.py               Account, session, profile, goal, and preference records
 frontend/
-  templates/              Introduction, authentication, account, and profile pages
+  templates/              Introduction, authentication, profile, goal, and preference pages
   static/                 Local styles and browser scripts
 tests/                    Isolated service, security, HTTP, and database checks
 docs/
@@ -101,13 +107,13 @@ authentication controllers, and private account pages are now present. Fitness
 services and AI/vision adapters will be introduced with their features.
 See [database configuration](docs/database.md), [architecture](docs/architecture.md),
 [environment](docs/environment.md), [authentication](docs/authentication.md),
-[goals](docs/goals.md), and
+[goals](docs/goals.md), [training preferences](docs/training-preferences.md), and
 [development rules](AGENTS.md).
 
 ## Next milestone
 
-Add planning preferences in small increments using the authenticated
-server-side identity. Metric units, user-selected IANA time zones, Monday week
+Add food preferences, allergies, meal timing, budget, and preparation time in
+small increments using the authenticated server-side identity. Metric units, user-selected IANA time zones, Monday week
 boundaries, and customizable meal schedules are confirmed product defaults.
 Use only synthetic data in tests; never commit real profiles or activity records.
 

@@ -96,3 +96,34 @@ and logout. Temporary clusters were removed. The real database was upgraded
 explicitly to 0003 after conflict/revision checks; existing data was preserved.
 No new dependencies or model downloads were introduced; the 2026-10-29 advisory
 audit is historical and was not rerun for these code-only changes.
+
+
+## Training-preference milestone — 2026-10-31
+
+Story: a signed-in user opens Training preferences, saves experience, activity,
+equipment, available days, and session time through the guarded API, then reloads
+stored private selections from PostgreSQL.
+
+| Boundary | Evidence |
+| --- | --- |
+| UI entry and guards | Account/goal links; anonymous login redirect; profile-first redirect |
+| Client to API | Browser form saved bodyweight preferences, then equipment/duration changes |
+| API to data | Owner-keyed upserts; two-user and concurrent-retry PostgreSQL tests |
+| Data to response | Five-field allowlisted response; invalid updates retain prior values |
+| Response to UI | Saved selections rendered after navigation and explicit reload |
+
+Four rule tests, four storage tests, five API tests, and two page tests passed as
+separate targeted increments. The complete isolated PostgreSQL suite then passed
+83 tests, none skipped, including migration round trips. `pip check` passed.
+Browser verification also covered no selected weekdays, stale-success clearing,
+logout, and desktop/mobile layouts. At effective viewport widths 1163 and 354 CSS
+pixels, no element extended beyond the viewport; no console warnings/errors were
+reported. Overrides were reset; synthetic data and the owned cluster were removed.
+
+The configured database was explicitly upgraded from 0003 to 0004 after conflict
+checks. The current loopback runtime returned /login 200, /training-preferences
+303 to login without a cookie, /api/training-preferences 401, and the new local
+script 200; checked responses used no-store and omitted Server headers.
+No synthetic records were written to the configured database. Dependencies were
+unchanged; the 2026-10-29 advisory audit was not rerun. Food preferences, calculations,
+generated plans, AI, and camera work remain unimplemented.
