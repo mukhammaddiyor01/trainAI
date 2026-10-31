@@ -4,7 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from backend.services.catalogs import InvalidCatalog, validate_exercise, validate_food
+from backend.services.catalogs import InvalidCatalog, strings, validate_exercise, validate_food
 
 CATALOG_ROOT = Path(__file__).resolve().parent.parent / "data" / "catalogs"
 MAX_CATALOG_BYTES = 256 * 1024
@@ -54,7 +54,33 @@ def load_records(filename: str, validator):
 
 
 def load_exercises():
-    return load_records("exercises.json", validate_exercise)
+    exercises = load_records("exercises.json", validate_exercise)
+    try:
+        with (CATALOG_ROOT / "sources" / "free-exercise-db.json").open("rb") as source:
+            raw = source.read(MAX_CATALOG_BYTES + 1)
+        if len(raw) > MAX_CATALOG_BYTES:
+            raise InvalidCatalog("Exercise source evidence is oversized.")
+        evidence = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_keys, parse_constant=reject_constant)
+    except (OSError, UnicodeError, ValueError, RecursionError):
+        raise InvalidCatalog("Exercise source evidence is unavailable or invalid.") from None
+    if type(evidence) is not dict or set(evidence) != {"source_revision", "records"}:
+        raise InvalidCatalog("Exercise source envelope is invalid.")
+    records = evidence["records"]
+    if type(records) is not list or len(records) != len(exercises):
+        raise InvalidCatalog("Exercise source evidence count does not match.")
+    sources = {}
+    for record in records:
+        if type(record) is not dict or type(record.get("id")) is not str or record["id"] in sources:
+            raise InvalidCatalog("Exercise source IDs must be unique.")
+        sources[record["id"]] = record
+    for exercise in exercises:
+        record = sources.get(exercise.source_id)
+        if (record is None or evidence["source_revision"] != exercise.source_revision
+                or record.get("name") != exercise.name or record.get("level") != exercise.source_level
+                or record.get("force") != exercise.force
+                or strings(record.get("primaryMuscles"), 8) != exercise.primary_muscles):
+            raise InvalidCatalog("Exercise metadata does not match retained source evidence.")
+    return exercises
 
 
 def load_foods():

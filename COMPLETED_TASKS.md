@@ -308,7 +308,11 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - Source-link verification found USDA web detail routes returned 404. Replaced
   them with the documented, successfully retrieved official API resource URLs
   using USDA's public DEMO_KEY. Five food-source tests passed after correction;
-  runtime catalog loading remains offline.
+  runtime catalog loading remains offline. Source-link fix committed as 135a9ff.
+- Added explicit offline catalog verification with exercise source-evidence
+  parity and food snapshot digests. Two operator tests passed, including denied
+  sockets and an unusable DATABASE_URL. The command reports 6 exercise and 4
+  food nutrient records while clearly stating food selection is unavailable.
 
 ## Next Work — Not Yet Completed
 

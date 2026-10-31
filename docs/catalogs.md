@@ -100,3 +100,15 @@ with its public demonstration key, matching the responses actually retrieved.
 DEMO_KEY is explicitly public in USDA's guide, not a user's private credential;
 clicking these source links is subject to USDA's public-demo rate limits. Runtime
 catalog loading is offline and never follows these links.
+
+
+## Explicit offline check
+
+Run `.venv/bin/python -m backend.check_catalogs`. It validates both local catalogs,
+compares exercise source IDs/revisions and preserved metadata with selected source
+evidence, and checks food snapshot hashes. Exit 0 means the bundled contracts and
+evidence pass; it does not mean food selection or planning is available. Failure
+returns exit 1 with a generic diagnostic. The command reports 6 exercise records,
+4 nutrient records, and unavailable food selection. It does not read DATABASE_URL,
+connect to a database, fetch URLs, alter a schema, or run automatically at startup.
+Two operator-check tests passed, including socket denial and safe failure output.
