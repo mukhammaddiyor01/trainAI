@@ -173,3 +173,15 @@ only public registry counts/version and pending composition counts. Ambiguous
 registry entries fail with a generic diagnostic. Existing HTTP/body/response and
 owner guards remain unchanged. Recognized names do not bypass ingredient or
 food-composition review, and every current nutrient seed remains blocked.
+
+
+## Adult energy service boundary — 2026-11-02
+
+The new calculation services accept bounded profile data and three exact string
+choices, revalidate immutable objects at use, and reject unknown/out-of-scope
+calculation answers. They do not infer sex or whole-day activity from account or
+training data, log inputs/results, use a database/network, or accept model output.
+No new endpoint, persistence, form, or public data exposure exists in this step.
+Future collection must use the shared owner/session/origin guards, strict input
+and response allowlists, and existing request/rate/response budgets; these future
+boundaries have not yet been implemented or verified for energy preferences.

@@ -236,3 +236,25 @@ no runtime was started/stopped and no browser check or historical advisory audit
 was repeated. The configured database was not contacted. This increment totals
 specified portions; it does not record a meal, determine personal energy needs,
 recommend foods, or create a plan.
+
+
+## Adult energy-method services — 2026-11-02
+
+Read all 15 existing project-owned Markdown documents and confirmed clean develop
+at da04b5a. Reviewed National Academies 2023 Table 5-16, its summary, and the
+Health Canada adult table and whole-day PAL definitions before coding. The source
+and scope decision was committed separately, followed by input and calculation
+service commits. New method documentation brings the inventory to 16 files.
+
+Four input-rule tests passed, then eight calculation tests passed independently.
+These include all eight numerical reference cases and 67 valid-but-ineligible
+choice combinations, exact/strict input types, unknowns, age boundaries, forged
+service values, decimal precision, changed current profile weight, time-zone
+independence, nonpositive-result rejection, immutable outputs, and offline use.
+
+The complete disposable PostgreSQL suite passed 143 tests, none skipped, including
+migration downgrade/upgrade; its owned cluster was removed. pip check and offline
+catalog verification passed. No dependencies, schema, API, UI, or runtime launcher
+changed. The configured database was not contacted. No browser check or historical
+advisory audit was repeated. Energy preference persistence/collection and a
+user-facing estimate are still unimplemented; no calorie target or plan is active.

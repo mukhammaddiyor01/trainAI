@@ -6,8 +6,9 @@ health conditions, or generate a fitness plan. Weight goals are implemented
 separately; training availability and equipment are recorded in
 [training preferences](training-preferences.md). Diet, reported allergies, and
 meal timing are recorded in [food preferences](food-preferences.md).
-Calculation-specific inputs still require a reviewed method and a separate increment. These four fields alone
-must never trigger a personal plan.
+The [adult energy method and explicit extra inputs](energy-estimation.md) are
+now reviewed and implemented as plain services only. Extra input storage/API/UI
+are not yet present. These four fields alone must never trigger an estimate or plan.
 
 Supported input bounds are application validation limits, not medical reference
 ranges: age 18–120, height 50–300 cm, and weight 20–500 kg. Non-finite values,

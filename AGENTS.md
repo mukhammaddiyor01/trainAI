@@ -46,7 +46,7 @@ training and food preferences are implemented.
 The profile currently includes age, height, weight, and an explicit IANA time zone.
 Strict input/response schemas, shared authentication/origin guards, ownership-scoped
 profile operations, request/rate/resource limits, and safe errors are verified.
-All 131 working-tree checks passed with isolated PostgreSQL on 2026-11-02.
+All 143 working-tree checks passed with isolated PostgreSQL on 2026-11-02.
 Browser profile and training-preference flows were verified using synthetic data; the configured real database was upgraded
 explicitly to migration 0005. See docs/verification.md, docs/profiles.md, and
 docs/security.md and docs/goals.md. Goals keep a server-selected starting-weight
@@ -66,8 +66,14 @@ an explicit readiness blocker. Recognized names still require ingredient review.
 Multi-portion nutrient arithmetic now totals explicit catalog IDs and grams while
 preserving unknown nutrients and raw/cooked identity. It does not select foods.
 The four composition-source reviews found insufficient evidence; see docs/catalogs.md.
-Next, review calculation-specific inputs and methods before personal targets;
-product-specific composition evidence is still required before food selection.
+A reviewed DRI 2023 adult energy estimate and explicit energy-preference rules
+are available as plain services only; see docs/energy-estimation.md. The method
+requires age 19+, explicit coefficient/activity choices, and general-adult context;
+unsure and out-of-scope answers do not produce an estimate. Training activity is
+not substituted. No user-facing energy estimate, energy preference storage, or
+collection API/UI exists yet. Next, add owner-scoped energy-preference persistence,
+then guarded API and explicit UI in separate increments. Product-specific
+composition evidence is still required before food selection.
 Unsure allergy status and unmapped names must not silently permit food selection.
 The user selected an 8-character password minimum, shared
 across service, schema, and rendered forms; the earlier mismatch is resolved.

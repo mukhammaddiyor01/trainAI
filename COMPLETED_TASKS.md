@@ -6,24 +6,27 @@ before implementation.
 
 ## Current Checkpoint — 2026-11-02
 
-- Resumed from clean, synchronized develop at f5b59ce after reading all 15 Markdown
-  files. Prior allergy-name resolution and unknown-name blockers remain active.
-- Rechecked composition evidence for all four SR Legacy snapshots. The outcome
-  is insufficient evidence for product composition, not approval. Requirements
-  for a separately identified product import are recorded in docs/catalogs.md.
-- Added bounded explicit multi-portion nutrient totals with exact IDs, raw/cooked
-  separation, immutable row contributions, and independent unknown propagation.
-  Repeated portions are additive; no personal target or food recommendation results.
-- Latest complete result: 131 isolated PostgreSQL tests passed, none skipped;
-  32 cover catalog/name/portion checks. pip check and offline catalog check passed.
+- Resumed from clean, synchronized develop at da04b5a after reading all 15 existing
+  Markdown files. New docs/energy-estimation.md brings the inventory to 16.
+- Reviewed DRI 2023 adult EER equations, units, and whole-day PAL definitions.
+  Implemented strict explicit energy preferences and versioned plain calculation
+  with current profile values, age-19 boundary, and scope/unknown checks.
+- All eight numerical equation cases and 67 uncertain/excluded input combinations
+  are tested. No coefficient/activity/context is inferred; no gain/loss offset,
+  personal calorie target, plan, energy storage, API, or UI has been activated.
+- Latest complete result: 143 isolated PostgreSQL tests passed, none skipped;
+  12 are new energy input/calculation tests. pip check and offline catalogs passed.
   Expected database revision remains 0005; the configured database was not used.
-- Latest service increment: 3ed98b3, following composition review 3102a4e.
-  Development remains on develop; master remains at a8ddfd9.
-- Next: review calculation methods, required inputs, applicability and bounds
-  before personal targets. Product-specific composition evidence remains required
-  before food selection; exercise rules/limitations remain required before workouts.
-- No server was started/stopped or browser tab changed in this continuation.
-  Check runtime availability again when UI work resumes.
+- Latest implementation: 14b5845, after source review 906e1c8 and input rules
+  f57b3e7. Work remains on develop; master remains at a8ddfd9.
+- Next: owner-scoped energy-preference persistence and a reviewed additive
+  migration, followed by strict guarded API and explicit input UI in separate
+  commits. Only then expose the estimate; gain/loss policies need their own review.
+- Existing catalog/name/portion logic and selection blockers for all four foods
+  remain active. Product composition evidence and exercise rules remain prerequisites
+  for automatic food/workout planning.
+- No port-8000 listener was found during the startup check. No server was started
+  or stopped and no browser tab was changed; recheck runtime for future UI work.
 
 ## Previous Session Handoff — 2026-10-31
 
@@ -78,12 +81,13 @@ Current documentation:
 - [Food preferences](docs/food-preferences.md)
 - [Catalog seeds](docs/catalogs.md)
 - [Allergy-name resolution](docs/allergen-names.md)
+- [Adult energy estimation](docs/energy-estimation.md)
 - [Security boundaries](docs/security.md)
 - [Verification history](docs/verification.md)
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete working-tree suite passed 131 tests on 2026-11-02. If documents disagree, inspect Git
+the latest complete working-tree suite passed 143 tests on 2026-11-02. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
@@ -94,8 +98,9 @@ zone, gain/loss/maintenance weight goals, and private training preferences.
 Private food preferences and custom local meal schedules are implemented.
 Six sourced exercise metadata records and four USDA nutrient seeds are implemented.
 Bounded exact allergy-name resolution and explicit unresolved-name blockers are
-implemented. Explicit multi-portion nutrient totals are also available. Personal
-calculation inputs, product composition evidence, and plans remain pending.
+implemented. Explicit multi-portion nutrient totals and reviewed adult energy
+input/calculation services are available. Energy input storage/API/UI, product
+composition evidence, personal targets, and plans remain pending.
 
 | Area | Completed behavior |
 | --- | --- |
@@ -106,6 +111,7 @@ calculation inputs, product composition evidence, and plans remain pending.
 | Guards | Shared same-origin write checks and server-derived account identity; browser user_id, role, or forged Bearer values do not establish identity |
 | Validation | Strict Pydantic request/response contracts, unknown-field rejection, no coercion, bounded UTF-8 JSON, duplicate-key/non-finite/compressed-body rejection |
 | Allergy-name resolution | Nine reviewed groups/15 exact English terms, shared normalization, immutable results, preserved unknowns, unchanged ingredient/composition blockers, offline checks |
+| Adult energy services | Reviewed versioned DRI 2023 equations, explicit choices without inference, age/context/unknown checks, revalidated current profile values; no storage/API/UI yet |
 | Portion totals | Exact-ID gram rows, bounded input, retained raw/cooked identity, immutable contributions, missing nutrients preserved independently |
 | Catalog seeds | Six pinned exercise records, complete equipment requirements, four sourced nutrient records, raw/cooked identity, exact-ID lookup, gram scaling, explicit blocked-food readiness, offline evidence check |
 | Food preferences | Explicit allergy states and bounded names, diet, spending style, preparation allowance, custom local meal times, private atomic storage, guarded API, responsive form |
@@ -146,7 +152,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Latest result: 131 working-tree tests passed, none skipped (2026-11-02). Coverage includes account/session isolation,
+Latest result: 143 working-tree tests passed, none skipped (2026-11-02). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.
@@ -174,7 +180,8 @@ The original 2026-10-29 handoff followed 0682f78 and was committed as dfe7b23.
 The 2026-10-30 handoff is a1a045d; the training-preference checkpoint is 335862a.
 The food-preference checkpoint is b5d4a3c; catalog documentation is fc89ac6,
 followed by handoff dd69dc4. Allergy readiness handoff is f5b59ce. The latest
-service increment is 3ed98b3 on develop, after composition review 3102a4e.
+service increment is 14b5845 on develop, after method/input increments 906e1c8
+and f57b3e7. The prior portion checkpoint is da04b5a.
 Master remains at a8ddfd9, the initial web setup. Subsequent work belongs only on
 develop. Each verified milestone ends with a separate documentation checkpoint.
 
@@ -233,6 +240,10 @@ develop. Each verified milestone ends with a separate documentation checkpoint.
 | f5b59ce | Verified allergy-name readiness and composition-review handoff |
 | 3102a4e | Composition-source review outcome and product evidence requirements |
 | 3ed98b3 | Bounded multi-portion nutrient totals and focused regression tests |
+| da04b5a | Verified portion-total handoff and next calculation-input review |
+| 906e1c8 | Reviewed adult energy method, source coefficients, and explicit input scope |
+| f57b3e7 | Strict immutable energy calculation preferences without defaults |
+| 14b5845 | Versioned adult DRI 2023 estimate with scope checks and independent fixtures |
 
 ## Historical Password Edit — Resolved on 2026-10-30
 
@@ -486,19 +497,25 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   age 18/19, forged dataclass values, current weight, time-zone independence,
   immutable results, and offline operation. No gain/loss offsets, food selection,
   plans, storage, API, or browser behavior were introduced.
-- Next: full regression and handoff, then separate private preference storage,
-  guarded API, and explicit input UI before any user-facing estimate.
+- Calculation increment committed as 14b5845. All 143 isolated PostgreSQL tests
+  passed, none skipped, with migration round trips and owned-cluster cleanup.
+  pip check and the offline catalog check passed. No configured database access,
+  schema/dependency/HTTP/UI change, server restart, browser check, or advisory
+  audit was performed. No calorie target or plan was created.
+- Next: private energy preference storage and reviewed migration, followed by
+  guarded API and explicit input UI before any user-facing estimate.
 
 ## Next Work — Not Yet Completed
 
 The reference catalog seed milestone is complete. Continue the original
 profile → weekly plan → daily logging → weekly review → approved revision flow:
 
-1. Review calculation methods and required missing profile inputs before adding
-   deterministic personal targets. Record method version, evidence, applicability,
-   and bounds before implementation; do not infer missing inputs. Descriptive
-   activity/budget labels are not verified multipliers or prices. Multi-portion
-   arithmetic is available independently and does not define those targets.
+1. Add owner-scoped energy-preference persistence and a reviewed migration,
+   then strict guarded API and explicit explanatory UI in separate small commits.
+   Preserve the three exact choices, including unsure/excluded contexts. Do not
+   backfill from training/account data. Expose the existing plain estimate only
+   after explicit required inputs and scope checks; review gain/loss target
+   policies separately. Method/source/coefficients are in docs/energy-estimation.md.
 2. Obtain separately identified product ingredient/diet/allergen evidence before
    automatic food selection. The current four composition-source reviews found
    insufficient evidence; do not repeat generic nutrient retrieval as if it

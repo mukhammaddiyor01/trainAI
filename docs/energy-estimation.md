@@ -74,3 +74,28 @@ macro target, household portion conversion, food selection, storage, or plan is
 part of this calculation. Future private collection must use existing ownership,
 strict schema, request/response limits, and origin/session guards. No existing
 profile is backfilled with invented answers.
+
+
+## Implemented and verified — 2026-11-02
+
+backend/services/energy_preferences.py validates all three choices and returns
+immutable values. Saving uncertainty is not the same as calculation eligibility.
+backend/services/energy_estimation.py revalidates ProfileDetails and preferences,
+checks age/context/uncertainty, and returns AdultEnergyEstimate with kcal/day,
+method version, and the two selected equation keys. Missing or forged dataclass
+values cannot bypass validation. No private inputs or results are logged or sent.
+
+Four preference-rule tests cover all 75 valid choice combinations, strict/missing
+inputs, exact labels, redaction, and immutable unknowns. Eight estimate tests cover
+all eight independent numerical fixtures, fractional precision, 67 excluded or
+uncertain combinations, age 18/19, malformed service values, current weight,
+time-zone independence, nonpositive output, immutable results, and offline operation.
+All 143 application checks passed, none skipped, in disposable PostgreSQL with
+migration round trips and cluster cleanup. pip check and offline catalogs passed.
+
+No schema/dependency/HTTP/UI change was introduced; no real database was accessed.
+Browser testing and the historical advisory audit were not repeated. Next: store
+private calculation preferences per profile, add the guarded strict API, and then
+an explicit explanatory input form. Keep these as separate verified commits.
+The current method is backend-only; no existing user has been assigned answers
+or a calorie target.
