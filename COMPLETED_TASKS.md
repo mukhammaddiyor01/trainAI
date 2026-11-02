@@ -470,8 +470,15 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   applying unreviewed activity factors to resting energy. Documented explicit
   coefficient/activity/context inputs, source boundaries, and application scope
   in docs/energy-estimation.md before implementing calculations.
-- Next small increments: plain calculation-preference validation, then a versioned
-  estimate with explicit scope checks. Persistence, API, and UI remain separate.
+- Method/source review committed separately as 906e1c8.
+- Added explicit immutable energy preferences: equation sex, whole-day activity
+  category, and calculation context. No defaults/inference; unsure and excluded
+  contexts remain representable without implying calculation eligibility.
+- Four targeted rule tests passed, including all 75 supported combinations,
+  missing/malformed/coercible inputs, training-label rejection, exact choices,
+  redacted errors, and immutable unsure values. No estimate is computed yet.
+- Next: versioned adult EER estimate with explicit scope checks. Persistence,
+  API, and UI remain separate.
 
 ## Next Work — Not Yet Completed
 
