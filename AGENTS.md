@@ -46,7 +46,7 @@ training and food preferences are implemented.
 The profile currently includes age, height, weight, and an explicit IANA time zone.
 Strict input/response schemas, shared authentication/origin guards, ownership-scoped
 profile operations, request/rate/resource limits, and safe errors are verified.
-All 124 working-tree checks passed with isolated PostgreSQL on 2026-11-02.
+All 131 working-tree checks passed with isolated PostgreSQL on 2026-11-02.
 Browser profile and training-preference flows were verified using synthetic data; the configured real database was upgraded
 explicitly to migration 0005. See docs/verification.md, docs/profiles.md, and
 docs/security.md and docs/goals.md. Goals keep a server-selected starting-weight
@@ -63,7 +63,11 @@ metadata is unresolved, so current foods remain blocked from automatic selection
 A bounded exact English allergy-name resolver now recognizes 15 terms in nine
 reviewed groups; see docs/allergen-names.md. Unknown names are preserved and add
 an explicit readiness blocker. Recognized names still require ingredient review.
-Next, review composition evidence and calculation-specific inputs before planning.
+Multi-portion nutrient arithmetic now totals explicit catalog IDs and grams while
+preserving unknown nutrients and raw/cooked identity. It does not select foods.
+The four composition-source reviews found insufficient evidence; see docs/catalogs.md.
+Next, review calculation-specific inputs and methods before personal targets;
+product-specific composition evidence is still required before food selection.
 Unsure allergy status and unmapped names must not silently permit food selection.
 The user selected an 8-character password minimum, shared
 across service, schema, and rendered forms; the earlier mismatch is resolved.

@@ -182,3 +182,30 @@ another nutrient lookup as composition evidence. Product composition review
 remains a separate prerequisite for automatic selection. Explicit gram-based
 nutrient arithmetic may advance independently: calculating the totals of provided
 portions does not select foods, endorse a meal, or establish personal daily needs.
+
+
+## Multi-portion nutrient arithmetic — 2026-11-02
+
+nutrition_for_portions accepts a validated local food catalog and 1–50 explicit
+(food ID, grams) rows. Each row uses exact-ID lookup and the existing finite,
+positive, at-most-10000-g portion bound. These are application input bounds, not
+recommended portions. Empty/malformed collections, unknown IDs, strings/booleans
+as mass, and invalid mass reject the entire calculation; no row is skipped.
+
+The immutable result retains every individual FoodPortion in input order and
+four nutrient totals. Repeated food IDs are intentionally additive, not silently
+deduplicated. Raw and cooked records stay distinct. math.fsum adds scaled values
+without rounding individual portions or recalculating energy from macros.
+If any row is missing a nutrient, only that nutrient's total is None; known
+contributions remain visible in the individual rows. Explicit sourced zero remains
+zero. Empty input is invalid rather than evidence of no intake.
+
+Example using retained reference values: 150 g raw banana plus 200 g cooked rice
+has reference totals of 393.5 kcal, 7.015 g protein, 1.055 g fat, and 90.60 g
+carbohydrate. This is a reproducible arithmetic fixture, not a suggested meal,
+measured personal intake, daily target, or food-safety finding. All four current
+foods retain their selection blockers. No API or browser calculator is exposed.
+
+Seven targeted total tests passed. The full isolated PostgreSQL suite passed
+131 tests, none skipped, including migration round trips. No dependencies, schema,
+HTTP, UI, or configured user database changed; offline catalog and pip checks passed.

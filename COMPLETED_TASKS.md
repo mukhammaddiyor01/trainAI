@@ -1,26 +1,29 @@
 # TrainAI — Completed Tasks and Session Handoff
 
 Last updated: 2026-11-02 (Asia/Seoul).
-The 2026-11-02 continuation read all 14 existing project-owned Markdown files
-before implementation. New milestone documentation is included in the inventory.
+The latest 2026-11-02 continuation read all 15 project-owned Markdown files
+before implementation.
 
 ## Current Checkpoint — 2026-11-02
 
-- Resumed from dd69dc4 after reading all 14 existing Markdown files. The current
-  inventory now contains 15, including docs/allergen-names.md.
-- Bounded exact English allergy-name resolution, explicit unknown-name readiness
-  blockers, and offline registry checks are complete. Recognized names do not
-  approve food composition; all four nutrient-only seeds remain blocked.
-- Latest complete result: 124 isolated PostgreSQL tests passed, none skipped;
-  25 cover catalog/name-resolution checks. `pip check` passed. Expected database
-  revision remains 0005; the configured user database was not used in this step.
-- Latest implementation increment: 3350355, after separate resolver/readiness
-  commits below. Development remains on develop; master remains at a8ddfd9.
-- Next: obtain and review ingredient/diet/allergen composition evidence before
-  food selection. Review method-specific profile inputs and exercise prescription
-  rules before targets or plans. Additional allergy aliases require explicit review.
-- No listener was observed on port 8000 during the read-only startup check. No
-  server was started/stopped; check availability again when UI work resumes.
+- Resumed from clean, synchronized develop at f5b59ce after reading all 15 Markdown
+  files. Prior allergy-name resolution and unknown-name blockers remain active.
+- Rechecked composition evidence for all four SR Legacy snapshots. The outcome
+  is insufficient evidence for product composition, not approval. Requirements
+  for a separately identified product import are recorded in docs/catalogs.md.
+- Added bounded explicit multi-portion nutrient totals with exact IDs, raw/cooked
+  separation, immutable row contributions, and independent unknown propagation.
+  Repeated portions are additive; no personal target or food recommendation results.
+- Latest complete result: 131 isolated PostgreSQL tests passed, none skipped;
+  32 cover catalog/name/portion checks. pip check and offline catalog check passed.
+  Expected database revision remains 0005; the configured database was not used.
+- Latest service increment: 3ed98b3, following composition review 3102a4e.
+  Development remains on develop; master remains at a8ddfd9.
+- Next: review calculation methods, required inputs, applicability and bounds
+  before personal targets. Product-specific composition evidence remains required
+  before food selection; exercise rules/limitations remain required before workouts.
+- No server was started/stopped or browser tab changed in this continuation.
+  Check runtime availability again when UI work resumes.
 
 ## Previous Session Handoff — 2026-10-31
 
@@ -80,7 +83,7 @@ Current documentation:
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete working-tree suite passed 124 tests on 2026-11-02. If documents disagree, inspect Git
+the latest complete working-tree suite passed 131 tests on 2026-11-02. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
@@ -91,7 +94,8 @@ zone, gain/loss/maintenance weight goals, and private training preferences.
 Private food preferences and custom local meal schedules are implemented.
 Six sourced exercise metadata records and four USDA nutrient seeds are implemented.
 Bounded exact allergy-name resolution and explicit unresolved-name blockers are
-implemented. Calculation-specific inputs, food composition review, and plans remain pending.
+implemented. Explicit multi-portion nutrient totals are also available. Personal
+calculation inputs, product composition evidence, and plans remain pending.
 
 | Area | Completed behavior |
 | --- | --- |
@@ -102,6 +106,7 @@ implemented. Calculation-specific inputs, food composition review, and plans rem
 | Guards | Shared same-origin write checks and server-derived account identity; browser user_id, role, or forged Bearer values do not establish identity |
 | Validation | Strict Pydantic request/response contracts, unknown-field rejection, no coercion, bounded UTF-8 JSON, duplicate-key/non-finite/compressed-body rejection |
 | Allergy-name resolution | Nine reviewed groups/15 exact English terms, shared normalization, immutable results, preserved unknowns, unchanged ingredient/composition blockers, offline checks |
+| Portion totals | Exact-ID gram rows, bounded input, retained raw/cooked identity, immutable contributions, missing nutrients preserved independently |
 | Catalog seeds | Six pinned exercise records, complete equipment requirements, four sourced nutrient records, raw/cooked identity, exact-ID lookup, gram scaling, explicit blocked-food readiness, offline evidence check |
 | Food preferences | Explicit allergy states and bounded names, diet, spending style, preparation allowance, custom local meal times, private atomic storage, guarded API, responsive form |
 | Training preferences | Self-reported experience/activity, explicit equipment, Monday-based weekdays, bounded duration, owner-scoped atomic storage, strict API, responsive form |
@@ -141,7 +146,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Latest result: 124 working-tree tests passed, none skipped (2026-11-02). Coverage includes account/session isolation,
+Latest result: 131 working-tree tests passed, none skipped (2026-11-02). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.
@@ -168,8 +173,8 @@ Repository: https://github.com/mukhammaddiyor01/trainAI
 The original 2026-10-29 handoff followed 0682f78 and was committed as dfe7b23.
 The 2026-10-30 handoff is a1a045d; the training-preference checkpoint is 335862a.
 The food-preference checkpoint is b5d4a3c; catalog documentation is fc89ac6,
-followed by handoff dd69dc4. The latest implementation commit is 3350355 on
-develop, following the separate allergy resolver and readiness increments below.
+followed by handoff dd69dc4. Allergy readiness handoff is f5b59ce. The latest
+service increment is 3ed98b3 on develop, after composition review 3102a4e.
 Master remains at a8ddfd9, the initial web setup. Subsequent work belongs only on
 develop. Each verified milestone ends with a separate documentation checkpoint.
 
@@ -225,6 +230,9 @@ develop. Each verified milestone ends with a separate documentation checkpoint.
 | 9179c9e | Bounded reviewed allergy-name vocabulary and shared normalization |
 | 7d3ade6 | Preserve unresolved allergy names in food-readiness checks |
 | 3350355 | Offline registry validation and pending composition counts |
+| f5b59ce | Verified allergy-name readiness and composition-review handoff |
+| 3102a4e | Composition-source review outcome and product evidence requirements |
+| 3ed98b3 | Bounded multi-portion nutrient totals and focused regression tests |
 
 ## Historical Password Edit — Resolved on 2026-10-30
 
@@ -423,18 +431,51 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - A read-only startup check found no listener on port 8000. No server was
   started/stopped; the ambient port-8001 browser tab was not used or modified.
 
+## Portion-Arithmetic Continuation — 2026-11-02
+
+- Read all 15 project-owned Markdown files before implementation and confirmed
+  clean, synchronized develop at f5b59ce.
+- Rechecked USDA's official data-type comparison/API guide and all four retained
+  snapshots. Recorded the composition review outcome as insufficient evidence,
+  with per-source observations and explicit evidence requirements for a future
+  product import. No nutrient-only record was approved or altered.
+- Next small increment: bounded exact-ID multi-portion nutrient totals. This
+  arithmetic is independent of food eligibility and personal daily targets.
+- Composition-review decision committed separately as 3102a4e.
+- Added nutrition_for_portions: 1–50 explicit (food ID, grams) rows, exact catalog
+  lookup, existing positive finite gram bounds, source-based scaling, and fsum
+  totals. Repeated rows are additive; raw/cooked IDs and individual contributions
+  are retained in immutable results. Missing nutrient values propagate only to
+  that nutrient total; empty input does not fabricate zero intake.
+- Seven new portion-total tests and all seven existing use-rule/six food-catalog
+  tests passed (20 targeted checks). Includes unknown-ID rejection without
+  skipping rows, malformed/oversized collections, invalid masses, missing-vs-zero
+  values, detached immutable results, and unchanged food-selection restrictions.
+- This is plain offline arithmetic only, with no saved meal, recommendation,
+  personal target, HTTP contract, schema, UI, or dependency change.
+- Service increment committed as 3ed98b3. The full isolated PostgreSQL suite
+  passed 131 tests, none skipped, with migration round trips and owned-cluster
+  cleanup. pip check and explicit offline catalog verification also passed.
+- No configured database access, migration, dependency, UI, or HTTP change was
+  made. No server was started/stopped or browser check/advisory audit repeated.
+- Next: reviewed calculation methods and required missing inputs before personal
+  targets; separately supported product composition before automatic food selection.
+
 ## Next Work — Not Yet Completed
 
 The reference catalog seed milestone is complete. Continue the original
 profile → weekly plan → daily logging → weekly review → approved revision flow:
 
-1. Review ingredient/diet/allergen composition evidence. The bounded allergy-name
-   vocabulary is now implemented; unknown/ambiguous names remain unresolved.
-   Current USDA seeds are nutrition-only and must remain blocked until product
-   composition and allergy restrictions can actually be evaluated.
-2. Review calculation methods and required missing profile inputs before adding
-   deterministic targets. Descriptive activity/budget labels are not verified
-   multipliers, prices, or medical conclusions.
+1. Review calculation methods and required missing profile inputs before adding
+   deterministic personal targets. Record method version, evidence, applicability,
+   and bounds before implementation; do not infer missing inputs. Descriptive
+   activity/budget labels are not verified multipliers or prices. Multi-portion
+   arithmetic is available independently and does not define those targets.
+2. Obtain separately identified product ingredient/diet/allergen evidence before
+   automatic food selection. The current four composition-source reviews found
+   insufficient evidence; do not repeat generic nutrient retrieval as if it
+   supplies product composition. All four seeds remain nutrition-only and blocked.
+   Unknown/ambiguous allergy names remain unresolved.
 3. Review exercise prescription rules and user limitations before turning equipment
    candidates into workouts. Upstream source levels are not suitability approval.
 4. Build deterministic plan rules after inputs/catalogs are sufficient; then add
@@ -472,28 +513,3 @@ workout/nutrition plans are implemented or verified yet.
 - Check runtime/database availability without exposing secrets or recreating data.
 - Preserve the last verified baseline and select one small next increment.
 - Implement, verify, update this record, and commit that increment separately.
-
-
-## Portion-Arithmetic Continuation — 2026-11-02
-
-- Read all 15 project-owned Markdown files before implementation and confirmed
-  clean, synchronized develop at f5b59ce.
-- Rechecked USDA's official data-type comparison/API guide and all four retained
-  snapshots. Recorded the composition review outcome as insufficient evidence,
-  with per-source observations and explicit evidence requirements for a future
-  product import. No nutrient-only record was approved or altered.
-- Next small increment: bounded exact-ID multi-portion nutrient totals. This
-  arithmetic is independent of food eligibility and personal daily targets.
-
-- Composition-review decision committed separately as 3102a4e.
-- Added nutrition_for_portions: 1–50 explicit (food ID, grams) rows, exact catalog
-  lookup, existing positive finite gram bounds, source-based scaling, and fsum
-  totals. Repeated rows are additive; raw/cooked IDs and individual contributions
-  are retained in immutable results. Missing nutrient values propagate only to
-  that nutrient total; empty input does not fabricate zero intake.
-- Seven new portion-total tests and all seven existing use-rule/six food-catalog
-  tests passed (20 targeted checks). Includes unknown-ID rejection without
-  skipping rows, malformed/oversized collections, invalid masses, missing-vs-zero
-  values, detached immutable results, and unchanged food-selection restrictions.
-- This is plain offline arithmetic only, with no saved meal, recommendation,
-  personal target, HTTP contract, schema, UI, or dependency change.

@@ -213,3 +213,26 @@ were introduced and the configured database was not used. Browser verification
 and the historical advisory audit were not repeated. A read-only startup check
 found no port-8000 listener; this milestone did not start/stop servers. This is
 name resolution/readiness plumbing, not clinical assessment or meal planning.
+
+
+## Explicit portion totals — 2026-11-02
+
+Read all 15 project-owned Markdown documents and confirmed clean develop at
+f5b59ce. Rechecked the current official USDA data-type/API documentation and
+retained composition evidence. The four SR Legacy sources do not provide the
+needed product composition evidence; their nutrition_only state is unchanged.
+
+Seven new service checks cover multi-food/source-based totals, repeated portions,
+raw/cooked separation, split-mass consistency, missing-vs-zero nutrients,
+malformed/oversized collections, invalid masses, unknown-ID rejection without
+skipping rows, immutable/detached results, and offline operation with unchanged
+eligibility blockers. The existing seven use-rule and six food-catalog checks
+also passed independently (20 targeted checks total).
+
+All 131 tests passed in disposable PostgreSQL, none skipped, with migration
+round trips. The owned temporary cluster was removed. pip check and the explicit
+offline catalog check passed. No dependency/schema/API/UI changes were introduced;
+no runtime was started/stopped and no browser check or historical advisory audit
+was repeated. The configured database was not contacted. This increment totals
+specified portions; it does not record a meal, determine personal energy needs,
+recommend foods, or create a plan.

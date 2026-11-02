@@ -22,7 +22,9 @@ Food preferences and custom local meal times are also available. A small offline
 catalog contains six sourced exercise metadata records and four USDA nutrient
 records with explicit raw/cooked identity and source evidence. A bounded English
 allergy-name resolver preserves unknown terms and reports unresolved readiness;
-recognized names do not establish ingredient or allergy safety.
+recognized names do not establish ingredient or allergy safety. Plain services
+can total explicitly supplied food portions, preserving missing nutrient values;
+this calculation does not recommend foods or set daily intake targets.
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
@@ -59,7 +61,7 @@ activity, available equipment, weekdays, and session duration. Use
 and meal times in your profile zone. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 124 checks, including PostgreSQL integration, use the disposable runner:
+For all 131 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
@@ -134,10 +136,12 @@ composition reviews. See [catalog provenance](docs/catalogs.md) and
 
 ## Next milestone
 
-Review food composition and ingredient/allergen/diet evidence. Expand the bounded
-allergy-name vocabulary only after reviewing each additional term. Review
-calculation-specific inputs and methods before computing targets
-or generating plans. Unknown allergy information must remain unknown. Metric
+Review calculation-specific inputs and methods before computing personal targets.
+The four current composition-source reviews found insufficient evidence; separately
+identified product composition and ingredient/allergen/diet evidence remain
+required before automatic food selection or meal planning. Expand the bounded
+allergy-name vocabulary only after reviewing each additional term. Unknown allergy
+information must remain unknown. Metric
 units, explicit IANA time zones, Monday weeks, and custom local meal times are
 confirmed product defaults.
 Use only synthetic data in tests; never commit real profiles or activity records.
