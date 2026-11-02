@@ -26,6 +26,15 @@ class FoodPreferencesDetails:
     meal_times: tuple[str, ...]
 
 
+def normalize_allergy_name(name: str) -> str:
+    if type(name) is not str or not 1 <= len(name) <= MAX_ALLERGY_LENGTH or not name.isprintable():
+        raise InvalidFoodPreferences("Use 1 to 64 printable characters per allergy name.")
+    cleaned = " ".join(name.strip().split()).casefold()
+    if not cleaned or len(cleaned) > MAX_ALLERGY_LENGTH:
+        raise InvalidFoodPreferences("Enter a non-empty allergy name of up to 64 characters.")
+    return cleaned
+
+
 def validate_food_preferences(diet: str, allergy_status: str,
                               allergies: list[str] | tuple[str, ...], budget_level: str,
                               prep_minutes: int, meal_times: list[str] | tuple[str, ...]) -> FoodPreferencesDetails:
@@ -35,14 +44,7 @@ def validate_food_preferences(diet: str, allergy_status: str,
         raise InvalidFoodPreferences("Choose an explicit food allergy status.")
     if type(allergies) not in (list, tuple) or len(allergies) > MAX_ALLERGIES:
         raise InvalidFoodPreferences("Enter up to 20 reported food allergies.")
-    names = []
-    for name in allergies:
-        if type(name) is not str or not 1 <= len(name) <= MAX_ALLERGY_LENGTH or not name.isprintable():
-            raise InvalidFoodPreferences("Use 1 to 64 printable characters per allergy name.")
-        cleaned = " ".join(name.strip().split()).casefold()
-        if not cleaned or len(cleaned) > MAX_ALLERGY_LENGTH:
-            raise InvalidFoodPreferences("Enter a non-empty allergy name of up to 64 characters.")
-        names.append(cleaned)
+    names = [normalize_allergy_name(name) for name in allergies]
     if len(set(names)) != len(names):
         raise InvalidFoodPreferences("List each reported allergy only once.")
     if (allergy_status == "listed") != bool(names):

@@ -1,8 +1,8 @@
 # TrainAI — Completed Tasks and Session Handoff
 
-Last updated: 2026-10-31 (Asia/Seoul).
-The latest implementation continuation read all 13 Markdown files that existed
-at its start. The current inventory contains 14 project-owned Markdown files.
+Last updated: 2026-11-02 (Asia/Seoul).
+The 2026-11-02 continuation read all 14 existing project-owned Markdown files
+before implementation. New milestone documentation is included in the inventory.
 
 ## Latest Session Handoff — 2026-10-31
 
@@ -56,6 +56,7 @@ Current documentation:
 - [Training preferences](docs/training-preferences.md)
 - [Food preferences](docs/food-preferences.md)
 - [Catalog seeds](docs/catalogs.md)
+- [Allergy-name resolution](docs/allergen-names.md)
 - [Security boundaries](docs/security.md)
 - [Verification history](docs/verification.md)
 
@@ -366,6 +367,18 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   unchanged. Six targeted food tests and the offline check passed. Fix committed
   as d49579e. All 17 catalog checks and the final complete 116-test suite passed,
   none skipped; the extra full run followed the source-parity change.
+
+## Allergy-Name Continuation — 2026-11-02
+
+- Read all 14 existing project Markdown files before implementation; develop was
+  clean and synchronized with origin/develop at dd69dc4.
+- Reviewed FDA Edition 5 and its current FAQ, and compared the evidence scope
+  with the nutrient-only USDA records. A labeling reference does not establish
+  food ingredient composition or allergy safety for those generic records.
+- Added a deliberately bounded nine-group/fifteen-name English resolver using
+  shared saved-name normalization, immutable versioned results, and preserved
+  unknown names. Four targeted mapping tests and five existing food-rule tests
+  passed. No fuzzy matching, translation, diagnosis, or food approval is performed.
 
 ## Next Work — Not Yet Completed
 
