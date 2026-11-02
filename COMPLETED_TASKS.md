@@ -484,3 +484,16 @@ workout/nutrition plans are implemented or verified yet.
   product import. No nutrient-only record was approved or altered.
 - Next small increment: bounded exact-ID multi-portion nutrient totals. This
   arithmetic is independent of food eligibility and personal daily targets.
+
+- Composition-review decision committed separately as 3102a4e.
+- Added nutrition_for_portions: 1–50 explicit (food ID, grams) rows, exact catalog
+  lookup, existing positive finite gram bounds, source-based scaling, and fsum
+  totals. Repeated rows are additive; raw/cooked IDs and individual contributions
+  are retained in immutable results. Missing nutrient values propagate only to
+  that nutrient total; empty input does not fabricate zero intake.
+- Seven new portion-total tests and all seven existing use-rule/six food-catalog
+  tests passed (20 targeted checks). Includes unknown-ID rejection without
+  skipping rows, malformed/oversized collections, invalid masses, missing-vs-zero
+  values, detached immutable results, and unchanged food-selection restrictions.
+- This is plain offline arithmetic only, with no saved meal, recommendation,
+  personal target, HTTP contract, schema, UI, or dependency change.

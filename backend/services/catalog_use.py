@@ -52,6 +52,36 @@ def nutrition_for_grams(food: FoodDetails, grams: float) -> FoodPortion:
     return FoodPortion(food.id, food.preparation_state, float(grams), *values)
 
 
+@dataclass(frozen=True)
+class FoodPortionTotals:
+    portions: tuple[FoodPortion, ...]
+    energy_kcal: float | None
+    protein_g: float | None
+    fat_g: float | None
+    carbohydrate_g: float | None
+
+
+def nutrition_for_portions(
+    foods: tuple[FoodDetails, ...],
+    portions: list[tuple[str, float]] | tuple[tuple[str, float], ...],
+) -> FoodPortionTotals:
+    """Sum explicit (food ID, grams) rows against a validated catalog, without selecting foods."""
+    if type(portions) not in (list, tuple) or not 1 <= len(portions) <= 50:
+        raise ValueError("Provide between 1 and 50 explicit food portions.")
+    resolved = []
+    for row in portions:
+        if type(row) not in (list, tuple) or len(row) != 2:
+            raise ValueError("Each portion requires exactly a food ID and grams.")
+        food_id, grams = row
+        resolved.append(nutrition_for_grams(food_by_id(foods, food_id), grams))
+    totals = []
+    for nutrient in ("energy_kcal", "protein_g", "fat_g", "carbohydrate_g"):
+        values = tuple(getattr(portion, nutrient) for portion in resolved)
+        # A partial subtotal must not appear to be a complete nutrient total.
+        totals.append(None if any(value is None for value in values) else math.fsum(values))
+    return FoodPortionTotals(tuple(resolved), *totals)
+
+
 def food_selection_blockers(food: FoodDetails, preferences: FoodPreferencesDetails) -> tuple[str, ...]:
     preferences = validate_food_preferences(preferences.diet, preferences.allergy_status, preferences.allergies,
                                              preferences.budget_level, preferences.prep_minutes, preferences.meal_times)
