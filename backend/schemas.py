@@ -97,3 +97,12 @@ class EnergyPreferencesInput(BaseModel):
 
 class EnergyPreferencesResponse(EnergyPreferencesInput):
     """Only the three selected choices; no owner, calorie target, or storage metadata."""
+
+
+class AdultEnergyEstimateResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    energy_kcal_per_day: float = Field(gt=0, allow_inf_nan=False)
+    method_version: Literal["dri-2023-adult-eer-v1"]
+    equation_sex: Literal["male", "female"]
+    activity_category: Literal["inactive", "low_active", "active", "very_active"]

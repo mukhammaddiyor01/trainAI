@@ -523,6 +523,16 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   calculated-field injection, revoked access, malformed/oversized JSON, redacted
   errors, and invalid-update preservation. Migration round trips passed.
 
+- Preference API committed as 96ebe4c. Added read-only /api/energy-estimate,
+  with a single owner-scoped joined profile/preference query and four-field
+  strict response. Inputs are revalidated; missing inputs return 404 and scope
+  exclusions return 409. Estimates are recomputed from current weight, without
+  saved calorie targets or goal-baseline substitution.
+- Four targeted estimate API tests passed in disposable PostgreSQL, including
+  identity/query spoofing, two-owner isolation, current-weight vs goal snapshot,
+  response allowlisting, uncertainty/context/age/nonpositive exclusions, and
+  revoked access. Disposable migration round trips passed.
+
 ## Next Work — Not Yet Completed
 
 The reference catalog seed milestone is complete. Continue the original

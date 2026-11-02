@@ -1,10 +1,12 @@
 """Owner-scoped atomic energy preferences; no inferred defaults or saved calorie targets."""
 
 from uuid import UUID
+from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 
 from backend.database import session_scope
-from backend.models import EnergyPreferences
+from backend.models import EnergyPreferences, Profile
+from backend.services.profiles import ProfileDetails, validate_profile
 from backend.services.energy_preferences import EnergyPreferencesDetails, validate_energy_preferences
 
 
@@ -25,3 +27,16 @@ def save_energy_preferences(user_id: UUID, details: EnergyPreferencesDetails) ->
     with session_scope() as session:
         session.execute(statement)
     return details
+
+
+def read_energy_inputs(user_id: UUID) -> tuple[ProfileDetails, EnergyPreferencesDetails] | None:
+    # One statement observes both owner-scoped rows in the same PostgreSQL snapshot.
+    with session_scope() as session:
+        rows = session.execute(select(Profile, EnergyPreferences).join(
+            EnergyPreferences, EnergyPreferences.user_id == Profile.user_id,
+        ).where(Profile.user_id == user_id)).one_or_none()
+        if rows is None:
+            return None
+        profile, preferences = rows
+        return (validate_profile(profile.age, profile.height_cm, profile.weight_kg, profile.timezone),
+                validate_energy_preferences(preferences.equation_sex, preferences.activity_category, preferences.context))
