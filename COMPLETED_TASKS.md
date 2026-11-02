@@ -472,3 +472,15 @@ workout/nutrition plans are implemented or verified yet.
 - Check runtime/database availability without exposing secrets or recreating data.
 - Preserve the last verified baseline and select one small next increment.
 - Implement, verify, update this record, and commit that increment separately.
+
+
+## Portion-Arithmetic Continuation — 2026-11-02
+
+- Read all 15 project-owned Markdown files before implementation and confirmed
+  clean, synchronized develop at f5b59ce.
+- Rechecked USDA's official data-type comparison/API guide and all four retained
+  snapshots. Recorded the composition review outcome as insufficient evidence,
+  with per-source observations and explicit evidence requirements for a future
+  product import. No nutrient-only record was approved or altered.
+- Next small increment: bounded exact-ID multi-portion nutrient totals. This
+  arithmetic is independent of food eligibility and personal daily targets.

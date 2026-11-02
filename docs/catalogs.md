@@ -150,3 +150,35 @@ processing user data. Inspection of retained USDA responses found no ingredient
 declarations or root-level allergen fields. No composition approval was inferred.
 The full isolated PostgreSQL suite passed 124 tests on 2026-11-02, none skipped.
 No new dependencies, database migrations, UI, or HTTP contracts were introduced.
+
+
+## Composition evidence decision — 2026-11-02
+
+The composition-source review is complete for the current four snapshots; its
+outcome is insufficient evidence, not approval. Rechecked USDA's current
+[data-type comparison](https://fdc.nal.usda.gov/data-documentation/) and
+[API guide](https://fdc.nal.usda.gov/api-guide/): SR Legacy is historical nutrient
+reference data (final release April 2018), whereas Branded Foods includes
+manufacturer label data. A generic SR Legacy identity is not a specific product.
+
+| Retained source ID | Ingredient declaration | Root-level allergen fields | Decision |
+| --- | --- | --- | --- |
+| 173944, raw banana | Absent | Absent | Keep nutrition_only |
+| 171688, raw apple | Absent | Absent | Keep nutrition_only |
+| 168878, cooked enriched rice | Absent | Absent | Keep nutrition_only |
+| 168877, raw enriched rice | Absent | Absent | Keep nutrition_only |
+
+These observations describe the retained JSON only. Missing fields do not prove
+absence of allergens. Do not infer ingredients from a name, transfer branded
+product composition to a generic record, or copy raw-food evidence to cooked food.
+A future product import needs a separately identified record, retained dated label
+and ingredient evidence, preparation/nutrient-basis compatibility, explicit diet
+review, and separately supported allergen restrictions and cross-contact scope.
+A label alone must not be promoted into a universal allergy-safety guarantee.
+The current loader intentionally rejects authored composition approval fields.
+
+This closes the review of these four nutrient sources without repeatedly treating
+another nutrient lookup as composition evidence. Product composition review
+remains a separate prerequisite for automatic selection. Explicit gram-based
+nutrient arithmetic may advance independently: calculating the totals of provided
+portions does not select foods, endorse a meal, or establish personal daily needs.
