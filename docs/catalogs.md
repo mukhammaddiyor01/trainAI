@@ -133,3 +133,20 @@ Final source-audit refinement: food loading also compares source identity, sourc
 nutrient IDs, units, and amounts with the retained response. Editing a prepared
 nutrient amount or name while keeping the original snapshot hash now fails.
 The new regression passed; all 116 application checks passed after this change.
+
+
+## Exact allergy-name readiness — 2026-11-02
+
+The [bounded name resolver](allergen-names.md) recognizes 15 exact English terms
+in nine reviewed groups and retains every unmatched name. Food readiness adds
+allergy_names_unresolved for any unknown term, including partially recognized
+lists. Recognized names still retain allergy_mapping_unreviewed: name recognition
+has not completed ingredient/cross-contact review. All existing composition,
+ingredient, diet, allergen, and nutrient blockers remain active.
+
+The offline check validates registry ambiguity/normalization, prints its version
+and term/group counts, and reports four pending composition reviews without
+processing user data. Inspection of retained USDA responses found no ingredient
+declarations or root-level allergen fields. No composition approval was inferred.
+The full isolated PostgreSQL suite passed 124 tests on 2026-11-02, none skipped.
+No new dependencies, database migrations, UI, or HTTP contracts were introduced.

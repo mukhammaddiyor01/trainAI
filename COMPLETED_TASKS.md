@@ -4,7 +4,25 @@ Last updated: 2026-11-02 (Asia/Seoul).
 The 2026-11-02 continuation read all 14 existing project-owned Markdown files
 before implementation. New milestone documentation is included in the inventory.
 
-## Latest Session Handoff — 2026-10-31
+## Current Checkpoint — 2026-11-02
+
+- Resumed from dd69dc4 after reading all 14 existing Markdown files. The current
+  inventory now contains 15, including docs/allergen-names.md.
+- Bounded exact English allergy-name resolution, explicit unknown-name readiness
+  blockers, and offline registry checks are complete. Recognized names do not
+  approve food composition; all four nutrient-only seeds remain blocked.
+- Latest complete result: 124 isolated PostgreSQL tests passed, none skipped;
+  25 cover catalog/name-resolution checks. `pip check` passed. Expected database
+  revision remains 0005; the configured user database was not used in this step.
+- Latest implementation increment: 3350355, after separate resolver/readiness
+  commits below. Development remains on develop; master remains at a8ddfd9.
+- Next: obtain and review ingredient/diet/allergen composition evidence before
+  food selection. Review method-specific profile inputs and exercise prescription
+  rules before targets or plans. Additional allergy aliases require explicit review.
+- No listener was observed on port 8000 during the read-only startup check. No
+  server was started/stopped; check availability again when UI work resumes.
+
+## Previous Session Handoff — 2026-10-31
 
 Next planned continuation: 2026-11-01 (Asia/Seoul), when the user resumes work.
 Before starting the next feature, discover and read every project-owned Markdown
@@ -62,7 +80,7 @@ Current documentation:
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete working-tree suite passed 116 tests on 2026-10-31. If documents disagree, inspect Git
+the latest complete working-tree suite passed 124 tests on 2026-11-02. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
@@ -72,7 +90,8 @@ identity, and a basic private profile containing age, height, weight, and IANA t
 zone, gain/loss/maintenance weight goals, and private training preferences.
 Private food preferences and custom local meal schedules are implemented.
 Six sourced exercise metadata records and four USDA nutrient seeds are implemented.
-Calculation-specific inputs, food composition/allergen review, and plans remain pending.
+Bounded exact allergy-name resolution and explicit unresolved-name blockers are
+implemented. Calculation-specific inputs, food composition review, and plans remain pending.
 
 | Area | Completed behavior |
 | --- | --- |
@@ -82,6 +101,7 @@ Calculation-specific inputs, food composition/allergen review, and plans remain 
 | Sessions | Random 32-byte tokens, SHA-256 digests in storage, 24-hour expiry, login rotation, logout revocation, HttpOnly/host-only/SameSite cookies |
 | Guards | Shared same-origin write checks and server-derived account identity; browser user_id, role, or forged Bearer values do not establish identity |
 | Validation | Strict Pydantic request/response contracts, unknown-field rejection, no coercion, bounded UTF-8 JSON, duplicate-key/non-finite/compressed-body rejection |
+| Allergy-name resolution | Nine reviewed groups/15 exact English terms, shared normalization, immutable results, preserved unknowns, unchanged ingredient/composition blockers, offline checks |
 | Catalog seeds | Six pinned exercise records, complete equipment requirements, four sourced nutrient records, raw/cooked identity, exact-ID lookup, gram scaling, explicit blocked-food readiness, offline evidence check |
 | Food preferences | Explicit allergy states and bounded names, diet, spending style, preparation allowance, custom local meal times, private atomic storage, guarded API, responsive form |
 | Training preferences | Self-reported experience/activity, explicit equipment, Monday-based weekdays, bounded duration, owner-scoped atomic storage, strict API, responsive form |
@@ -121,7 +141,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Latest result: 116 working-tree tests passed, none skipped (2026-10-31). Coverage includes account/session isolation,
+Latest result: 124 working-tree tests passed, none skipped (2026-11-02). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.
@@ -138,7 +158,7 @@ Live HTTP checks confirmed no Server header, no-store responses, and rejection
 of spoofed X-Forwarded-For headers. Details are in docs/verification.md.
 
 The 2026-10-29 and end-of-day 2026-10-30 handoffs were documentation-only.
-The latest 2026-10-31 implementation passed the complete working-tree suite. Re-run relevant
+The latest 2026-11-02 implementation passed the complete working-tree suite. Re-run relevant
 checks when code or runtime configuration changes.
 
 ## Git Checkpoint and Completed Increments
@@ -147,9 +167,9 @@ Repository: https://github.com/mukhammaddiyor01/trainAI
 
 The original 2026-10-29 handoff followed 0682f78 and was committed as dfe7b23.
 The 2026-10-30 handoff is a1a045d; the training-preference checkpoint is 335862a.
-The food-preference checkpoint is b5d4a3c. The latest implementation commit is
-d49579e on develop, followed by verified catalog documentation fc89ac6.
-Both were pushed to origin/develop; the separate increments are listed below.
+The food-preference checkpoint is b5d4a3c; catalog documentation is fc89ac6,
+followed by handoff dd69dc4. The latest implementation commit is 3350355 on
+develop, following the separate allergy resolver and readiness increments below.
 Master remains at a8ddfd9, the initial web setup. Subsequent work belongs only on
 develop. Each verified milestone ends with a separate documentation checkpoint.
 
@@ -201,6 +221,10 @@ develop. Each verified milestone ends with a separate documentation checkpoint.
 | 6175ce8 | Explicit offline source-evidence verification |
 | d49579e | Reject prepared food nutrient/name drift against retained source |
 | fc89ac6 | Verified catalog milestone and planning-readiness checkpoint |
+| dd69dc4 | October 31 completed-work handoff and required next-session reading |
+| 9179c9e | Bounded reviewed allergy-name vocabulary and shared normalization |
+| 7d3ade6 | Preserve unresolved allergy names in food-readiness checks |
+| 3350355 | Offline registry validation and pending composition counts |
 
 ## Historical Password Edit — Resolved on 2026-10-30
 
@@ -391,16 +415,23 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - Extended offline checks with registry ambiguity rejection, 9-group/15-term
   counts, mapping version, and 4 pending composition reviews. Five resolver and
   three operator tests passed; offline checks still work with sockets denied
-  and DATABASE_URL unavailable.
+  and DATABASE_URL unavailable. Offline-check increment committed as 3350355.
+- The complete isolated PostgreSQL suite passed 124 tests, none skipped,
+  including migration round trips. `pip check` passed. The configured database
+  was not used; no dependency/schema/UI/HTTP changes were introduced. Browser
+  and historical advisory checks were not rerun for this backend-only increment.
+- A read-only startup check found no listener on port 8000. No server was
+  started/stopped; the ambient port-8001 browser tab was not used or modified.
 
 ## Next Work — Not Yet Completed
 
 The reference catalog seed milestone is complete. Continue the original
 profile → weekly plan → daily logging → weekly review → approved revision flow:
 
-1. Review ingredient/diet/allergen composition evidence and a deliberately bounded
-   allergy-name mapping. Current USDA seeds are nutrition-only and must remain
-   blocked from food selection until that review is complete.
+1. Review ingredient/diet/allergen composition evidence. The bounded allergy-name
+   vocabulary is now implemented; unknown/ambiguous names remain unresolved.
+   Current USDA seeds are nutrition-only and must remain blocked until product
+   composition and allergy restrictions can actually be evaluated.
 2. Review calculation methods and required missing profile inputs before adding
    deterministic targets. Descriptive activity/budget labels are not verified
    multipliers, prices, or medical conclusions.

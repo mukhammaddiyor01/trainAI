@@ -160,3 +160,16 @@ records and the documented USDA DEMO_KEY; no private keys/profiles were supplied
 Operator checks work offline with database access unavailable. Incomplete food
 composition/diet/allergen review blocks automatic selection; untrusted source text
 is never executed or promoted into AI instructions or personalized guidance.
+
+
+## Bounded allergy-name resolution — 2026-11-02
+
+Names remain bounded plain data and use the same normalization as stored food
+preferences. Resolution is exact against a versioned authored subset; it performs
+no model inference, fuzzy matching, translation, or substring matching. Unknowns
+are preserved and block future selection, including when other names resolve.
+Names/results are neither logged nor transmitted. Offline operator checks report
+only public registry counts/version and pending composition counts. Ambiguous
+registry entries fail with a generic diagnostic. Existing HTTP/body/response and
+owner guards remain unchanged. Recognized names do not bypass ingredient or
+food-composition review, and every current nutrient seed remains blocked.

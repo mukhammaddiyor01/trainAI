@@ -65,3 +65,15 @@ The offline catalog check now validates alias uniqueness/normalization and repor
 reviews. It processes no reported user names. An ambiguous registry fails with a
 generic diagnostic. Five resolver tests and three operator tests passed; the
 operator test still denies sockets and provides an unusable DATABASE_URL.
+
+
+## Completed verification — 2026-11-02
+
+Five resolver tests, seven catalog-use tests, and three offline-check tests passed.
+The complete application suite passed 124 tests, none skipped, in disposable
+PostgreSQL with migration round trips. `pip check` passed. Existing food storage,
+API isolation, strict fields, and rendered forms remain covered by that suite.
+No new schema, dependency, UI, or HTTP contract was introduced; browser testing
+and the historical dependency-advisory audit were not rerun for this backend-only
+increment. The configured user database was not used. A read-only startup check
+found no listener on port 8000; no server process was started or stopped.

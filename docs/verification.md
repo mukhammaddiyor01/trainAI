@@ -188,3 +188,28 @@ daily calorie targets, or generated workout/nutrition plans.
 Final source-audit refinement additionally rejects prepared nutrient/name drift
 against retained USDA values even when the source hash remains unchanged. Its
 regression passed, then the complete suite was rerun and passed all 116 checks.
+
+
+## Allergy-name readiness milestone — 2026-11-02
+
+Read all 14 existing Markdown files before implementation. Started on clean,
+synchronized develop at dd69dc4. Reviewed FDA Edition 5 (January 2025) and the
+current FDA FAQ for the bounded terminology scope, while retaining unresolved
+food-composition evidence. No private data was sent during source review.
+
+Five resolver tests cover the exact nine-group/fifteen-name subset, shared saved
+normalization, immutable results, equivalent alias collapse, malformed/bounded
+input, ambiguous/species/translated names, and registry collisions. Two new
+readiness tests confirm recognized names retain composition/ingredient blockers
+and partial matches never drop unknown restrictions; all seven use tests passed.
+Three operator tests verify offline operation with sockets denied and unusable
+DATABASE_URL, accurate public counts/version, pending reviews, and safe failure.
+Inspection of the four retained USDA responses found no ingredient declarations
+or root-level allergen fields; all four foods remain blocked from selection.
+
+The complete isolated PostgreSQL runner passed 124 tests, none skipped, including
+migration round trips. `pip check` passed. No dependency/schema/UI/HTTP changes
+were introduced and the configured database was not used. Browser verification
+and the historical advisory audit were not repeated. A read-only startup check
+found no port-8000 listener; this milestone did not start/stop servers. This is
+name resolution/readiness plumbing, not clinical assessment or meal planning.

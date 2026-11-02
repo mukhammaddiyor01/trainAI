@@ -14,8 +14,10 @@ has no HTTP, ORM, model, network, or camera dependencies.
   empty list. None_reported records a user statement, not verified absence.
 - Allergies: up to 20 printable names, each 1–64 characters. Surrounding/repeated
   whitespace is normalized, names are case-folded, duplicates rejected. Names
-  may describe allergies beyond a fixed regional checklist. No synonym mapping,
-  diagnosis, intolerance interpretation, or ingredient-safety inference is performed.
+  may describe allergies beyond a fixed regional checklist. A deliberately bounded
+  [exact-name resolver](allergen-names.md) recognizes reviewed terms and preserves
+  the rest as unresolved. No diagnosis, intolerance interpretation, translation,
+  fuzzy matching, or ingredient-safety inference is performed.
 - Budget level: economical, standard, or flexible, chosen by the user. This is
   spending style, not a monetary amount, currency, verified price, or cost guarantee.
 - Preparation: 0–180 whole minutes available per meal; zero allows no-cook choices.
