@@ -461,6 +461,18 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - Next: reviewed calculation methods and required missing inputs before personal
   targets; separately supported product composition before automatic food selection.
 
+## Energy-Method Continuation — 2026-11-02
+
+- Read all 15 existing project-owned Markdown files before implementation; clean
+  develop was synchronized at da04b5a. A read-only port-8000 check found no listener.
+- Reviewed National Academies 2023 Table 5-16 and Health Canada's adult equations,
+  units, and whole-day PAL definitions. Selected direct adult EER rather than
+  applying unreviewed activity factors to resting energy. Documented explicit
+  coefficient/activity/context inputs, source boundaries, and application scope
+  in docs/energy-estimation.md before implementing calculations.
+- Next small increments: plain calculation-preference validation, then a versioned
+  estimate with explicit scope checks. Persistence, API, and UI remain separate.
+
 ## Next Work — Not Yet Completed
 
 The reference catalog seed milestone is complete. Continue the original
