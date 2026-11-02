@@ -533,6 +533,18 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   response allowlisting, uncertainty/context/age/nonpositive exclusions, and
   revoked access. Disposable migration round trips passed.
 
+- Estimate endpoint committed as d8acc04. Added /energy-preferences with explicit
+  choices, source/category guidance, saved current-profile estimate or truthful
+  unavailable state, account/food navigation, local styles/scripts, and stale
+  success/result clearing. Reused existing palette/type/form patterns after
+  reading frontend-design. Two targeted page tests passed in disposable PostgreSQL.
+- Synthetic browser flow passed: registration/sign-in, profile-first redirect,
+  profile save, empty choices, unsure save/reload, eligible estimate save/reload,
+  clinical exclusion, edit-time stale-result clearing, category-guide disclosure,
+  and logout protection. No horizontal overflow at inspected effective widths
+  355 and 1164 CSS px (requested 390/1280); no console warnings/errors. Viewport
+  overrides reset. Only the owned disposable browser instance was used.
+
 ## Next Work — Not Yet Completed
 
 The reference catalog seed milestone is complete. Continue the original

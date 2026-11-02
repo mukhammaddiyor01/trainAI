@@ -8,6 +8,8 @@ from backend.profiles import read_profile
 from backend.goals import read_goal
 from backend.training_preferences import read_training_preferences
 from backend.food_preferences import read_food_preferences
+from backend.energy_preferences import read_energy_inputs
+from backend.services.energy_estimation import EnergyEstimateUnavailable, estimate_adult_energy
 from backend.services.food_preferences import MAX_ALLERGIES, MAX_ALLERGY_LENGTH, MAX_MEALS, MAX_PREP_MINUTES
 from backend.services.training_preferences import MIN_SESSION_MINUTES, MAX_SESSION_MINUTES
 from backend.services.accounts import MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH
@@ -114,4 +116,30 @@ async def food_preferences_page(request: Request):
         "saved": preferences is not None and request.query_params.get("saved") == "1",
         "max_allergies": MAX_ALLERGIES, "max_allergy_length": MAX_ALLERGY_LENGTH,
         "max_meals": MAX_MEALS, "max_prep_minutes": MAX_PREP_MINUTES,
+    })
+
+
+@router.get("/energy-preferences", response_class=HTMLResponse)
+async def energy_preferences_page(request: Request):
+    try:
+        identity = await optional_account(request)
+        if identity is None:
+            return RedirectResponse("/login", status_code=303)
+        profile = await run_in_threadpool(read_profile, identity.user_id)
+        if profile is None:
+            return RedirectResponse("/profile", status_code=303)
+        inputs = await run_in_threadpool(read_energy_inputs, identity.user_id)
+    except (DatabaseConfigurationError, SQLAlchemyError):
+        return templates.TemplateResponse(request=request, name="account.html", status_code=503,
+                                          context={"identity": None})
+    preferences, estimate, unavailable = None, None, None
+    if inputs is not None:
+        profile, preferences = inputs
+        try:
+            estimate = estimate_adult_energy(profile, preferences)
+        except EnergyEstimateUnavailable as error:
+            unavailable = str(error)
+    return templates.TemplateResponse(request=request, name="energy-preferences.html", context={
+        "profile": profile, "preferences": preferences, "estimate": estimate, "unavailable": unavailable,
+        "saved": preferences is not None and request.query_params.get("saved") == "1",
     })

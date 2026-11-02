@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your energy preferences — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/profile.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/energy-preferences.css').path }}">
+  <script src="{{ url_for('static', path='/js/energy-preferences.js').path }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Energy navigation"><a href="/profile">Your profile</a><a href="/account">Your account</a></nav></header>
+  <main id="main" class="wrap profile-page energy-page">
+    <h1>Understand your<br>daily energy.</h1>
+    <p class="lead">Add three choices to estimate the energy needed to maintain your current weight. Choose unsure whenever an answer does not fit.</p>
+    <section class="auth-panel" aria-labelledby="energy-title">
+      <h2 id="energy-title">Your energy preferences</h2>
+      {% if saved %}<p id="energy-saved-notice" class="success-message" role="status">Energy preferences saved.</p>{% endif %}
+      <form id="energy-form" action="/api/energy-preferences" method="post" aria-describedby="energy-message">
+        <fieldset id="energy-fields">
+          <legend class="visually-hidden">Energy calculation choices</legend>
+          <label for="equation_sex">Sex used by the equation</label>
+          <select id="equation_sex" name="equation_sex" required aria-describedby="sex-help">
+            <option value="" disabled {% if not preferences %}selected{% endif %}>Choose an equation or unsure</option>
+            {% for value, label in [('male', 'Male equation'), ('female', 'Female equation'), ('unsure', 'Unsure or prefer not to choose')] %}
+            <option value="{{ value }}" {% if preferences and preferences.equation_sex == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <p id="sex-help" class="field-help">The source has two sex-specific equations. This choice does not describe your gender identity and is never inferred.</p>
+          <label for="activity_category">Whole-day activity</label>
+          <select id="activity_category" name="activity_category" required aria-describedby="energy-activity-help">
+            <option value="" disabled {% if not preferences %}selected{% endif %}>Choose a category or unsure</option>
+            {% for value, label in [('inactive', 'Inactive'), ('low_active', 'Low active'), ('active', 'Active'), ('very_active', 'Very active'), ('unsure', 'Unsure')] %}
+            <option value="{{ value }}" {% if preferences and preferences.activity_category == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <p id="energy-activity-help" class="field-help">Include your whole day: work, transport, household activity, and exercise. This is a separate choice from activity outside workouts in Training preferences.</p>
+          <details class="energy-guide"><summary>How do the activity categories compare?</summary>
+            <p>The source uses physical activity level (PAL), a whole-day measure. Inactive includes daily living activities; the higher categories include progressively more activity. These are reference categories, not exercise recommendations.</p>
+            <ul><li>Inactive: PAL 1.00 to below 1.53</li><li>Low active: PAL 1.53 to below 1.68</li><li>Active: PAL 1.68 to below 1.85</li><li>Very active: PAL 1.85 to below 2.50</li></ul>
+            <p><a href="https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/equations-estimate-energy-requirement.html">Read the source's daily activity examples</a>. If you cannot identify a category, choose unsure.</p>
+          </details>
+          <label for="context">Calculation context</label>
+          <select id="context" name="context" required aria-describedby="context-help">
+            <option value="" disabled {% if not preferences %}selected{% endif %}>Choose your context or unsure</option>
+            {% for value, label in [('general_adult', 'General adult'), ('pregnant', 'Pregnant'), ('breastfeeding', 'Breastfeeding'), ('clinical', 'Clinical nutrition needs'), ('unsure', 'Unsure')] %}
+            <option value="{{ value }}" {% if preferences and preferences.context == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <p id="context-help" class="field-help">Choose General adult only if you are not pregnant or breastfeeding and do not need clinical nutrition support. No condition details are needed. Other contexts can be saved, but this version will not calculate an estimate.</p>
+          <button class="button" type="submit">Save energy preferences</button>
+        </fieldset>
+        <p id="energy-message" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+      <noscript><p>Enable JavaScript to save your energy preferences.</p></noscript>
+      <section id="energy-result" class="energy-result" aria-labelledby="estimate-title">
+        <h2 id="estimate-title">Daily energy estimate</h2>
+        {% if estimate %}
+        <p class="energy-value">About {{ '{:,.0f}'.format(estimate.energy_kcal_per_day) }} <span>kcal/day</span></p>
+        <p class="field-help">Calculated from your saved profile: age {{ profile.age }}, {{ profile.height_cm }} cm, {{ profile.weight_kg }} kg. <a href="/profile">Update your profile</a>.</p>
+        <p class="field-help">DRI 2023 · {{ estimate.method_version }}. The display is rounded; the underlying calculation is not.</p>
+        {% elif unavailable %}
+        <p>{{ unavailable }}</p>
+        {% else %}
+        <p>Save your choices to check whether an estimate is available. No answers are selected for you.</p>
+        {% endif %}
+        <p class="field-help">This is an estimate of maintenance energy, not a gain or loss calorie target. Individual needs vary. Saving does not create or change a plan. This method is available from age 19.</p>
+      </section>
+    </section>
+    <p class="profile-scope">Your choices and estimate are private to your account. Unsure answers are kept as unsure.</p>
+  </main>
+</body>
+</html>

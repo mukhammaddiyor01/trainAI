@@ -1,0 +1,9 @@
+.energy-page .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.energy-page select { width: 100%; min-width: 0; padding: 13px 12px; border: 1px solid #89988d; border-radius: 5px; background: var(--white); color: var(--ink); font: inherit; font-size: 16px; }
+.energy-page select:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.energy-page .field-help { max-width: 68ch; }
+.energy-guide { margin-block: 12px 24px; line-height: 1.6; }
+.energy-guide li { margin-block: 5px; }
+.energy-result { border-top: 1px solid var(--line); margin-top: 28px; padding-top: 24px; }
+.energy-result .energy-value { font-size: clamp(30px, 5vw, 44px); letter-spacing: -.04em; margin-block: 14px; }
+.energy-value span { font-size: 16px; letter-spacing: 0; }
