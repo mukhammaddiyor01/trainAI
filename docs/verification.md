@@ -258,3 +258,43 @@ catalog verification passed. No dependencies, schema, API, UI, or runtime launch
 changed. The configured database was not contacted. No browser check or historical
 advisory audit was repeated. Energy preference persistence/collection and a
 user-facing estimate are still unimplemented; no calorie target or plan is active.
+
+
+## Energy onboarding end to end — 2026-11-02
+
+Read all 16 project Markdown files; started on clean develop at ca710a4. Storage,
+preference API, estimate API, and UI were each independently tested and committed.
+
+| Boundary | Verified behavior |
+| --- | --- |
+| Browser to API | Explicit selections saved with PUT; profile-first redirect and local scripts |
+| API to database | Owner-scoped complete upsert, strict choices, missing-profile rejection |
+| Database to estimate | One joined SQL snapshot, current weight, no goal-baseline substitution |
+| Response to browser | Stored choices and eligible estimate reload; unsure/clinical state has no calories |
+| Security | Owner/role/profile/result injection rejected, revoked access, bounded/redacted JSON, allowlisted response |
+
+Four storage, five preference API, four estimate API, and two page tests passed
+as separate targeted checks. The full isolated PostgreSQL suite passed 158 tests,
+none skipped, including migration downgrade/upgrade and model parity. pip check
+and offline catalog validation passed; dependencies were unchanged.
+
+Synthetic browser flow covered registration/sign-in, profile-first redirect,
+profile save, initially blank selects, unsure save, eligible estimate save/reload,
+clinical exclusion, stale success/result clearing on edits, expanded activity
+guidance, and logout protection. Mobile/desktop checks at effective 355/1164 CSS
+pixel widths (requested 390/1280) found no horizontal overflow. Console inspection
+returned no warnings/errors. Overrides were reset, the test tab closed, and the
+owned browser cluster and data removed. A screenshot outside the repository
+contains only synthetic profile values. No capture or private fixture was committed.
+
+Verified configured revision 0005 and no new-table conflict, then explicitly
+applied additive migration 0006 and checked its four columns. Existing records
+were preserved; no synthetic data was written there. Started the capped canonical
+loopback launcher on port 8000. Live /login returned 200, anonymous energy page
+303 to /login, both energy APIs 401, and local energy JavaScript 200. All checked
+responses used no-store and omitted Server. An initial sandbox loopback probe
+was denied; the same read-only check passed with authorized local network access.
+
+The historical advisory audit was not rerun. The new output is an estimate of
+maintenance energy, not a prescribed calorie target, measured expenditure,
+automatically selected meal/workout, or approved plan revision.

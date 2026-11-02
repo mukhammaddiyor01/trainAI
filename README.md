@@ -25,9 +25,10 @@ allergy-name resolver preserves unknown terms and reports unresolved readiness;
 recognized names do not establish ingredient or allergy safety. Plain services
 can total explicitly supplied food portions, preserving missing nutrient values;
 this calculation does not recommend foods or set daily intake targets.
-A reviewed DRI 2023 adult energy-estimation service also exists, with explicit
-calculation choices and scope checks. It is not yet connected to saved preferences,
-an API, or the browser. See [energy method and inputs](docs/energy-estimation.md).
+A reviewed DRI 2023 adult energy estimate is available after explicitly saving
+private energy preferences. Strict owner-scoped APIs and the responsive form
+preserve uncertainty and scope checks. The estimate uses the current profile and
+does not create a gain/loss target or plan. See [energy inputs](docs/energy-estimation.md).
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
@@ -61,10 +62,11 @@ to view your private account. Open `/profile` to save your basic details, then
 `/goal` to record your weight goal. Use `/training-preferences` to save experience,
 activity, available equipment, weekdays, and session duration. Use
 `/food-preferences` for diet, reported allergies, spending style, preparation time,
-and meal times in your profile zone. Passwords
+and meal times in your profile zone. Open `/energy-preferences` to save the
+three explicit calculation choices and view an eligible daily energy estimate. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 143 checks, including PostgreSQL integration, use the disposable runner:
+For all 158 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
@@ -139,11 +141,10 @@ composition reviews. See [catalog provenance](docs/catalogs.md) and
 
 ## Next milestone
 
-Add owner-scoped persistence for the reviewed energy calculation preferences,
-then strict guarded API and explicit input UI in separate verified increments.
-Collect all required answers before exposing the existing plain adult estimate;
-never backfill coefficient, whole-day activity, or calculation context from other
-fields. Gain/loss target policies still require their own review.
+Review bounded gain/loss target policies before converting the existing energy
+estimate into a proposed calorie target. Review exercise prescription rules and
+user limitations before generating workouts. Current preference collection and
+estimates do not create or approve a plan.
 The four current composition-source reviews found insufficient evidence; separately
 identified product composition and ingredient/allergen/diet evidence remain
 required before automatic food selection or meal planning. Expand the bounded

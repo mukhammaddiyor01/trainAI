@@ -1,8 +1,8 @@
 # Adult Energy Estimation
 
 Method review: 2026-11-02. Selected method: dri-2023-adult-eer-v1.
-This increment provides a plain service estimate only; persistence, API, and UI
-will be separate verified steps.
+Private preference storage, strict APIs, and an explicit browser form now connect
+the reviewed service. Estimates do not create gain/loss calorie targets or plans.
 
 ## Reviewed sources and decision
 
@@ -76,7 +76,7 @@ strict schema, request/response limits, and origin/session guards. No existing
 profile is backfilled with invented answers.
 
 
-## Implemented and verified — 2026-11-02
+## Initial service milestone — 2026-11-02
 
 backend/services/energy_preferences.py validates all three choices and returns
 immutable values. Saving uncertainty is not the same as calculation eligibility.
@@ -99,3 +99,49 @@ private calculation preferences per profile, add the guarded strict API, and the
 an explicit explanatory input form. Keep these as separate verified commits.
 The current method is backend-only; no existing user has been assigned answers
 or a calorie target.
+
+
+## Private collection and estimate flow — 2026-11-02
+
+Migration 0006 adds one energy_preferences row per profile, with exact non-null
+SQL choices, a cascading owner foreign key, and no defaults or backfill. Atomic
+upserts replace all three fields. Reads and writes return plain validated values;
+no calorie result is stored. Concurrent updates keep one complete selection.
+
+GET/PUT /api/energy-preferences expose exactly equation_sex, activity_category,
+and context. PUT requires a saved profile, shared session/Origin guards, strict
+schemas, and bounded JSON up to 2048 bytes. Missing saved preferences return 404;
+missing-profile writes return 409. Unknown owner/role/profile/calculated fields,
+coercion, ambiguous JSON, and invalid choices are rejected without input echoes.
+Existing rate, time, response-size, and browser security controls apply.
+
+GET /api/energy-estimate loads only the authenticated owner's profile/preferences
+through one joined SQL statement. It recomputes from current weight, revalidates
+scope, and returns only energy_kcal_per_day, method_version, equation_sex, and
+activity_category. Missing inputs return 404; uncertainty/age/context/nonpositive
+exclusions return 409. Goal baseline/target and query values do not supply inputs.
+
+/energy-preferences requires sign-in and a saved basic profile. The form has
+three explicit selects, unsure choices, context and whole-day activity guidance,
+a source link, and a truthful empty/unavailable state. Local JavaScript PUT uses
+a 15-second timeout, disabled fields during save, and textContent feedback. Edits
+hide the old estimate and saved notice; successful saves reload stored values.
+Native method POST prevents values entering query strings; JavaScript is required.
+The display rounds kcal/day to a whole number; service/API values remain unrounded.
+No input/result enters browser storage or application logs. Account and food
+pages link to energy preferences. No other preference is inferred or overwritten.
+
+Four storage, five preference API, four estimate API, and two page checks passed
+independently. The full disposable PostgreSQL suite passed 158 tests, none skipped,
+with migration round trips. Synthetic browser checks verified empty/profile-first,
+unsure and clinical exclusions, eligible save/reload, stale-result clearing,
+category guidance, desktop/mobile layout, and logout protection. No horizontal
+overflow or console warning/error was observed; viewport overrides were reset and
+the owned test cluster/data removed. pip check and offline catalog checks passed.
+
+After revision/table-conflict checks, the configured database was explicitly
+upgraded 0005 to 0006. Existing records were preserved; no synthetic data was added.
+The capped loopback launcher was started on port 8000. Anonymous page/API guards,
+local script delivery, no-store, and absent Server headers passed live checks.
+No dependency changes or advisory audit were performed. Gain/loss policies,
+exercise prescriptions, food composition eligibility, and plans remain separate.

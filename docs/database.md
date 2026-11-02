@@ -93,3 +93,18 @@ consistency. Disposable upgrade/downgrade/upgrade and metadata parity passed.
 After checking revision 0004 and no food_preferences table conflict, the configured
 database was explicitly upgraded to 0005. Existing tables were not modified and
 no synthetic records were written there. See [food preferences](food-preferences.md).
+
+
+## Energy-preference migration — 2026-11-02
+
+Migration 0006 creates energy_preferences only, with one cascading owner foreign
+key per profile and three explicit non-null choice columns. It performs no
+backfill and stores no estimate or target. Atomic full-row upserts and all 75
+valid choice combinations were tested in disposable PostgreSQL, alongside owner
+isolation, concurrent complete selections, SQL bounds, cascade, and metadata parity.
+The full 158-test suite and disposable migration round trips passed.
+
+After verifying configured revision 0005 and no energy_preferences table conflict,
+the reviewed additive migration was explicitly applied. Current configured and
+expected revision: 0006. Existing tables/records were not modified; no synthetic
+accounts or preferences were written to the configured database.

@@ -23,6 +23,7 @@ Plain business services remain independent of these HTTP controls.
 
 | Boundary | Limit / behavior |
 | --- | --- |
+| Energy-preference bodies | 2048 bytes, strict three-field input, authenticated owner only |
 | Food-preference bodies | 8192 bytes, strict six-field input, authenticated owner only |
 | Training-preference bodies | 4096 bytes, strict five-field input, authenticated owner only |
 | Basic profile bodies | 8192 bytes, strict four-field input, authenticated owner only |
@@ -175,7 +176,7 @@ owner guards remain unchanged. Recognized names do not bypass ingredient or
 food-composition review, and every current nutrient seed remains blocked.
 
 
-## Adult energy service boundary — 2026-11-02
+## Initial adult energy service boundary — 2026-11-02
 
 The new calculation services accept bounded profile data and three exact string
 choices, revalidate immutable objects at use, and reject unknown/out-of-scope
@@ -185,3 +186,22 @@ No new endpoint, persistence, form, or public data exposure exists in this step.
 Future collection must use the shared owner/session/origin guards, strict input
 and response allowlists, and existing request/rate/response budgets; these future
 boundaries have not yet been implemented or verified for energy preferences.
+
+
+## Energy collection and estimate boundaries — 2026-11-02
+
+GET/PUT /api/energy-preferences and GET /api/energy-estimate require the shared
+server-derived account identity. PUT also requires exact Origin, bounded JSON,
+strict choices, and a saved profile; unknown ownership/role/calculated/profile
+fields are rejected. Preference responses expose three fields; estimates expose
+four versioned result fields. Existing API rate/time/response bounds apply.
+
+Every row query is owner-scoped. A single joined SQL snapshot reads profile and
+calculation choices for estimates; browser query values and goal snapshots do
+not supply calculation inputs. Invalid saves preserve prior selections; uncertain
+or excluded choices cannot return a stale estimate. No energy result is persisted.
+The browser uses local scripts, POST form method plus PUT, textContent, timeout,
+and stale-result clearing. Existing no-store/CSP/referrer protections remain active.
+Two-user, revoked-access, injection, malformed/oversized JSON, and response
+allowlisting checks passed. OAuth remains deferred and limiter scope remains
+single-process. No new dependency or complete-security claim was introduced.
