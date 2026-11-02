@@ -51,3 +51,17 @@ stay blocked, including for known names and none_reported status.
 Two targeted readiness tests passed for recognized names retaining their blockers
 and mixed/ambiguous lists retaining every unresolved restriction. The original
 catalog-use checks also passed; no food selection has been opened.
+
+
+## Evidence review and offline check
+
+Inspection of all four retained USDA SR Legacy responses found no ingredient
+declaration or root-level allergen fields. Their nutrient values and descriptions
+cannot establish product ingredient composition, processing aids, or cross-contact.
+No composition/allergen tags or catalog approval state were changed in this step.
+
+The offline catalog check now validates alias uniqueness/normalization and reports
+9 reviewed name groups, 15 terms, the mapping version, and 4 pending composition
+reviews. It processes no reported user names. An ambiguous registry fails with a
+generic diagnostic. Five resolver tests and three operator tests passed; the
+operator test still denies sockets and provides an unusable DATABASE_URL.

@@ -2,6 +2,7 @@
 
 from dataclasses import FrozenInstanceError
 import unittest
+from unittest.mock import patch
 
 from backend.services.allergens import (ALLERGEN_GROUPS, MAPPING_VERSION,
                                         reviewed_allergen_aliases, resolve_allergy_names)
@@ -45,3 +46,11 @@ class AllergenNameTests(unittest.TestCase):
                       [" "], ["milk"," MILK "], ["milk"]*21, ["\u202e"]]:
             with self.subTest(names_type=type(names).__name__), self.assertRaises(InvalidFoodPreferences):
                 resolve_allergy_names(names)
+
+    def test_duplicate_group_or_alias_and_unnormalized_registry_fail(self):
+        for groups in [(('milk',('milk',)),('egg',('milk',))),
+                       (('milk',('milk',)),('milk',('eggs',))),
+                       (('milk',('MILK',)),), (('milk',()),)]:
+            with self.subTest(groups=groups), patch("backend.services.allergens.ALLERGEN_GROUPS",groups):
+                with self.assertRaises(ValueError):
+                    reviewed_allergen_aliases()

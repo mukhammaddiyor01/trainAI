@@ -20,6 +20,10 @@ class CatalogCheckTests(unittest.TestCase):
         self.assertIn("Exercise metadata records: 6",output.getvalue())
         self.assertIn("Food nutrient records: 4",output.getvalue())
         self.assertIn("Food selection: unavailable",output.getvalue())
+        self.assertIn("Reviewed allergy-name groups: 9",output.getvalue())
+        self.assertIn("Reviewed allergy terms: 15",output.getvalue())
+        self.assertIn("Food composition reviews pending: 4",output.getvalue())
+        self.assertIn("fda-major-terms-2026-11-02-v1",output.getvalue())
 
     def test_invalid_evidence_returns_failure_without_echoing_imported_text(self):
         output = StringIO()
@@ -27,3 +31,11 @@ class CatalogCheckTests(unittest.TestCase):
             self.assertEqual(main(),1)
         self.assertIn("Catalog verification failed",output.getvalue())
         self.assertNotIn("untrusted source marker",output.getvalue())
+
+    def test_ambiguous_allergy_registry_fails_the_operator_check_safely(self):
+        output = StringIO()
+        groups = (("milk",("milk",)),("soy",("milk",)))
+        with patch("backend.services.allergens.ALLERGEN_GROUPS",groups), redirect_stdout(output):
+            self.assertEqual(main(),1)
+        self.assertIn("Catalog verification failed",output.getvalue())
+        self.assertNotIn("Reviewed allergy terms",output.getvalue())

@@ -385,6 +385,13 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   the separate ingredient-mapping and food-composition blockers. Two new
   readiness regressions and all five original catalog-use tests passed. All
   current foods remain blocked; no personal data, API, or schema changed.
+  Readiness increment committed as 7d3ade6.
+- Inspected all four retained USDA records: no ingredient declaration or
+  root-level allergen fields are present. No composition approval was inferred.
+- Extended offline checks with registry ambiguity rejection, 9-group/15-term
+  counts, mapping version, and 4 pending composition reviews. Five resolver and
+  three operator tests passed; offline checks still work with sockets denied
+  and DATABASE_URL unavailable.
 
 ## Next Work — Not Yet Completed
 
