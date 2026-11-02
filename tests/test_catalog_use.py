@@ -63,3 +63,24 @@ class CatalogUseTests(unittest.TestCase):
                     self.assertIn("allergy_mapping_unreviewed",blockers)
                 with self.assertRaises(FoodSelectionUnavailable):
                     require_food_selection_review(food,preferences)
+
+    def test_recognized_names_do_not_complete_ingredient_or_allergen_review(self):
+        preferences = validate_food_preferences("vegan","listed",["soya","eggs"],"economical",20,["08:00"])
+        for food in load_foods():
+            blockers = food_selection_blockers(food,preferences)
+            self.assertNotIn("allergy_names_unresolved",blockers)
+            self.assertIn("allergy_mapping_unreviewed",blockers)
+            self.assertIn("composition_unreviewed",blockers)
+            self.assertIn("allergens_unknown",blockers)
+            with self.assertRaises(FoodSelectionUnavailable):
+                require_food_selection_review(food,preferences)
+
+    def test_partial_or_ambiguous_name_resolution_cannot_drop_unknown_restrictions(self):
+        for names in [["milk","banana"],["milk","nuts"],["milk free"],["shellfish"]]:
+            preferences = validate_food_preferences("mixed","listed",names,"economical",0,["08:00"])
+            for food in load_foods():
+                blockers = food_selection_blockers(food,preferences)
+                self.assertIn("allergy_names_unresolved",blockers)
+                self.assertIn("allergy_mapping_unreviewed",blockers)
+                with self.assertRaises(FoodSelectionUnavailable):
+                    require_food_selection_review(food,preferences)

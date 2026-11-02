@@ -379,6 +379,12 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   shared saved-name normalization, immutable versioned results, and preserved
   unknown names. Four targeted mapping tests and five existing food-rule tests
   passed. No fuzzy matching, translation, diagnosis, or food approval is performed.
+  Resolver increment committed as 9179c9e.
+- Integrated exact-name resolution into food readiness. Unsupported/partially
+  recognized lists add allergy_names_unresolved; recognized names still retain
+  the separate ingredient-mapping and food-composition blockers. Two new
+  readiness regressions and all five original catalog-use tests passed. All
+  current foods remain blocked; no personal data, API, or schema changed.
 
 ## Next Work — Not Yet Completed
 

@@ -5,6 +5,7 @@ import math
 
 from backend.services.catalogs import ExerciseDetails, FoodDetails, InvalidCatalog
 from backend.services.food_preferences import FoodPreferencesDetails, validate_food_preferences
+from backend.services.allergens import resolve_allergy_names
 
 
 class UnknownCatalogItem(InvalidCatalog):
@@ -58,7 +59,10 @@ def food_selection_blockers(food: FoodDetails, preferences: FoodPreferencesDetai
     if preferences.allergy_status == "unsure":
         blockers.append("allergy_status_unsure")
     elif preferences.allergy_status == "listed":
-        # No reviewed synonym/ingredient mapping exists in this milestone.
+        resolution = resolve_allergy_names(preferences.allergies)
+        if resolution.unresolved_names:
+            blockers.append("allergy_names_unresolved")
+        # Recognizing a name does not complete ingredient or cross-contact review.
         blockers.append("allergy_mapping_unreviewed")
     if food.review_status != "composition_reviewed":
         blockers.append("composition_unreviewed")

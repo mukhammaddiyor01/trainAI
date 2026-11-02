@@ -37,3 +37,17 @@ such as milk free. Being unresolved is never a finding that a food is safe.
 This increment does not alter database rows, API contracts, or browser forms.
 Food ingredient/diet/allergen metadata still needs separate evidence review.
 The current nutrient-only catalog must remain blocked from automatic selection.
+
+
+## Readiness integration
+
+Food readiness now reports allergy_names_unresolved when any reported name is
+outside this vocabulary, including partially recognized lists. Recognized lists
+do not receive that code, but retain allergy_mapping_unreviewed because matching
+names is not ingredient/cross-contact review. Existing composition, ingredient,
+diet, allergen, and nutrient blockers remain active. All four nutrient-only seeds
+stay blocked, including for known names and none_reported status.
+
+Two targeted readiness tests passed for recognized names retaining their blockers
+and mixed/ambiguous lists retaining every unresolved restriction. The original
+catalog-use checks also passed; no food selection has been opened.
