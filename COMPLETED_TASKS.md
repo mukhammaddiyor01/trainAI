@@ -477,8 +477,17 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - Four targeted rule tests passed, including all 75 supported combinations,
   missing/malformed/coercible inputs, training-label rejection, exact choices,
   redacted errors, and immutable unsure values. No estimate is computed yet.
-- Next: versioned adult EER estimate with explicit scope checks. Persistence,
-  API, and UI remain separate.
+- Input-rule increment committed as f57b3e7. Added the versioned adult EER
+  service with all eight reviewed equations, current-profile validation, age-19
+  boundary, explicit context/unknown checks, and nonpositive-result rejection.
+  The output keeps method/selection metadata and unrounded kcal/day values.
+- Eight targeted estimate tests passed, including independent fixtures for all
+  equations, fractional values, all 67 uncertain/excluded choice combinations,
+  age 18/19, forged dataclass values, current weight, time-zone independence,
+  immutable results, and offline operation. No gain/loss offsets, food selection,
+  plans, storage, API, or browser behavior were introduced.
+- Next: full regression and handoff, then separate private preference storage,
+  guarded API, and explicit input UI before any user-facing estimate.
 
 ## Next Work — Not Yet Completed
 
