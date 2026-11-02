@@ -505,6 +505,17 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - Next: private energy preference storage and reviewed migration, followed by
   guarded API and explicit input UI before any user-facing estimate.
 
+## Energy-Onboarding Continuation — 2026-11-02
+
+- Read all 16 existing Markdown files and confirmed clean develop at ca710a4.
+- Added additive migration 0006 and one energy_preferences row per profile,
+  with no defaults/backfill. Exact non-null SQL choices preserve unsure and
+  excluded contexts. Atomic complete-row upserts return validated plain values.
+- Four targeted disposable PostgreSQL tests passed: all 75 choice combinations,
+  owner isolation, invalid-update preservation, concurrent complete selections,
+  SQL bounds/nulls/foreign key/cascade, and model/migration parity. Disposable
+  migration round trips passed. Configured database not used at this increment.
+
 ## Next Work — Not Yet Completed
 
 The reference catalog seed milestone is complete. Continue the original

@@ -111,3 +111,17 @@ class FoodPreferences(Base):
     budget_level: Mapped[str] = mapped_column(String(16))
     prep_minutes: Mapped[int] = mapped_column(SmallInteger)
     meal_minutes: Mapped[list[int]] = mapped_column(ARRAY(SmallInteger))
+
+
+class EnergyPreferences(Base):
+    __tablename__ = "energy_preferences"
+    __table_args__ = (
+        CheckConstraint("equation_sex IN ('male', 'female', 'unsure')", name="ck_energy_equation_sex"),
+        CheckConstraint("activity_category IN ('inactive', 'low_active', 'active', 'very_active', 'unsure')", name="ck_energy_activity"),
+        CheckConstraint("context IN ('general_adult', 'pregnant', 'breastfeeding', 'clinical', 'unsure')", name="ck_energy_context"),
+    )
+
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("profiles.user_id", ondelete="CASCADE"), primary_key=True)
+    equation_sex: Mapped[str] = mapped_column(String(24))
+    activity_category: Mapped[str] = mapped_column(String(24))
+    context: Mapped[str] = mapped_column(String(24))
