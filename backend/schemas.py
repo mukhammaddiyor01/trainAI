@@ -85,3 +85,15 @@ class FoodPreferencesInput(BaseModel):
 
 class FoodPreferencesResponse(FoodPreferencesInput):
     """Six public preference fields, without owner IDs or persistence internals."""
+
+
+class EnergyPreferencesInput(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    equation_sex: Literal["male", "female", "unsure"]
+    activity_category: Literal["inactive", "low_active", "active", "very_active", "unsure"]
+    context: Literal["general_adult", "pregnant", "breastfeeding", "clinical", "unsure"]
+
+
+class EnergyPreferencesResponse(EnergyPreferencesInput):
+    """Only the three selected choices; no owner, calorie target, or storage metadata."""

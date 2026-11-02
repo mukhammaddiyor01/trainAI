@@ -23,6 +23,8 @@ from backend.services.profiles import InvalidProfile
 from backend.services.goals import InvalidGoal
 from backend.services.training_preferences import InvalidTrainingPreferences
 from backend.services.food_preferences import InvalidFoodPreferences
+from backend.services.energy_preferences import InvalidEnergyPreferences
+from backend.energy_preference_routes import router as energy_preference_router
 from backend.food_preference_routes import router as food_preference_router
 from backend.training_preference_routes import router as training_preference_router
 from backend.goals import GoalProfileRequired
@@ -57,7 +59,7 @@ def create_app() -> FastAPI:
             status = 409
         return JSONResponse({"detail": str(error)}, status_code=status)
 
-    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable, InvalidProfile, InvalidGoal, GoalProfileRequired, InvalidTrainingPreferences, InvalidFoodPreferences]:
+    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable, InvalidProfile, InvalidGoal, GoalProfileRequired, InvalidTrainingPreferences, InvalidFoodPreferences, InvalidEnergyPreferences]:
         app.add_exception_handler(error_type, account_error)
 
     async def persistence_error(request, error):
@@ -106,6 +108,7 @@ def create_app() -> FastAPI:
     app.include_router(goal_router)
     app.include_router(training_preference_router)
     app.include_router(food_preference_router)
+    app.include_router(energy_preference_router)
     return app
 
 

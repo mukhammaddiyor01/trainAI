@@ -516,6 +516,13 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   SQL bounds/nulls/foreign key/cascade, and model/migration parity. Disposable
   migration round trips passed. Configured database not used at this increment.
 
+- Storage increment committed as e6c2fd2. Added GET/PUT /api/energy-preferences
+  with shared identity/Origin guards, a 2048-byte JSON cap, exact three-field
+  strict input/response schemas, and profile-first writes. Five targeted API
+  checks passed in disposable PostgreSQL, covering two-user isolation, owner and
+  calculated-field injection, revoked access, malformed/oversized JSON, redacted
+  errors, and invalid-update preservation. Migration round trips passed.
+
 ## Next Work — Not Yet Completed
 
 The reference catalog seed milestone is complete. Continue the original
