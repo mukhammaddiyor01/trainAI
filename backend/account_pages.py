@@ -9,6 +9,7 @@ from backend.goals import read_goal
 from backend.training_preferences import read_training_preferences
 from backend.food_preferences import read_food_preferences
 from backend.energy_preferences import read_energy_inputs
+from backend.calorie_previews import read_calorie_preview_inputs
 from backend.services.energy_estimation import EnergyEstimateUnavailable, estimate_adult_energy
 from backend.services.food_preferences import MAX_ALLERGIES, MAX_ALLERGY_LENGTH, MAX_MEALS, MAX_PREP_MINUTES
 from backend.services.training_preferences import MIN_SESSION_MINUTES, MAX_SESSION_MINUTES
@@ -142,4 +143,22 @@ async def energy_preferences_page(request: Request):
     return templates.TemplateResponse(request=request, name="energy-preferences.html", context={
         "profile": profile, "preferences": preferences, "estimate": estimate, "unavailable": unavailable,
         "saved": preferences is not None and request.query_params.get("saved") == "1",
+    })
+
+
+@router.get("/calorie-preview", response_class=HTMLResponse)
+async def calorie_preview_page(request: Request):
+    try:
+        identity = await optional_account(request)
+        if identity is None:
+            return RedirectResponse("/login", status_code=303)
+        profile = await run_in_threadpool(read_profile, identity.user_id)
+        if profile is None:
+            return RedirectResponse("/profile", status_code=303)
+        inputs = await run_in_threadpool(read_calorie_preview_inputs, identity.user_id)
+    except (DatabaseConfigurationError, SQLAlchemyError):
+        return templates.TemplateResponse(request=request, name="account.html", status_code=503,
+                                          context={"identity": None})
+    return templates.TemplateResponse(request=request, name="calorie-preview.html", context={
+        "profile": profile, "goal": inputs[2] if inputs is not None else None,
     })

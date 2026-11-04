@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calorie adjustment preview — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/profile.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/calorie-preview.css').path }}">
+  <script src="{{ url_for('static', path='/js/calorie-preview.js').path }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Preview navigation"><a href="/energy-preferences">Energy preferences</a><a href="/account">Your account</a></nav></header>
+  <main id="main" class="wrap profile-page calorie-page">
+    <h1>Preview an adjustment.</h1>
+    <p class="lead">Explore a daily calorie change against your current maintenance estimate. This is a calculation preview, not a saved target or plan.</p>
+    <section class="auth-panel" aria-labelledby="preview-title">
+      <h2 id="preview-title">Your saved starting point</h2>
+      {% if goal %}
+      <p class="preview-context">Current profile: {{ profile.weight_kg }} kg at {{ profile.height_cm }} cm. Saved goal: <strong>{{ goal.direction }}</strong>{% if goal.target_weight_kg is not none %} toward {{ goal.target_weight_kg }} kg{% endif %}. <a href="/goal">Review your goal</a>.</p>
+      <form id="calorie-preview-form" action="/api/calorie-preview" method="post" data-direction="{{ goal.direction }}" aria-describedby="preview-limits preview-message">
+        <fieldset id="preview-fields">
+          <legend class="visually-hidden">Requested calorie adjustment</legend>
+          <label for="adjustment_kcal">Adjustment magnitude, kcal/day</label>
+          <input id="adjustment_kcal" name="adjustment_kcal" type="number" inputmode="numeric" min="0" max="250" step="1" required autocomplete="off" aria-describedby="adjustment-help">
+          <p id="adjustment-help" class="field-help">{% if goal.direction == 'maintain' %}Enter 0 explicitly to preview maintenance.{% elif goal.direction == 'gain' %}Enter a whole number from 1 to 250. The preview adds it to maintenance.{% else %}Enter a whole number from 1 to 250. The preview subtracts it from maintenance.{% endif %} No value is chosen for you.</p>
+          <button class="button" type="submit">Calculate preview</button>
+        </fieldset>
+        <p id="preview-message" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+      <section id="preview-result" class="preview-result" aria-labelledby="result-title" hidden>
+        <h2 id="result-title">Calculated preview</h2>
+        <p id="preview-value" class="preview-value"></p>
+        <dl class="preview-breakdown">
+          <div><dt>Current maintenance estimate</dt><dd id="preview-maintenance"></dd></div>
+          <div><dt>Requested change</dt><dd id="preview-adjustment"></dd></div>
+          <div><dt>Goal direction</dt><dd id="preview-direction"></dd></div>
+          <div><dt>Method</dt><dd id="preview-method"></dd></div>
+          <div><dt>Preview policy</dt><dd id="preview-policy"></dd></div>
+        </dl>
+        <p class="field-help">Displayed calories are rounded to whole numbers. The calculation keeps its original precision. Status: preview only; nothing was saved or activated.</p>
+      </section>
+      <noscript><p>Enable JavaScript to calculate a preview. The form does not save a target.</p></noscript>
+      {% else %}
+      <p>Save both a <a href="/goal">weight goal</a> and <a href="/energy-preferences">energy preferences</a> to request a preview. Your basic profile is already saved. No adjustment is selected for you.</p>
+      {% endif %}
+    </section>
+    <section id="preview-limits" class="preview-limits" aria-labelledby="limits-title">
+      <h2 id="limits-title">How this preview is limited</h2>
+      <p>TrainAI accepts an explicit 1–250 kcal/day change for gain or loss, or 0 for maintenance. The change must also stay within 10% of your current estimated maintenance; the result must be at least 1,500 kcal/day. Current and target BMI must fall from 18.5 to below 40. If your current weight reaches or crosses your saved target, review the goal first.</p>
+      <p>These experimental application limits are not medical recommendations or proof that a calorie amount meets your needs. The calculation applies only to eligible adults using the <a href="/energy-preferences">DRI 2023 maintenance estimate</a>. It does not predict a completion date, select foods, or approve a plan.</p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,13 @@
+.calorie-page .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.calorie-page .auth-panel { max-width: 720px; }
+.preview-context, .preview-limits p { line-height: 1.65; color: var(--muted); }
+.preview-context { margin-top: -12px; }
+.preview-context strong { color: var(--ink); }
+.calorie-page .field-help { max-width: 68ch; }
+.preview-result { border-top: 1px solid var(--line); margin-top: 28px; padding-top: 24px; }
+.preview-result .preview-value { font-size: clamp(30px, 5vw, 44px); font-weight: 600; letter-spacing: -.04em; margin-block: 12px 18px; }
+.preview-breakdown div { grid-template-columns: minmax(150px, 1fr) minmax(0, 1fr); }
+.preview-limits { max-width: 70ch; margin-top: 32px; }
+.preview-limits h2 { font-size: 20px; letter-spacing: -.02em; }
+.preview-limits p { font-size: 13px; }
+@media (max-width: 700px) { .preview-breakdown div { grid-template-columns: 1fr; gap: 4px; } }
