@@ -8,7 +8,7 @@ from uuid import uuid4
 from sqlalchemy import func, select
 
 from backend.accounts import register_account
-from backend.calorie_proposals import CalorieProposalInputsRequired, create_calorie_proposal, read_calorie_proposal
+from backend.calorie_proposals import CalorieProposalInputsRequired, ProposalCursorNotFound, create_calorie_proposal, list_calorie_proposals, read_calorie_proposal
 from backend.database import close_database, session_scope
 from backend.energy_preferences import save_energy_preferences
 from backend.goals import save_goal
@@ -91,3 +91,21 @@ class CalorieProposalStorageTests(unittest.TestCase):
         self.assertAlmostEqual(second.maintenance_kcal_per_day, 2580.87)
         self.assertEqual(read_calorie_proposal(owner, first.id), first)
         self.assertEqual(self.count(owner), 2)
+
+    def test_owner_only_bounded_pages_reach_older_snapshots(self):
+        first, second = self.owner(), self.owner()
+        created = [create_calorie_proposal(first, 100) for _ in range(23)]
+        other = create_calorie_proposal(second, 100)
+        newest = list_calorie_proposals(first)
+        self.assertEqual(len(newest.items), 20)
+        self.assertEqual([item.id for item in newest.items], [item.id for item in reversed(created[-20:])])
+        self.assertEqual(newest.next_before, newest.items[-1].id)
+        older = list_calorie_proposals(first, newest.next_before)
+        self.assertEqual([item.id for item in older.items], [item.id for item in reversed(created[:3])])
+        self.assertIsNone(older.next_before)
+        self.assertEqual(len({item.id for item in newest.items + older.items}), 23)
+        self.assertEqual([item.id for item in list_calorie_proposals(second).items], [other.id])
+        with self.assertRaises(ProposalCursorNotFound):
+            list_calorie_proposals(first, other.id)
+        with self.assertRaises(ProposalCursorNotFound):
+            list_calorie_proposals(first, uuid4())

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import select
+from sqlalchemy import and_, or_, select
 
 from backend.database import session_scope
 from backend.models import CalorieProposal, EnergyPreferences, Goal, Profile
@@ -39,6 +39,19 @@ class PendingCalorieProposal:
     preview_kcal_per_day: float
     energy_method_version: str
     policy_version: str
+
+
+PROPOSAL_PAGE_SIZE = 20
+
+
+@dataclass(frozen=True)
+class PendingProposalPage:
+    items: tuple[PendingCalorieProposal, ...]
+    next_before: UUID | None
+
+
+class ProposalCursorNotFound(ValueError):
+    """An older-page cursor must identify one of the owner's proposals."""
 
 
 def _plain_proposal(row: CalorieProposal) -> PendingCalorieProposal:
@@ -95,3 +108,24 @@ def read_calorie_proposal(user_id: UUID, proposal_id: UUID) -> PendingCaloriePro
             CalorieProposal.user_id == user_id, CalorieProposal.id == proposal_id,
         ))
         return None if row is None else _plain_proposal(row)
+
+
+def list_calorie_proposals(user_id: UUID, before: UUID | None = None) -> PendingProposalPage:
+    with session_scope() as session:
+        statement = select(CalorieProposal).where(CalorieProposal.user_id == user_id)
+        if before is not None:
+            cursor = session.scalar(select(CalorieProposal).where(
+                CalorieProposal.user_id == user_id, CalorieProposal.id == before,
+            ))
+            if cursor is None:
+                raise ProposalCursorNotFound("Proposal page not found.")
+            statement = statement.where(or_(
+                CalorieProposal.created_at < cursor.created_at,
+                and_(CalorieProposal.created_at == cursor.created_at, CalorieProposal.id < cursor.id),
+            ))
+        rows = session.scalars(statement.order_by(
+            CalorieProposal.created_at.desc(), CalorieProposal.id.desc(),
+        ).limit(PROPOSAL_PAGE_SIZE + 1)).all()
+        items = tuple(_plain_proposal(row) for row in rows[:PROPOSAL_PAGE_SIZE])
+        next_before = items[-1].id if len(rows) > PROPOSAL_PAGE_SIZE else None
+        return PendingProposalPage(items, next_before)
