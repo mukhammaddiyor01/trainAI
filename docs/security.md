@@ -222,4 +222,6 @@ Tests cover forged owner/result fields, two-owner isolation, revoked access,
 strict/missing/ambiguous/oversized JSON, current profile changes, goal review,
 and preservation of saved inputs. No preview value is logged, transmitted,
 persisted, or approved. No new dependency, OAuth change, or schema migration was
-introduced; the limiter remains single-process. Browser preview UI remains pending.
+introduced; the limiter remains single-process. The authenticated browser preview
+page uses owner-derived inputs; the result is temporary and cleared on edits or
+reload. No browser storage or query string holds the adjustment.

@@ -29,9 +29,9 @@ A reviewed DRI 2023 adult energy estimate is available after explicitly saving
 private energy preferences. Strict owner-scoped APIs and the responsive form
 preserve uncertainty and scope checks. The estimate uses the current profile and
 does not create a gain/loss target or plan. See [energy inputs](docs/energy-estimation.md).
-A protected explicit-request calorie preview API is also available; it writes no
-target or plan. Its experimental bounds are documented in
-[preview policy](docs/calorie-preview.md). A preview browser form is not yet present.
+A protected explicit-request calorie preview API and browser form are available;
+they write no target or plan. Experimental bounds are documented in
+[preview policy](docs/calorie-preview.md).
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
@@ -66,10 +66,12 @@ to view your private account. Open `/profile` to save your basic details, then
 activity, available equipment, weekdays, and session duration. Use
 `/food-preferences` for diet, reported allergies, spending style, preparation time,
 and meal times in your profile zone. Open `/energy-preferences` to save the
-three explicit calculation choices and view an eligible daily energy estimate. Passwords
+three explicit calculation choices and view an eligible daily energy estimate.
+Open `/calorie-preview` to request an adjustment after saving a profile, goal,
+and energy choices. The result is temporary and does not activate a target. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 171 checks, including PostgreSQL integration, use the disposable runner:
+For all 173 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
@@ -144,9 +146,8 @@ composition reviews. See [catalog provenance](docs/catalogs.md) and
 
 ## Next milestone
 
-Add an explanatory browser preview flow for the existing explicit-request API.
-Then implement proposal storage and approval/version history as separate reviewed
-steps; current previews do not activate a target or plan. Review exercise rules
+Review proposal storage and approval/version history as separate steps; current
+previews do not activate a target or plan. Review exercise rules
 and user limitations before generating workouts.
 The four current composition-source reviews found insufficient evidence; separately
 identified product composition and ingredient/allergen/diet evidence remain

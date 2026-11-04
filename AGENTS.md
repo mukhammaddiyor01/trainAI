@@ -46,7 +46,7 @@ training and food preferences are implemented.
 The profile currently includes age, height, weight, and an explicit IANA time zone.
 Strict input/response schemas, shared authentication/origin guards, ownership-scoped
 profile operations, request/rate/resource limits, and safe errors are verified.
-All 171 working-tree checks passed with isolated PostgreSQL on 2026-11-04.
+All 173 working-tree checks passed with isolated PostgreSQL on 2026-11-04.
 Browser profile and training-preference flows were verified using synthetic data; the configured real database was upgraded
 explicitly to migration 0006. See docs/verification.md, docs/profiles.md, and
 docs/security.md and docs/goals.md. Goals keep a server-selected starting-weight
@@ -76,8 +76,9 @@ Estimates are recomputed from current weight; no calorie target or plan is saved
 An explicit-request calorie preview service/API now applies documented authored
 bounds without persisting or activating a target; see docs/calorie-preview.md.
 Its input is an adjustment magnitude only; server-side profile, energy choices,
-and goal are read in one owner-scoped snapshot. Next, add an explanatory preview
-UI, then separately reviewed proposal persistence/approval/versioning. Exercise
+and goal are read in one owner-scoped snapshot. An explanatory browser form now
+shows temporary results without saving them. Next, review proposal persistence,
+approval, and versioning separately. Exercise
 rules/limitations still need review before prescriptions. Product-specific composition evidence is still required before
 food selection. The configured database is at 0006; the verified local launcher
 was started on 127.0.0.1:8000 after the 2026-11-04 preview API milestone.

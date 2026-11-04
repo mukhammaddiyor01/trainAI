@@ -327,3 +327,26 @@ anonymous preview 401, all with no-store and no Server header. No UI changed,
 so browser checks were not repeated; the historical advisory audit was not rerun.
 No calorie target or plan was stored/activated. Explanatory preview UI and
 transactional approval/version history remain next increments.
+
+## Explicit preview browser flow — 2026-11-04
+
+Read all 17 project-owned Markdown files and started from clean synchronized
+develop at dad6d1f. Added authenticated `/calorie-preview` with profile-first
+redirect, honest missing-prerequisite state, blank requested adjustment, authored
+limit explanations, and a temporary API result display. Only the explicit
+integer magnitude is sent; no browser storage/query value or approval control
+is involved. Two focused page tests passed.
+
+A synthetic account in the owned disposable PostgreSQL browser runner saved a
+profile, goal, and energy preferences. The form displayed 2,753 kcal/day from a
+2,553 kcal/day rounded maintenance estimate and +200 requested adjustment;
+precise service values remain unrounded. Editing hid the result; reload restored
+an empty field and no result. At a requested 390 px mobile viewport, effective
+document width and scroll width were both 375 px; console had no errors/warnings.
+The viewport override was reset and the temporary tab, account, and cluster
+removed. No real user records were entered into the test browser.
+
+The full disposable PostgreSQL suite passed 173 tests, none skipped, with
+migration round trips. pip check passed. No schema/dependency changes, configured
+database access, or advisory-audit rerun occurred. Preview values remain
+transient; proposal storage and transactional approval/version history are pending.

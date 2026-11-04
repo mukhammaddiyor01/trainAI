@@ -2,8 +2,8 @@
 
 Reviewed 2026-11-04. Policy: manual-adjustment-preview-2026-11-04-v1.
 This is an explicit-request arithmetic preview for future plan proposals. It
-creates no saved target or plan. A protected API is available; a browser form
-remains a separate next increment.
+creates no saved target or plan. A protected API and explicit browser form are
+available.
 
 ## Evidence and limits of the evidence
 
@@ -78,6 +78,27 @@ covering Origin/session guards, two-owner isolation, spoofed fields, revoked acc
 strict/missing/oversized/ambiguous JSON, response allowlisting, input preservation,
 and current-weight/context changes. No schema or dependency was introduced.
 
+## Explicit browser preview
+
+The authenticated `/calorie-preview` page requires a saved basic profile; without
+one, it redirects to `/profile`. Until both a goal and energy preferences exist,
+it shows links to collect them and no calculator. The form starts with an empty
+adjustment field. It explains the current goal direction, authored bounds,
+eligibility limits, and temporary status. JavaScript sends only the whole-number
+magnitude to the existing guarded API with same-origin credentials; the server
+selects every other input. Request timeout is 15 seconds. A successful response
+shows rounded maintenance, signed change, rounded preview, goal direction, and
+method/policy versions. Edits hide the prior result; reload discards it. Errors
+appear as text without injecting HTML. No browser storage or query values hold
+the requested amount, and no approval control is shown.
+
+Two focused page tests and the full 173-test disposable PostgreSQL suite passed.
+A synthetic browser account verified profile-first navigation, explicit saved
+inputs, the calculation, stale-result clearing, and reload disappearance. At the
+inspected mobile viewport, no horizontal overflow or console warning/error was
+observed. The temporary test account/database were removed. No migration or
+dependency changed; the configured database was not used for browser testing.
+
 
 ## Verification — 2026-11-04
 
@@ -91,5 +112,6 @@ The capped canonical loopback launcher was started on port 8000. Live login
 returned 200; preview POST without Origin returned 403 and same-Origin anonymous
 POST returned 401, all with no-store and absent Server headers. No UI changed,
 so browser verification was not repeated. The historical dependency-advisory
-audit was not rerun. Next: explicit explanatory UI, then separately reviewed
-proposal storage and transactional approval/versioning before any activation.
+audit was not rerun. The browser increment above completed the explanatory UI.
+Next: separately reviewed proposal storage and transactional approval/versioning
+before any activation.

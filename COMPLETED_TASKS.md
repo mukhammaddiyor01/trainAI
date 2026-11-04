@@ -1,10 +1,24 @@
 # TrainAI — Completed Tasks and Session Handoff
 
 Last updated: 2026-11-04 (Asia/Seoul).
-The latest 2026-11-04 continuation read all 16 project-owned Markdown files
+The latest 2026-11-04 continuation read all 17 project-owned Markdown files
 before implementation.
 
 ## Current Checkpoint — 2026-11-04
+
+- Continued from clean synchronized develop at dad6d1f after reading all 17
+  project-owned Markdown files. Added `/calorie-preview` as an authenticated,
+  explanatory form for the existing API. The amount is blank by default; no
+  browser storage, query value, target write, or plan approval is involved.
+- Page guards and prerequisite states passed two focused checks. A synthetic
+  disposable browser flow verified profile-first redirect, goal/energy collection,
+  +200 kcal preview, edit-time stale clearing, reload disappearance, and mobile
+  width without overflow or console errors. The test cluster/account were removed.
+- The full isolated PostgreSQL suite passed 173 tests with no skips and migration
+  round trips. pip check passed. No dependency/schema change or configured user
+  database access was made. UI increment: d7f70f6.
+- Next: review proposal persistence and transactional approval/version history as
+  separate small increments. Do not activate a target from a transient preview.
 
 - Resumed from clean, synchronized develop at cbb64c0 after reading all 16 Markdown
   files. New docs/calorie-preview.md brings the inventory to 17.
@@ -16,7 +30,7 @@ before implementation.
   retains seven allowlisted preview fields, and writes no target, goal, or plan.
 - Latest implementation: 589bb99, after policy review 4d50a97 and service b76ecfa.
   Development remains on develop; master remains at a8ddfd9.
-- Latest result: 171 complete isolated PostgreSQL tests passed, none skipped;
+- Previous API result: 171 complete isolated PostgreSQL tests passed, none skipped;
   eight service and five API checks passed independently. Migration round trips,
   pip check, and offline catalogs passed. No schema/dependency changes were made.
 - Expected database revision remains 0006; configured database/private records
@@ -25,8 +39,8 @@ before implementation.
 - No listeners were observed on 8000/8001 at startup. The canonical bounded
   launcher is now running on 127.0.0.1:8000. Live login returned 200; preview POST
   without Origin 403 and anonymous same-Origin POST 401, with privacy headers.
-- Next: explicit explanatory preview UI. Then separately reviewed proposal
-  persistence and transactional approval/version history before activation.
+- The explanatory preview UI is complete. Separately reviewed proposal
+  persistence and transactional approval/version history remain before activation.
   Exercise prescription rules/limitations and food composition evidence remain
   prerequisites for automatic workout/meal plans.
 
@@ -90,7 +104,7 @@ Current documentation:
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete working-tree suite passed 171 tests on 2026-11-04. If documents disagree, inspect Git
+the latest complete working-tree suite passed 173 tests on 2026-11-04. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
@@ -104,7 +118,7 @@ Bounded exact allergy-name resolution and explicit unresolved-name blockers are
 implemented. Explicit multi-portion nutrient totals and reviewed adult energy
 input/calculation services are connected to private energy preference storage,
 strict APIs, and explicit browser onboarding. Bounded explicit-request calorie
-previews are available in a plain service and guarded API. Preview UI, product
+previews are available in a plain service, guarded API, and temporary browser UI. Product
 composition evidence, saved/approved calorie targets, and plans remain pending.
 
 | Area | Completed behavior |
@@ -117,7 +131,7 @@ composition evidence, saved/approved calorie targets, and plans remain pending.
 | Validation | Strict Pydantic request/response contracts, unknown-field rejection, no coercion, bounded UTF-8 JSON, duplicate-key/non-finite/compressed-body rejection |
 | Allergy-name resolution | Nine reviewed groups/15 exact English terms, shared normalization, immutable results, preserved unknowns, unchanged ingredient/composition blockers, offline checks |
 | Adult energy onboarding | Versioned DRI 2023 estimate from one owner-scoped snapshot; explicit stored choices, strict guarded APIs, responsive form, uncertainty/scope checks, no saved calorie target |
-| Calorie preview | Explicit requested magnitude, authored caps/scope, stable goal semantics, one owner-scoped input snapshot, strict guarded API, immutable preview status; no writes or UI yet |
+| Calorie preview | Explicit requested magnitude, authored caps/scope, stable goal semantics, one owner-scoped input snapshot, strict guarded API, temporary browser result; no target or plan writes |
 | Portion totals | Exact-ID gram rows, bounded input, retained raw/cooked identity, immutable contributions, missing nutrients preserved independently |
 | Catalog seeds | Six pinned exercise records, complete equipment requirements, four sourced nutrient records, raw/cooked identity, exact-ID lookup, gram scaling, explicit blocked-food readiness, offline evidence check |
 | Food preferences | Explicit allergy states and bounded names, diet, spending style, preparation allowance, custom local meal times, private atomic storage, guarded API, responsive form |
@@ -146,7 +160,7 @@ height 50–300 cm, weight 20–500 kg. These are not medical reference ranges.
 - The main local server was left running at http://127.0.0.1:8000. Do not assume
   its process survives until the next session or stop an unrelated process.
 - Canonical launcher: `.venv/bin/python -m backend` from the repository root.
-- Useful routes: /register, /login, /account, /profile, /goal, /training-preferences, /food-preferences, /energy-preferences, /health.
+- Useful routes: /register, /login, /account, /profile, /goal, /training-preferences, /food-preferences, /energy-preferences, /calorie-preview, /health.
 - APIs: POST /auth/register, POST /auth/login, GET /auth/me, POST /auth/logout,
   GET/PUT /api/profile, GET/PUT /api/goal, GET/PUT /api/training-preferences, GET/PUT /api/food-preferences, GET/PUT /api/energy-preferences, GET /api/energy-estimate, and POST /api/calorie-preview.
 
@@ -158,7 +172,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Latest result: 171 working-tree tests passed, none skipped (2026-11-04). Coverage includes account/session isolation,
+Latest result: 173 working-tree tests passed, none skipped (2026-11-04). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.
@@ -610,11 +624,9 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 The reference catalog seed milestone is complete. Continue the original
 profile → weekly plan → daily logging → weekly review → approved revision flow:
 
-1. Add an explicit explanatory browser preview flow for POST /api/calorie-preview,
-   including authored scope/limit information, no default adjustment, and stale
-   result clearing. Keep this separate from proposal storage and transactional
-   approval/version history. Preserve policy/version metadata and revalidate all
-   inputs for any future approval; no preview request may activate a target.
+1. Review and implement proposal storage, then transactional approval/version
+   history as separate increments. Preserve policy/version metadata and revalidate
+   all inputs for any future approval; no preview request may activate a target.
    See docs/calorie-preview.md and docs/energy-estimation.md.
 2. Obtain separately identified product ingredient/diet/allergen evidence before
    automatic food selection. The current four composition-source reviews found
