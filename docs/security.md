@@ -239,3 +239,11 @@ missing inputs, excluded scope, revoked access, and two-owner access were tested
 SQL checks prevent an approved status or inconsistent signed direction. Neither
 API changes active plans; approval controls and active-plan uniqueness remain
 future work. The existing single-process limiter is unchanged.
+
+The pending-proposal list API and browser page now use owner-scoped keyset
+pagination, limited to 20 records per page with one extra row only to detect
+more results. Cursor lookup is also owner-scoped; foreign and unknown IDs share
+a 404 response. The API rejects duplicate, malformed, and unexpected query
+parameters and exposes only allowlisted proposal fields and the next UUID.
+The page renders at most 20 rows and retains no private data in browser storage.
+No approval control or broader sharing was added.

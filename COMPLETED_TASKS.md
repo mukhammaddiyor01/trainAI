@@ -4,6 +4,27 @@ Last updated: 2026-11-05 (Asia/Seoul).
 The latest 2026-11-05 continuation read all 18 project-owned Markdown files
 before implementation.
 
+## Current Checkpoint — Private Proposal Discovery
+
+- Continued from clean synchronized develop at b8ba7d6 after reading all 18
+  project-owned Markdown files and the frontend-design skill. Implemented
+  owner-scoped, newest-first keyset pagination, 20 rows per page with a 21st
+  existence check. Foreign/missing cursors fail without exposing records.
+  Storage checks passed; commit 8842965.
+- Added guarded `GET /api/calorie-proposals` with strict single-cursor query,
+  allowlisted nested responses, and no owner/source snapshot fields. Focused
+  API checks passed; commit c8f1aa6.
+- Added `/calorie-proposals` with empty state, older-page navigation, and links
+  from account, preview, and detail views. Owner/anonymous/cursor page checks
+  passed; commit edb3c7b. Synthetic browser flow verified empty and populated
+  lists, detail navigation, desktop/mobile fit, and no console warnings/errors.
+- Complete disposable PostgreSQL regression: 187 tests, none skipped, with
+  migration round trips. pip check and offline catalogs passed. No schema,
+  dependency, configured user record, active target, or approval changed.
+- Next: review the transactional approval boundary in detail before implementing
+  it in separate schema, service, API, and UI increments. Preserve old proposals
+  and enforce one active target/version per owner in PostgreSQL.
+
 ## Current Checkpoint — Pending Proposal Browser Flow
 
 - Continued from clean synchronized develop at 76ed876 after reading all 18
@@ -149,7 +170,7 @@ Current documentation:
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete working-tree suite passed 183 tests on 2026-11-05. If documents disagree, inspect Git
+the latest complete working-tree suite passed 187 tests on 2026-11-05. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
@@ -165,7 +186,7 @@ input/calculation services are connected to private energy preference storage,
 strict APIs, and explicit browser onboarding. Bounded explicit-request calorie
 previews are available in a plain service, guarded API, and temporary browser UI.
 Pending calorie proposals are saved through a guarded API and explicit browser
-action, then reviewed at a private saved URL; product composition
+action, then found in a private paged list and reviewed at a saved URL; product composition
 evidence, approved calorie targets, and plans remain pending.
 
 | Area | Completed behavior |
@@ -179,7 +200,7 @@ evidence, approved calorie targets, and plans remain pending.
 | Allergy-name resolution | Nine reviewed groups/15 exact English terms, shared normalization, immutable results, preserved unknowns, unchanged ingredient/composition blockers, offline checks |
 | Adult energy onboarding | Versioned DRI 2023 estimate from one owner-scoped snapshot; explicit stored choices, strict guarded APIs, responsive form, uncertainty/scope checks, no saved calorie target |
 | Calorie preview | Explicit requested magnitude, authored caps/scope, stable goal semantics, one owner-scoped input snapshot, strict guarded API, temporary browser result; no target or plan writes |
-| Pending calorie proposals | Immutable owner-scoped snapshots, migration 0007, locked recomputation, strict create/read API, explicit browser save/private review, pending-only SQL state; no approval |
+| Pending calorie proposals | Immutable owner-scoped snapshots, migration 0007, locked recomputation, strict create/read/list API, explicit browser save/private paged review, pending-only SQL state; no approval |
 | Portion totals | Exact-ID gram rows, bounded input, retained raw/cooked identity, immutable contributions, missing nutrients preserved independently |
 | Catalog seeds | Six pinned exercise records, complete equipment requirements, four sourced nutrient records, raw/cooked identity, exact-ID lookup, gram scaling, explicit blocked-food readiness, offline evidence check |
 | Food preferences | Explicit allergy states and bounded names, diet, spending style, preparation allowance, custom local meal times, private atomic storage, guarded API, responsive form |
@@ -209,9 +230,9 @@ height 50–300 cm, weight 20–500 kg. These are not medical reference ranges.
 - The main local server was left running at http://127.0.0.1:8000. Do not assume
   its process survives until the next session or stop an unrelated process.
 - Canonical launcher: `.venv/bin/python -m backend` from the repository root.
-- Useful routes: /register, /login, /account, /profile, /goal, /training-preferences, /food-preferences, /energy-preferences, /calorie-preview, /health.
+- Useful routes: /register, /login, /account, /profile, /goal, /training-preferences, /food-preferences, /energy-preferences, /calorie-preview, /calorie-proposals, /health.
 - APIs: POST /auth/register, POST /auth/login, GET /auth/me, POST /auth/logout,
-  GET/PUT /api/profile, GET/PUT /api/goal, GET/PUT /api/training-preferences, GET/PUT /api/food-preferences, GET/PUT /api/energy-preferences, GET /api/energy-estimate, POST /api/calorie-preview, POST /api/calorie-proposals, and GET /api/calorie-proposals/{proposal_id}.
+  GET/PUT /api/profile, GET/PUT /api/goal, GET/PUT /api/training-preferences, GET/PUT /api/food-preferences, GET/PUT /api/energy-preferences, GET /api/energy-estimate, POST /api/calorie-preview, GET/POST /api/calorie-proposals, and GET /api/calorie-proposals/{proposal_id}.
 
 ## Verification Already Performed
 
@@ -221,7 +242,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Latest result: 183 working-tree tests passed, none skipped (2026-11-05). Coverage includes account/session isolation,
+Latest result: 187 working-tree tests passed, none skipped (2026-11-05). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.
@@ -249,7 +270,8 @@ The original 2026-10-29 handoff followed 0682f78 and was committed as dfe7b23.
 The 2026-10-30 handoff is a1a045d; the training-preference checkpoint is 335862a.
 The food-preference checkpoint is b5d4a3c; catalog documentation is fc89ac6,
 followed by handoff dd69dc4. Allergy readiness handoff is f5b59ce. The latest
-implementation is e818b9a on develop, after proposal boundary/schema/storage
+implementation is edb3c7b on develop, after proposal discovery storage/API
+commits 8842965 and c8f1aa6. The earlier proposal API is e818b9a, after boundary/schema/storage
 commits 4d184d0, f7656ad, and 0b26d80. The prior preview API is 589bb99 after policy/service
 increments 4d50a97 and b76ecfa. The energy onboarding handoff is cbb64c0;
 its initial service handoff is ca710a4, and the portion checkpoint is da04b5a.
@@ -332,6 +354,10 @@ develop. Each verified milestone ends with a separate documentation checkpoint.
 | e818b9a | Strict guarded pending proposal create/read API |
 | 0ce484e | Private pending proposal review page and owner isolation |
 | 2b6c47a | Explicit preview-to-pending-save browser action |
+| b8ba7d6 | Verified pending proposal browser-flow handoff |
+| 8842965 | Bounded owner-scoped pending proposal keyset storage |
+| c8f1aa6 | Guarded allowlisted pending proposal list API |
+| edb3c7b | Private saved proposal list and navigation |
 
 ## Historical Password Edit — Resolved on 2026-10-30
 
@@ -682,9 +708,8 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 The reference catalog seed milestone is complete. Continue the original
 profile → weekly plan → daily logging → weekly review → approved revision flow:
 
-1. Add a bounded owner-only proposal list so saved drafts remain discoverable.
-   Then implement transactional approval and active-plan version history as
-   separate increments.
+1. Review and implement transactional approval and active-plan version history
+   as separate schema, service, API, and UI increments.
    Revalidate stored source snapshots and reject stale approvals; enforce one
    active plan per owner in PostgreSQL. A preview or pending proposal cannot
    activate a target. See docs/calorie-proposals.md and docs/calorie-preview.md.

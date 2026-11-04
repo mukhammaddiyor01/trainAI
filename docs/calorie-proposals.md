@@ -66,13 +66,35 @@ renders the saved snapshot on later visits. Another owner's or missing ID yields
 the same 404 page; anonymous visits redirect to login. The page shows pending
 status, saved time, rounded displayed values, and calculation versions. It does
 not expose the source snapshot fields or offer approval. The address must be kept
-to revisit the proposal; a browsable proposal list is not implemented yet.
+to revisit the proposal at this checkpoint; a browsable list followed later.
 
 Two focused private-page tests and two preview-page checks passed. A synthetic
 disposable browser flow verified explicit preview, save, redirect, reload, mobile
 width without overflow, and no console warnings/errors. The full isolated suite
 passed 183 tests, none skipped, with migration round trips. No schema, dependency,
 configured user data, or active target was changed by this browser increment.
+
+## Owner-only proposal list — 2026-11-05
+
+`GET /api/calorie-proposals` returns at most 20 saved pending proposals per page,
+ordered newest first by creation time and UUID. Its explicit response schema
+includes only the same nine allowlisted proposal fields and an optional
+`next_before` UUID. `before` must be a single valid UUID belonging to the signed-in
+owner; a foreign or nonexistent cursor receives 404, while malformed, duplicate,
+or unexpected query fields receive 422. The storage query loads at most 21 owner
+rows and uses the owner's cursor timestamp/UUID to continue without offset.
+
+The authenticated `/calorie-proposals` page presents this bounded list with
+**View older proposals**, an honest empty state, and detail links. Account,
+preview, and detail pages link to it. It also rejects foreign/missing cursors
+without displaying another user's data. The list is a discovery aid for saved
+pending snapshots, not approval or a timeline of active plans.
+
+Four focused storage/API checks and two page checks passed independently. A
+synthetic browser flow verified empty and populated states, navigation, desktop
+and 390 px mobile widths without overflow, and no console warnings/errors. The
+full isolated PostgreSQL suite passed 187 tests, none skipped. No migration,
+dependency, configured user record, or active target changed.
 
 ## Future approval boundary
 

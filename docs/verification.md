@@ -389,3 +389,22 @@ viewport override was reset, and the owned tab/server/test cluster were removed.
 No configured user records were used. The complete isolated suite passed 183
 tests, none skipped, with migration round trips. pip check and offline catalog
 verification passed. No dependency/schema or active-target change occurred.
+
+## Owner-only proposal discovery — 2026-11-05
+
+Read all 18 project Markdown documents before implementation. A bounded
+timestamp/UUID cursor storage query, strict owner-scoped list API, and private
+list page were verified and committed separately. Storage checks covered 23
+owner proposals across 20/3-record pages, ordering, no overlap, foreign and
+missing cursors. API checks covered an empty list, allowlisted results, another
+owner's empty list, and invalid/duplicate/unexpected cursor fields. Page checks
+covered anonymous redirect, owner-only pagination, and account navigation.
+
+The disposable browser flow checked the empty list, then saved a synthetic
+proposal from the preview and found it through the new list. Desktop width was
+1280/1280 document/scroll pixels; requested 390 px mobile width was 390/390.
+No console warnings or errors were observed. The temporary browser tab, server,
+and synthetic database were removed. Full isolated PostgreSQL regression passed
+187 tests, none skipped, with migration round trips. pip check and the offline
+catalog check passed. No configured user data, migration, dependency, active
+target, or approval changed.

@@ -33,8 +33,8 @@ A protected explicit-request calorie preview API and browser form are available;
 they write no target or plan. Experimental bounds are documented in
 [preview policy](docs/calorie-preview.md).
 Authenticated users can save a private pending calorie proposal from the preview
-and revisit its saved page. The guarded API also supports create and owner-only
-reads. Proposals snapshot the calculation and do not activate a target; see
+and find it later in a private, paged list. The guarded API supports create,
+owner-only detail reads, and bounded list reads. Proposals snapshot the calculation and do not activate a target; see
 [proposal boundary](docs/calorie-proposals.md).
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
@@ -73,11 +73,11 @@ and meal times in your profile zone. Open `/energy-preferences` to save the
 three explicit calculation choices and view an eligible daily energy estimate.
 Open `/calorie-preview` to request an adjustment after saving a profile, goal,
 and energy choices. The preview is temporary; use **Save pending proposal** to
-store a reviewable snapshot, then keep its private page address to revisit it.
+store a reviewable snapshot, then open `/calorie-proposals` to find it again.
 Neither action activates a target. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 183 checks, including PostgreSQL integration, use the disposable runner:
+For all 187 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
