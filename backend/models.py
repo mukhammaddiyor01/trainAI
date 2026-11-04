@@ -125,3 +125,52 @@ class EnergyPreferences(Base):
     equation_sex: Mapped[str] = mapped_column(String(24))
     activity_category: Mapped[str] = mapped_column(String(24))
     context: Mapped[str] = mapped_column(String(24))
+
+
+class CalorieProposal(Base):
+    __tablename__ = "calorie_proposals"
+    __table_args__ = (
+        CheckConstraint("status = 'pending'", name="ck_proposal_pending"),
+        CheckConstraint("profile_age BETWEEN 19 AND 120", name="ck_proposal_age"),
+        CheckConstraint("profile_height_cm BETWEEN 50 AND 300", name="ck_proposal_height"),
+        CheckConstraint("profile_weight_kg BETWEEN 20 AND 500", name="ck_proposal_weight"),
+        CheckConstraint("goal_direction IN ('gain', 'lose', 'maintain')", name="ck_proposal_direction"),
+        CheckConstraint("goal_starting_weight_kg BETWEEN 20 AND 500", name="ck_proposal_starting_weight"),
+        CheckConstraint("goal_target_weight_kg IS NULL OR goal_target_weight_kg BETWEEN 20 AND 500", name="ck_proposal_target_weight"),
+        CheckConstraint("(goal_direction = 'maintain' AND goal_target_weight_kg IS NULL) OR "
+                        "(goal_direction = 'gain' AND goal_target_weight_kg IS NOT NULL AND goal_target_weight_kg > goal_starting_weight_kg) OR "
+                        "(goal_direction = 'lose' AND goal_target_weight_kg IS NOT NULL AND goal_target_weight_kg < goal_starting_weight_kg)",
+                        name="ck_proposal_goal_shape"),
+        CheckConstraint("equation_sex IN ('male', 'female')", name="ck_proposal_equation_sex"),
+        CheckConstraint("activity_category IN ('inactive', 'low_active', 'active', 'very_active')", name="ck_proposal_activity"),
+        CheckConstraint("context = 'general_adult'", name="ck_proposal_context"),
+        CheckConstraint("adjustment_kcal BETWEEN 0 AND 250", name="ck_proposal_magnitude"),
+        CheckConstraint("(goal_direction = 'maintain' AND adjustment_kcal = 0 AND signed_adjustment_kcal = 0) OR "
+                        "(goal_direction = 'gain' AND adjustment_kcal > 0 AND signed_adjustment_kcal = adjustment_kcal) OR "
+                        "(goal_direction = 'lose' AND adjustment_kcal > 0 AND signed_adjustment_kcal = -adjustment_kcal)",
+                        name="ck_proposal_signed_adjustment"),
+        CheckConstraint("maintenance_kcal_per_day > 0", name="ck_proposal_maintenance"),
+        CheckConstraint("preview_kcal_per_day >= 1500", name="ck_proposal_preview_floor"),
+        CheckConstraint("energy_method_version = 'dri-2023-adult-eer-v1'", name="ck_proposal_energy_version"),
+        CheckConstraint("policy_version = 'manual-adjustment-preview-2026-11-04-v1'", name="ck_proposal_policy_version"),
+    )
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("profiles.user_id", ondelete="CASCADE"), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    status: Mapped[str] = mapped_column(String(16))
+    profile_age: Mapped[int] = mapped_column(SmallInteger)
+    profile_height_cm: Mapped[float] = mapped_column(Float)
+    profile_weight_kg: Mapped[float] = mapped_column(Float)
+    goal_direction: Mapped[str] = mapped_column(String(16))
+    goal_starting_weight_kg: Mapped[float] = mapped_column(Float)
+    goal_target_weight_kg: Mapped[float | None] = mapped_column(Float)
+    equation_sex: Mapped[str] = mapped_column(String(24))
+    activity_category: Mapped[str] = mapped_column(String(24))
+    context: Mapped[str] = mapped_column(String(24))
+    adjustment_kcal: Mapped[int] = mapped_column(SmallInteger)
+    signed_adjustment_kcal: Mapped[int] = mapped_column(SmallInteger)
+    maintenance_kcal_per_day: Mapped[float] = mapped_column(Float)
+    preview_kcal_per_day: Mapped[float] = mapped_column(Float)
+    energy_method_version: Mapped[str] = mapped_column(String(40))
+    policy_version: Mapped[str] = mapped_column(String(64))
