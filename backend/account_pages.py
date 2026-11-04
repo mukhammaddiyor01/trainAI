@@ -1,6 +1,7 @@
 """Sign-in pages and an account view resolved from the session cookie."""
 
 from fastapi import APIRouter, Request
+from uuid import UUID
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.exc import SQLAlchemyError
 from backend.guards import optional_account
@@ -10,6 +11,7 @@ from backend.training_preferences import read_training_preferences
 from backend.food_preferences import read_food_preferences
 from backend.energy_preferences import read_energy_inputs
 from backend.calorie_previews import read_calorie_preview_inputs
+from backend.calorie_proposals import read_calorie_proposal
 from backend.services.energy_estimation import EnergyEstimateUnavailable, estimate_adult_energy
 from backend.services.food_preferences import MAX_ALLERGIES, MAX_ALLERGY_LENGTH, MAX_MEALS, MAX_PREP_MINUTES
 from backend.services.training_preferences import MIN_SESSION_MINUTES, MAX_SESSION_MINUTES
@@ -162,3 +164,20 @@ async def calorie_preview_page(request: Request):
     return templates.TemplateResponse(request=request, name="calorie-preview.html", context={
         "profile": profile, "goal": inputs[2] if inputs is not None else None,
     })
+
+
+@router.get("/calorie-proposals/{proposal_id}", response_class=HTMLResponse)
+async def calorie_proposal_page(request: Request, proposal_id: UUID):
+    try:
+        identity = await optional_account(request)
+        if identity is None:
+            return RedirectResponse("/login", status_code=303)
+        proposal = await run_in_threadpool(read_calorie_proposal, identity.user_id, proposal_id)
+    except (DatabaseConfigurationError, SQLAlchemyError):
+        return templates.TemplateResponse(request=request, name="account.html", status_code=503,
+                                          context={"identity": None})
+    if proposal is None:
+        return templates.TemplateResponse(request=request, name="calorie-proposal.html",
+                                          status_code=404, context={"proposal": None})
+    return templates.TemplateResponse(request=request, name="calorie-proposal.html",
+                                      context={"proposal": proposal})
