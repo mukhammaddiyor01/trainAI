@@ -52,7 +52,27 @@ PostgreSQL. The complete isolated suite passed 181 tests, none skipped, includin
 migration round trips. The configured database was checked at 0006 with no table
 conflict, then explicitly upgraded to 0007; no real profile or proposal rows were
 read or written during verification. Dependencies and UI were unchanged. A
-browser control for saving/reviewing proposals remains a separate increment.
+browser control for saving/reviewing proposals was added in a later increment.
+
+## Browser save and review — 2026-11-05
+
+After a successful explicit `/calorie-preview` calculation, the user can choose
+**Save pending proposal**. This sends only the requested magnitude to the guarded
+create API. The server locks and revalidates current inputs and recomputes; a
+changed or out-of-scope input can reject the save. The button is unavailable
+before a preview and the result is cleared when the amount changes. A successful
+save opens `/calorie-proposals/{proposal_id}`, a private, owner-scoped page that
+renders the saved snapshot on later visits. Another owner's or missing ID yields
+the same 404 page; anonymous visits redirect to login. The page shows pending
+status, saved time, rounded displayed values, and calculation versions. It does
+not expose the source snapshot fields or offer approval. The address must be kept
+to revisit the proposal; a browsable proposal list is not implemented yet.
+
+Two focused private-page tests and two preview-page checks passed. A synthetic
+disposable browser flow verified explicit preview, save, redirect, reload, mobile
+width without overflow, and no console warnings/errors. The full isolated suite
+passed 183 tests, none skipped, with migration round trips. No schema, dependency,
+configured user data, or active target was changed by this browser increment.
 
 ## Future approval boundary
 

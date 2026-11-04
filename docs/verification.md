@@ -371,3 +371,21 @@ were read or written, and no dependency/UI changes or browser checks occurred.
 No target or plan activation, approval, or idempotent approval is implemented.
 The capped loopback launcher was started on port 8000. A live anonymous POST
 with the correct Origin returned 401, with no-store and no Server header.
+
+## Pending proposal browser flow — 2026-11-05
+
+Read all 18 project-owned Markdown files before implementation. The private
+proposal review page passed two focused disposable PostgreSQL checks for owner
+access, other-owner/missing 404 responses, anonymous redirect, and pending-only
+copy. The preview page passed two focused checks after adding the explicit save
+control. The increments were committed separately as 0ce484e and 2b6c47a.
+
+A synthetic account in the owned disposable browser server saved a profile,
+goal, and energy choices, calculated a +200 kcal/day preview, then explicitly
+saved a pending proposal. The browser reached its owner-only URL and reload
+retained the saved snapshot. The requested 390 px mobile viewport produced equal
+375 px document and scroll widths; console warnings/errors were absent. The
+viewport override was reset, and the owned tab/server/test cluster were removed.
+No configured user records were used. The complete isolated suite passed 183
+tests, none skipped, with migration round trips. pip check and offline catalog
+verification passed. No dependency/schema or active-target change occurred.
