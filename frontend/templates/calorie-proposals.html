@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Saved calorie proposals — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/profile.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/calorie-preview.css').path }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Proposal navigation"><a href="/calorie-preview">New preview</a><a href="/account">Your account</a></nav></header>
+  <main id="main" class="wrap profile-page calorie-page">
+    {% if page %}
+    <h1>Saved proposals.</h1>
+    <p class="lead">Review your pending calorie calculations. Each is a saved snapshot, not an active target or plan.</p>
+    {% if page.items %}
+    <section aria-label="Pending proposals">
+      <ol class="proposal-list">
+        {% for proposal in page.items %}
+        <li>
+          <a href="/calorie-proposals/{{ proposal.id }}">
+            <span class="proposal-list-value">{{ '%.0f'|format(proposal.preview_kcal_per_day) }} kcal/day</span>
+            <span class="proposal-list-meta">{{ proposal.created_at.strftime('%Y-%m-%d %H:%M UTC') }} · {{ proposal.goal_direction }} · {{ '%+d'|format(proposal.signed_adjustment_kcal) }} kcal/day · Pending review</span>
+            <span class="proposal-list-action">Review proposal</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ol>
+      {% if page.next_before %}<p class="proposal-more"><a href="/calorie-proposals?before={{ page.next_before }}">View older proposals</a></p>{% endif %}
+    </section>
+    {% else %}
+    <section class="auth-panel" aria-labelledby="empty-title">
+      <h2 id="empty-title">No proposals here yet.</h2>
+      <p>Start with an explicit calorie preview, then choose whether to save it for review.</p>
+      <a href="/calorie-preview">Create a preview</a>
+    </section>
+    {% endif %}
+    {% else %}
+    <h1>Proposal page unavailable.</h1>
+    <p class="lead">This page was not found in your account. <a href="/calorie-proposals">View your latest proposals</a>.</p>
+    {% endif %}
+  </main>
+</body>
+</html>

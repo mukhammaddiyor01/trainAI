@@ -11,7 +11,7 @@ from backend.training_preferences import read_training_preferences
 from backend.food_preferences import read_food_preferences
 from backend.energy_preferences import read_energy_inputs
 from backend.calorie_previews import read_calorie_preview_inputs
-from backend.calorie_proposals import read_calorie_proposal
+from backend.calorie_proposals import ProposalCursorNotFound, list_calorie_proposals, read_calorie_proposal
 from backend.services.energy_estimation import EnergyEstimateUnavailable, estimate_adult_energy
 from backend.services.food_preferences import MAX_ALLERGIES, MAX_ALLERGY_LENGTH, MAX_MEALS, MAX_PREP_MINUTES
 from backend.services.training_preferences import MIN_SESSION_MINUTES, MAX_SESSION_MINUTES
@@ -181,3 +181,29 @@ async def calorie_proposal_page(request: Request, proposal_id: UUID):
                                           status_code=404, context={"proposal": None})
     return templates.TemplateResponse(request=request, name="calorie-proposal.html",
                                       context={"proposal": proposal})
+
+
+@router.get("/calorie-proposals", response_class=HTMLResponse)
+async def calorie_proposals_page(request: Request):
+    try:
+        identity = await optional_account(request)
+        if identity is None:
+            return RedirectResponse("/login", status_code=303)
+        query = request.query_params
+        if query and (set(query) != {"before"} or len(query.getlist("before")) != 1):
+            return templates.TemplateResponse(request=request, name="calorie-proposals.html",
+                                              status_code=404, context={"page": None})
+        try:
+            before = UUID(query["before"]) if query else None
+        except ValueError:
+            return templates.TemplateResponse(request=request, name="calorie-proposals.html",
+                                              status_code=404, context={"page": None})
+        try:
+            page = await run_in_threadpool(list_calorie_proposals, identity.user_id, before)
+        except ProposalCursorNotFound:
+            return templates.TemplateResponse(request=request, name="calorie-proposals.html",
+                                              status_code=404, context={"page": None})
+    except (DatabaseConfigurationError, SQLAlchemyError):
+        return templates.TemplateResponse(request=request, name="account.html", status_code=503,
+                                          context={"identity": None})
+    return templates.TemplateResponse(request=request, name="calorie-proposals.html", context={"page": page})

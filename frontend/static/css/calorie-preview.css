@@ -11,3 +11,12 @@
 .preview-limits h2 { font-size: 20px; letter-spacing: -.02em; }
 .preview-limits p { font-size: 13px; }
 @media (max-width: 700px) { .preview-breakdown div { grid-template-columns: 1fr; gap: 4px; } }
+.proposal-list { list-style: none; padding: 0; margin: 0; max-width: 720px; border-top: 1px solid var(--line); }
+.proposal-list li { border-bottom: 1px solid var(--line); }
+.proposal-list a { display: grid; grid-template-columns: 1fr auto; gap: 5px 20px; padding: 20px 4px; text-decoration: none; }
+.proposal-list a:hover { background: var(--white); }
+.proposal-list-value { font-size: 23px; font-weight: 600; letter-spacing: -.04em; }
+.proposal-list-meta { grid-column: 1; font-size: 12px; line-height: 1.5; color: var(--muted); overflow-wrap: anywhere; }
+.proposal-list-action { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 13px; text-decoration: underline; text-underline-offset: 4px; }
+.proposal-more { margin-top: 24px; font-size: 14px; }
+@media (max-width: 700px) { .proposal-list a { grid-template-columns: 1fr; } .proposal-list-action { grid-column: 1; grid-row: 3; margin-top: 4px; } }
