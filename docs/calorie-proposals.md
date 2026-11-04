@@ -9,7 +9,7 @@ unchanged; see [preview limits](calorie-preview.md) and
 
 ## Create boundary
 
-- Only the signed-in owner may request a draft. A future HTTP endpoint must take
+- Only the signed-in owner may request a draft. The HTTP endpoint takes
   the adjustment magnitude alone, with exact Origin, strict JSON, and request
   limits. Browser-supplied owner, goal, maintenance, versions, or status cannot
   supply proposal data.
@@ -25,6 +25,34 @@ unchanged; see [preview limits](calorie-preview.md) and
 - New rows are pending only. They do not alter the current goal, energy choices,
   profile, or any active target. Existing proposals are retained when inputs
   change. No proposal is generated from a read-only preview request.
+
+## Implemented storage and API
+
+Migration 0007 adds `calorie_proposals` without changing existing tables or
+backfilling users. PostgreSQL permits only pending status and checks owner foreign
+keys, supported goal shape, choice labels, bounded magnitude, signed direction,
+floor, and pinned method/policy versions. The storage function locks the profile
+before joining and locking the owner's goal and energy rows. It validates the
+plain inputs and recomputes the preview inside that transaction, then inserts
+an immutable snapshot. An invalid request leaves no row.
+
+`POST /api/calorie-proposals` accepts only `adjustment_kcal` in a 2048-byte
+JSON body and requires the account session and exact Origin. It returns 201 and
+nine allowlisted fields: proposal ID, creation time, pending status, maintenance,
+signed change, preview, goal direction, energy method, and policy version.
+`GET /api/calorie-proposals/{proposal_id}` reads only the signed-in owner's row;
+another owner's ID and nonexistent IDs both return 404. Missing saved inputs
+return 404, unsupported current scope 409, and invalid magnitudes 422. Existing
+rate, body-time, response-size, and browser privacy limits apply. The API does
+not expose source snapshots or approve a target. Repeating a POST creates a new
+pending proposal with a new ID; no idempotent approval has been implemented.
+
+Two schema checks, three storage checks, and three API checks passed in disposable
+PostgreSQL. The complete isolated suite passed 181 tests, none skipped, including
+migration round trips. The configured database was checked at 0006 with no table
+conflict, then explicitly upgraded to 0007; no real profile or proposal rows were
+read or written during verification. Dependencies and UI were unchanged. A
+browser control for saving/reviewing proposals remains a separate increment.
 
 ## Future approval boundary
 

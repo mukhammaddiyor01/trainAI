@@ -32,6 +32,9 @@ does not create a gain/loss target or plan. See [energy inputs](docs/energy-esti
 A protected explicit-request calorie preview API and browser form are available;
 they write no target or plan. Experimental bounds are documented in
 [preview policy](docs/calorie-preview.md).
+Authenticated users can also create and read private pending calorie proposals
+through a guarded API. Proposals snapshot the calculation and do not activate a
+target; see [proposal boundary](docs/calorie-proposals.md).
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
@@ -71,7 +74,7 @@ Open `/calorie-preview` to request an adjustment after saving a profile, goal,
 and energy choices. The result is temporary and does not activate a target. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 173 checks, including PostgreSQL integration, use the disposable runner:
+For all 181 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
@@ -146,8 +149,9 @@ composition reviews. See [catalog provenance](docs/catalogs.md) and
 
 ## Next milestone
 
-Review proposal storage and approval/version history as separate steps; current
-previews do not activate a target or plan. Review exercise rules
+Add an explicit browser flow for saving and reviewing pending proposals. Then
+implement transactional approval and version history as separate reviewed steps;
+previews and pending proposals do not activate a target or plan. Review exercise rules
 and user limitations before generating workouts.
 The four current composition-source reviews found insufficient evidence; separately
 identified product composition and ingredient/allergen/diet evidence remain
@@ -180,3 +184,12 @@ profile, energy preferences, and goal in one owner-scoped snapshot. No default
 magnitude is supplied. The API returns a seven-field versioned preview or a
 bounded error; it does not update inputs, store a target, or create/approve a plan.
 See [scope and experimental limits](docs/calorie-preview.md) before use.
+
+## Pending calorie proposal API
+
+POST /api/calorie-proposals uses the same explicit adjustment-only input, exact
+Origin, authentication, and strict 2048-byte JSON limit. It recomputes from locked
+current saved inputs and creates a pending private snapshot. GET
+/api/calorie-proposals/{proposal_id} returns that owner's nine-field summary.
+There is no browser save control or approval endpoint yet. Migration 0007 is
+required. Repeated POSTs create separate pending records.

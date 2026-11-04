@@ -1,10 +1,32 @@
 # TrainAI — Completed Tasks and Session Handoff
 
-Last updated: 2026-11-04 (Asia/Seoul).
-The latest 2026-11-04 continuation read all 17 project-owned Markdown files
+Last updated: 2026-11-05 (Asia/Seoul).
+The latest 2026-11-05 continuation read all 17 existing project-owned Markdown files
 before implementation.
 
-## Current Checkpoint — 2026-11-04
+## Current Checkpoint — 2026-11-05
+
+- Continued from clean synchronized develop at e48855d after reading all 17
+  existing Markdown files. Added docs/calorie-proposals.md, bringing the inventory
+  to 18. The reviewed boundary, pending-only schema, transactional storage, and
+  guarded create/read API were separate verified commits: 4d184d0, f7656ad,
+  0b26d80, and e818b9a.
+- A proposal snapshots current owner profile, goal, energy choices, unrounded
+  calculation, and pinned versions. Creation locks/revalidates current rows;
+  prior snapshots remain intact. SQL permits only pending status. The API accepts
+  only an explicit adjustment magnitude and returns nine allowlisted fields.
+- Two schema, three storage, and three API checks passed independently. Full
+  isolated PostgreSQL regression: 181 tests, none skipped, with migration round
+  trips. pip check and offline catalog check passed. No dependencies/UI changed.
+- The configured database was at 0006 with no proposal table. Additive migration
+  0007 was applied explicitly and verified; no real user records were read/written.
+- Started the capped loopback server on port 8000. A live anonymous proposal
+  POST with exact Origin returned 401, with privacy headers and no Server header.
+- Next: explicit browser save/review of pending proposals, then separately
+  transactional approval, active-plan uniqueness, and version history. No active
+  calorie target or plan exists yet.
+
+## Previous Preview UI Checkpoint — 2026-11-04
 
 - Continued from clean synchronized develop at dad6d1f after reading all 17
   project-owned Markdown files. Added `/calorie-preview` as an authenticated,
@@ -99,12 +121,13 @@ Current documentation:
 - [Allergy-name resolution](docs/allergen-names.md)
 - [Adult energy estimation](docs/energy-estimation.md)
 - [Calorie preview scope](docs/calorie-preview.md)
+- [Pending calorie proposals](docs/calorie-proposals.md)
 - [Security boundaries](docs/security.md)
 - [Verification history](docs/verification.md)
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete working-tree suite passed 173 tests on 2026-11-04. If documents disagree, inspect Git
+the latest complete working-tree suite passed 181 tests on 2026-11-05. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
@@ -118,8 +141,9 @@ Bounded exact allergy-name resolution and explicit unresolved-name blockers are
 implemented. Explicit multi-portion nutrient totals and reviewed adult energy
 input/calculation services are connected to private energy preference storage,
 strict APIs, and explicit browser onboarding. Bounded explicit-request calorie
-previews are available in a plain service, guarded API, and temporary browser UI. Product
-composition evidence, saved/approved calorie targets, and plans remain pending.
+previews are available in a plain service, guarded API, and temporary browser UI.
+Pending calorie proposals are saved through a guarded API; product composition
+evidence, approved calorie targets, and plans remain pending.
 
 | Area | Completed behavior |
 | --- | --- |
@@ -132,6 +156,7 @@ composition evidence, saved/approved calorie targets, and plans remain pending.
 | Allergy-name resolution | Nine reviewed groups/15 exact English terms, shared normalization, immutable results, preserved unknowns, unchanged ingredient/composition blockers, offline checks |
 | Adult energy onboarding | Versioned DRI 2023 estimate from one owner-scoped snapshot; explicit stored choices, strict guarded APIs, responsive form, uncertainty/scope checks, no saved calorie target |
 | Calorie preview | Explicit requested magnitude, authored caps/scope, stable goal semantics, one owner-scoped input snapshot, strict guarded API, temporary browser result; no target or plan writes |
+| Pending calorie proposals | Immutable owner-scoped snapshots, migration 0007, locked recomputation, strict create/read API, pending-only SQL state; no approval or browser save flow |
 | Portion totals | Exact-ID gram rows, bounded input, retained raw/cooked identity, immutable contributions, missing nutrients preserved independently |
 | Catalog seeds | Six pinned exercise records, complete equipment requirements, four sourced nutrient records, raw/cooked identity, exact-ID lookup, gram scaling, explicit blocked-food readiness, offline evidence check |
 | Food preferences | Explicit allergy states and bounded names, diet, spending style, preparation allowance, custom local meal times, private atomic storage, guarded API, responsive form |
@@ -153,8 +178,9 @@ height 50–300 cm, weight 20–500 kg. These are not medical reference ranges.
 - The configured database connection was verified. Migration 0001 created users
   and login_sessions; migration 0002 added profiles; migration 0003 added goals;
   migration 0004 added training preferences; migration 0005 added food preferences.
-  Migration 0006 adds explicit energy preferences. All were applied explicitly.
-- Current expected migration revision: 0006. Existing accounts were preserved.
+  Migration 0006 adds explicit energy preferences. Migration 0007 adds pending
+  calorie proposals. All were applied explicitly.
+- Current expected migration revision: 0007. Existing accounts were preserved.
 - Synthetic browser accounts and profiles were created only in disposable test
   clusters; those clusters were stopped and removed.
 - The main local server was left running at http://127.0.0.1:8000. Do not assume
@@ -162,7 +188,7 @@ height 50–300 cm, weight 20–500 kg. These are not medical reference ranges.
 - Canonical launcher: `.venv/bin/python -m backend` from the repository root.
 - Useful routes: /register, /login, /account, /profile, /goal, /training-preferences, /food-preferences, /energy-preferences, /calorie-preview, /health.
 - APIs: POST /auth/register, POST /auth/login, GET /auth/me, POST /auth/logout,
-  GET/PUT /api/profile, GET/PUT /api/goal, GET/PUT /api/training-preferences, GET/PUT /api/food-preferences, GET/PUT /api/energy-preferences, GET /api/energy-estimate, and POST /api/calorie-preview.
+  GET/PUT /api/profile, GET/PUT /api/goal, GET/PUT /api/training-preferences, GET/PUT /api/food-preferences, GET/PUT /api/energy-preferences, GET /api/energy-estimate, POST /api/calorie-preview, POST /api/calorie-proposals, and GET /api/calorie-proposals/{proposal_id}.
 
 ## Verification Already Performed
 
@@ -172,7 +198,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Latest result: 173 working-tree tests passed, none skipped (2026-11-04). Coverage includes account/session isolation,
+Latest result: 181 working-tree tests passed, none skipped (2026-11-05). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.
@@ -189,7 +215,7 @@ Live HTTP checks confirmed no Server header, no-store responses, and rejection
 of spoofed X-Forwarded-For headers. Details are in docs/verification.md.
 
 The 2026-10-29 and end-of-day 2026-10-30 handoffs were documentation-only.
-The latest 2026-11-04 implementation passed the complete working-tree suite. Re-run relevant
+The latest 2026-11-05 implementation passed the complete working-tree suite. Re-run relevant
 checks when code or runtime configuration changes.
 
 ## Git Checkpoint and Completed Increments
@@ -200,7 +226,8 @@ The original 2026-10-29 handoff followed 0682f78 and was committed as dfe7b23.
 The 2026-10-30 handoff is a1a045d; the training-preference checkpoint is 335862a.
 The food-preference checkpoint is b5d4a3c; catalog documentation is fc89ac6,
 followed by handoff dd69dc4. Allergy readiness handoff is f5b59ce. The latest
-implementation is 589bb99 on develop, after explicit-preview policy/service
+implementation is e818b9a on develop, after proposal boundary/schema/storage
+commits 4d184d0, f7656ad, and 0b26d80. The prior preview API is 589bb99 after policy/service
 increments 4d50a97 and b76ecfa. The energy onboarding handoff is cbb64c0;
 its initial service handoff is ca710a4, and the portion checkpoint is da04b5a.
 Master remains at a8ddfd9, the initial web setup. Subsequent work belongs only on
@@ -274,6 +301,12 @@ develop. Each verified milestone ends with a separate documentation checkpoint.
 | 4d50a97 | Calorie-preview evidence review and authored application limits |
 | b76ecfa | Explicit bounded calorie preview service without target activation |
 | 589bb99 | Guarded preview API and single-snapshot owner inputs |
+| d7f70f6 | Explicit calorie preview browser flow |
+| e48855d | Verified preview UI handoff |
+| 4d184d0 | Pending proposal storage and approval boundary |
+| f7656ad | Pending-only proposal table and migration 0007 |
+| 0b26d80 | Locked owner-scoped proposal snapshot storage |
+| e818b9a | Strict guarded pending proposal create/read API |
 
 ## Historical Password Edit — Resolved on 2026-10-30
 
@@ -624,10 +657,11 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 The reference catalog seed milestone is complete. Continue the original
 profile → weekly plan → daily logging → weekly review → approved revision flow:
 
-1. Review and implement proposal storage, then transactional approval/version
-   history as separate increments. Preserve policy/version metadata and revalidate
-   all inputs for any future approval; no preview request may activate a target.
-   See docs/calorie-preview.md and docs/energy-estimation.md.
+1. Add an explicit browser save/review flow for pending proposals. Then implement
+   transactional approval and active-plan version history as separate increments.
+   Revalidate stored source snapshots and reject stale approvals; enforce one
+   active plan per owner in PostgreSQL. A preview or pending proposal cannot
+   activate a target. See docs/calorie-proposals.md and docs/calorie-preview.md.
 2. Obtain separately identified product ingredient/diet/allergen evidence before
    automatic food selection. The current four composition-source reviews found
    insufficient evidence; do not repeat generic nutrient retrieval as if it

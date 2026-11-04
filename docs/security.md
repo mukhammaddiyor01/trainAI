@@ -24,6 +24,7 @@ Plain business services remain independent of these HTTP controls.
 | Boundary | Limit / behavior |
 | --- | --- |
 | Calorie-preview bodies | 2048 bytes, strict single adjustment field, owner/Origin guards, no writes |
+| Calorie-proposal bodies | 2048 bytes, strict single adjustment field, owner/Origin guards, pending-only write |
 | Energy-preference bodies | 2048 bytes, strict three-field input, authenticated owner only |
 | Food-preference bodies | 8192 bytes, strict six-field input, authenticated owner only |
 | Training-preference bodies | 4096 bytes, strict five-field input, authenticated owner only |
@@ -225,3 +226,16 @@ persisted, or approved. No new dependency, OAuth change, or schema migration was
 introduced; the limiter remains single-process. The authenticated browser preview
 page uses owner-derived inputs; the result is temporary and cleared on edits or
 reload. No browser storage or query string holds the adjustment.
+
+## Pending calorie proposals — 2026-11-05
+
+POST /api/calorie-proposals requires the same exact Origin and authenticated
+server-derived owner as the preview. It accepts one strict bounded magnitude,
+locks and revalidates current owner rows, and recomputes before the pending-only
+insert. GET by UUID is owner-scoped and returns the same 404 for another owner's
+row and an unknown row. Nine response fields exclude the source snapshot and
+owner ID. Forged status/goal/owner/result fields, ambiguous and oversized JSON,
+missing inputs, excluded scope, revoked access, and two-owner access were tested.
+SQL checks prevent an approved status or inconsistent signed direction. Neither
+API changes active plans; approval controls and active-plan uniqueness remain
+future work. The existing single-process limiter is unchanged.

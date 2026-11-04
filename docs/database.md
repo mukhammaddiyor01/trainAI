@@ -108,3 +108,13 @@ After verifying configured revision 0005 and no energy_preferences table conflic
 the reviewed additive migration was explicitly applied. Current configured and
 expected revision: 0006. Existing tables/records were not modified; no synthetic
 accounts or preferences were written to the configured database.
+
+## Pending calorie proposal migration — 2026-11-05
+
+Migration 0007 adds only `calorie_proposals`: server-generated IDs, owner foreign
+keys, pending-only status, exact calculation source snapshots, unrounded results,
+and pinned versions. It has no defaults/backfill for existing users. Disposable
+PostgreSQL upgrade/downgrade/upgrade, metadata parity, and SQL constraint tests
+passed with the complete 181-test suite. The configured database was checked at
+0006 with no table conflict, then explicitly upgraded to 0007. No real user
+rows were read or written. Approval and active-plan tables are not present.

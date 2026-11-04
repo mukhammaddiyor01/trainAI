@@ -4,6 +4,8 @@ Reviewed 2026-11-04. Policy: manual-adjustment-preview-2026-11-04-v1.
 This is an explicit-request arithmetic preview for future plan proposals. It
 creates no saved target or plan. A protected API and explicit browser form are
 available.
+The separate [pending proposal API](calorie-proposals.md) snapshots an explicitly
+requested adjustment without activating a target.
 
 ## Evidence and limits of the evidence
 

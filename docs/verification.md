@@ -350,3 +350,24 @@ The full disposable PostgreSQL suite passed 173 tests, none skipped, with
 migration round trips. pip check passed. No schema/dependency changes, configured
 database access, or advisory-audit rerun occurred. Preview values remain
 transient; proposal storage and transactional approval/version history are pending.
+
+## Pending proposal storage and API — 2026-11-05
+
+Read all 17 existing project-owned Markdown files on clean synchronized develop
+at e48855d. Added the authored pending-only storage boundary, migration 0007,
+owner-scoped transactional creation/read, and strict guarded create/read APIs
+in separate verified commits. The new boundary document brings the Markdown
+inventory to 18. Two SQL schema, three storage, and three API tests passed
+independently. Checks include forged status, amount, owner and result fields,
+missing/changed inputs, owner-only reads, revoked sessions, ambiguous/oversized
+JSON, preserved goal/energy values, and immutable prior snapshots.
+
+The full isolated PostgreSQL suite passed 181 tests, none skipped, including
+migration round trips and owned-cluster cleanup. pip check and offline catalog
+validation passed. Configured database connectivity returned a generic success;
+revision was 0006 and the proposal table absent. The additive migration was
+explicitly applied and revision 0007 verified. No real profile or proposal rows
+were read or written, and no dependency/UI changes or browser checks occurred.
+No target or plan activation, approval, or idempotent approval is implemented.
+The capped loopback launcher was started on port 8000. A live anonymous POST
+with the correct Origin returned 401, with no-store and no Server header.
