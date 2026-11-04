@@ -29,6 +29,9 @@ A reviewed DRI 2023 adult energy estimate is available after explicitly saving
 private energy preferences. Strict owner-scoped APIs and the responsive form
 preserve uncertainty and scope checks. The estimate uses the current profile and
 does not create a gain/loss target or plan. See [energy inputs](docs/energy-estimation.md).
+A protected explicit-request calorie preview API is also available; it writes no
+target or plan. Its experimental bounds are documented in
+[preview policy](docs/calorie-preview.md). A preview browser form is not yet present.
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
@@ -66,7 +69,7 @@ and meal times in your profile zone. Open `/energy-preferences` to save the
 three explicit calculation choices and view an eligible daily energy estimate. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 158 checks, including PostgreSQL integration, use the disposable runner:
+For all 171 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
@@ -141,10 +144,10 @@ composition reviews. See [catalog provenance](docs/catalogs.md) and
 
 ## Next milestone
 
-Review bounded gain/loss target policies before converting the existing energy
-estimate into a proposed calorie target. Review exercise prescription rules and
-user limitations before generating workouts. Current preference collection and
-estimates do not create or approve a plan.
+Add an explanatory browser preview flow for the existing explicit-request API.
+Then implement proposal storage and approval/version history as separate reviewed
+steps; current previews do not activate a target or plan. Review exercise rules
+and user limitations before generating workouts.
 The four current composition-source reviews found insufficient evidence; separately
 identified product composition and ingredient/allergen/diet evidence remain
 required before automatic food selection or meal planning. Expand the bounded
@@ -166,3 +169,13 @@ OAuth is deferred by the user's choice. See [security boundaries](docs/security.
 and [basic profiles](docs/profiles.md). A 2026-10-29 pip-audit run checked all
 29 pinned dependencies and reported no known advisories. This is a point-in-time
 dependency result, not a complete security assessment.
+
+
+## Explicit calorie preview API
+
+POST /api/calorie-preview requires a signed-in owner, the exact page Origin, and
+an application/json body containing only adjustment_kcal. It reads the saved
+profile, energy preferences, and goal in one owner-scoped snapshot. No default
+magnitude is supplied. The API returns a seven-field versioned preview or a
+bounded error; it does not update inputs, store a target, or create/approve a plan.
+See [scope and experimental limits](docs/calorie-preview.md) before use.

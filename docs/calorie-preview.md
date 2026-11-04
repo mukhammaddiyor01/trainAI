@@ -77,3 +77,19 @@ previous eligible result. Five targeted API checks passed in disposable PostgreS
 covering Origin/session guards, two-owner isolation, spoofed fields, revoked access,
 strict/missing/oversized/ambiguous JSON, response allowlisting, input preservation,
 and current-weight/context changes. No schema or dependency was introduced.
+
+
+## Verification — 2026-11-04
+
+Eight plain-service and five API tests passed independently. The complete
+application suite passed 171 tests, none skipped, in disposable PostgreSQL with
+migration round trips and owned-cluster cleanup. pip check and explicit offline
+catalog checks passed. No dependency or database schema changed; expected revision
+remains 0006. The configured database and real user records were not accessed.
+
+The capped canonical loopback launcher was started on port 8000. Live login
+returned 200; preview POST without Origin returned 403 and same-Origin anonymous
+POST returned 401, all with no-store and absent Server headers. No UI changed,
+so browser verification was not repeated. The historical dependency-advisory
+audit was not rerun. Next: explicit explanatory UI, then separately reviewed
+proposal storage and transactional approval/versioning before any activation.

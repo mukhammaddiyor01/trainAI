@@ -145,3 +145,13 @@ The capped loopback launcher was started on port 8000. Anonymous page/API guards
 local script delivery, no-store, and absent Server headers passed live checks.
 No dependency changes or advisory audit were performed. Gain/loss policies,
 exercise prescriptions, food composition eligibility, and plans remain separate.
+
+
+## Explicit adjustment previews — 2026-11-04
+
+The [calorie preview service/API](calorie-preview.md) now builds on this estimate
+with an explicitly requested adjustment and separate authored scope limits.
+Profile, energy choices, and saved goal are read in one owner-scoped snapshot.
+The maintenance endpoint and form retain their existing contracts; no preview
+request changes them or persists/activates a target. Preview UI and plan approval
+remain separate future increments.

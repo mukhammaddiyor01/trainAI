@@ -23,6 +23,7 @@ Plain business services remain independent of these HTTP controls.
 
 | Boundary | Limit / behavior |
 | --- | --- |
+| Calorie-preview bodies | 2048 bytes, strict single adjustment field, owner/Origin guards, no writes |
 | Energy-preference bodies | 2048 bytes, strict three-field input, authenticated owner only |
 | Food-preference bodies | 8192 bytes, strict six-field input, authenticated owner only |
 | Training-preference bodies | 4096 bytes, strict five-field input, authenticated owner only |
@@ -205,3 +206,20 @@ and stale-result clearing. Existing no-store/CSP/referrer protections remain act
 Two-user, revoked-access, injection, malformed/oversized JSON, and response
 allowlisting checks passed. OAuth remains deferred and limiter scope remains
 single-process. No new dependency or complete-security claim was introduced.
+
+
+## Explicit calorie preview — 2026-11-04
+
+POST /api/calorie-preview uses shared session/Origin guards, bounded JSON up to
+2048 bytes, strict one-field input, and seven allowlisted response fields.
+Browser owner IDs, profile/goal/energy values, policy versions, and active status
+cannot supply calculation inputs. All three saved inputs are read by one joined
+owner-scoped SQL statement. Plain services revalidate immutable values and scope.
+Existing rate/time/response budgets remain active. Missing inputs, exclusions,
+and excessive requests return controlled errors without echoing inputs.
+
+Tests cover forged owner/result fields, two-owner isolation, revoked access,
+strict/missing/ambiguous/oversized JSON, current profile changes, goal review,
+and preservation of saved inputs. No preview value is logged, transmitted,
+persisted, or approved. No new dependency, OAuth change, or schema migration was
+introduced; the limiter remains single-process. Browser preview UI remains pending.

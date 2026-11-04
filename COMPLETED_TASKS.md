@@ -1,32 +1,34 @@
 # TrainAI — Completed Tasks and Session Handoff
 
-Last updated: 2026-11-02 (Asia/Seoul).
-The latest 2026-11-02 continuation read all 16 project-owned Markdown files
+Last updated: 2026-11-04 (Asia/Seoul).
+The latest 2026-11-04 continuation read all 16 project-owned Markdown files
 before implementation.
 
-## Current Checkpoint — 2026-11-02
+## Current Checkpoint — 2026-11-04
 
-- Resumed on clean, synchronized develop at ca710a4 after reading all 16 Markdown
-  files. Energy onboarding is complete: owner-scoped persistence, strict guarded
-  preference API, read-only estimate API, explicit form, and saved estimate view.
-- Each layer was verified and committed separately. Latest implementation is
-  1e55091, following e6c2fd2 (storage), 96ebe4c (collection API), and d8acc04
-  (snapshot-based estimate API). Work remains on develop; master is a8ddfd9.
-- Latest result: 158 complete isolated PostgreSQL tests passed, none skipped;
-  15 new storage/API/page checks passed independently. Migration round trips,
-  pip check, and offline catalog checks passed; no dependencies changed.
-- Synthetic browser → PUT → database → reloaded estimate checks passed, including
-  unsure/clinical exclusions, stale-result clearing, mobile/desktop, and logout.
-  The owned temporary cluster/data/tab were removed; viewport overrides reset.
-- Configured database upgraded explicitly 0005 → 0006 after revision/conflict
-  checks. Existing data was preserved; no synthetic data/backfilled answers added.
-- Canonical capped loopback server started on 127.0.0.1:8000 and left running.
-  Anonymous page/API guards and no-store/absent Server headers passed live checks.
-  Do not assume the process survives a later session; check availability first.
-- Next: review bounded gain/loss target policies and exercise prescription rules
-  and limitations before generating prescriptions. Product composition evidence
-  remains required before automatic food selection. Current estimates create
-  no calorie target, meal/workout plan, or approved revision.
+- Resumed from clean, synchronized develop at cbb64c0 after reading all 16 Markdown
+  files. New docs/calorie-preview.md brings the inventory to 17.
+- Reviewed calorie-preview evidence and authored experimental bounds, then added
+  explicit-request preview arithmetic and a protected single-field POST API.
+  No universal offset, nutritional adequacy, outcome, or approval is inferred.
+- Service requires revalidated current profile/energy choices and original goal
+  semantics. The API reads all three inputs in one owner-scoped SQL snapshot,
+  retains seven allowlisted preview fields, and writes no target, goal, or plan.
+- Latest implementation: 589bb99, after policy review 4d50a97 and service b76ecfa.
+  Development remains on develop; master remains at a8ddfd9.
+- Latest result: 171 complete isolated PostgreSQL tests passed, none skipped;
+  eight service and five API checks passed independently. Migration round trips,
+  pip check, and offline catalogs passed. No schema/dependency changes were made.
+- Expected database revision remains 0006; configured database/private records
+  were not accessed. Browser checks and the historical advisory audit were not
+  repeated because no UI/dependencies changed.
+- No listeners were observed on 8000/8001 at startup. The canonical bounded
+  launcher is now running on 127.0.0.1:8000. Live login returned 200; preview POST
+  without Origin 403 and anonymous same-Origin POST 401, with privacy headers.
+- Next: explicit explanatory preview UI. Then separately reviewed proposal
+  persistence and transactional approval/version history before activation.
+  Exercise prescription rules/limitations and food composition evidence remain
+  prerequisites for automatic workout/meal plans.
 
 ## Previous Session Handoff — 2026-10-31
 
@@ -82,12 +84,13 @@ Current documentation:
 - [Catalog seeds](docs/catalogs.md)
 - [Allergy-name resolution](docs/allergen-names.md)
 - [Adult energy estimation](docs/energy-estimation.md)
+- [Calorie preview scope](docs/calorie-preview.md)
 - [Security boundaries](docs/security.md)
 - [Verification history](docs/verification.md)
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete working-tree suite passed 158 tests on 2026-11-02. If documents disagree, inspect Git
+the latest complete working-tree suite passed 171 tests on 2026-11-04. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
@@ -100,8 +103,9 @@ Six sourced exercise metadata records and four USDA nutrient seeds are implement
 Bounded exact allergy-name resolution and explicit unresolved-name blockers are
 implemented. Explicit multi-portion nutrient totals and reviewed adult energy
 input/calculation services are connected to private energy preference storage,
-strict APIs, and explicit browser onboarding. Product composition evidence,
-prescribed calorie targets, and plans remain pending.
+strict APIs, and explicit browser onboarding. Bounded explicit-request calorie
+previews are available in a plain service and guarded API. Preview UI, product
+composition evidence, saved/approved calorie targets, and plans remain pending.
 
 | Area | Completed behavior |
 | --- | --- |
@@ -113,6 +117,7 @@ prescribed calorie targets, and plans remain pending.
 | Validation | Strict Pydantic request/response contracts, unknown-field rejection, no coercion, bounded UTF-8 JSON, duplicate-key/non-finite/compressed-body rejection |
 | Allergy-name resolution | Nine reviewed groups/15 exact English terms, shared normalization, immutable results, preserved unknowns, unchanged ingredient/composition blockers, offline checks |
 | Adult energy onboarding | Versioned DRI 2023 estimate from one owner-scoped snapshot; explicit stored choices, strict guarded APIs, responsive form, uncertainty/scope checks, no saved calorie target |
+| Calorie preview | Explicit requested magnitude, authored caps/scope, stable goal semantics, one owner-scoped input snapshot, strict guarded API, immutable preview status; no writes or UI yet |
 | Portion totals | Exact-ID gram rows, bounded input, retained raw/cooked identity, immutable contributions, missing nutrients preserved independently |
 | Catalog seeds | Six pinned exercise records, complete equipment requirements, four sourced nutrient records, raw/cooked identity, exact-ID lookup, gram scaling, explicit blocked-food readiness, offline evidence check |
 | Food preferences | Explicit allergy states and bounded names, diet, spending style, preparation allowance, custom local meal times, private atomic storage, guarded API, responsive form |
@@ -143,7 +148,7 @@ height 50–300 cm, weight 20–500 kg. These are not medical reference ranges.
 - Canonical launcher: `.venv/bin/python -m backend` from the repository root.
 - Useful routes: /register, /login, /account, /profile, /goal, /training-preferences, /food-preferences, /energy-preferences, /health.
 - APIs: POST /auth/register, POST /auth/login, GET /auth/me, POST /auth/logout,
-  GET/PUT /api/profile, GET/PUT /api/goal, GET/PUT /api/training-preferences, GET/PUT /api/food-preferences, GET/PUT /api/energy-preferences, and GET /api/energy-estimate.
+  GET/PUT /api/profile, GET/PUT /api/goal, GET/PUT /api/training-preferences, GET/PUT /api/food-preferences, GET/PUT /api/energy-preferences, GET /api/energy-estimate, and POST /api/calorie-preview.
 
 ## Verification Already Performed
 
@@ -153,7 +158,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Latest result: 158 working-tree tests passed, none skipped (2026-11-02). Coverage includes account/session isolation,
+Latest result: 171 working-tree tests passed, none skipped (2026-11-04). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.
@@ -170,7 +175,7 @@ Live HTTP checks confirmed no Server header, no-store responses, and rejection
 of spoofed X-Forwarded-For headers. Details are in docs/verification.md.
 
 The 2026-10-29 and end-of-day 2026-10-30 handoffs were documentation-only.
-The latest 2026-11-02 implementation passed the complete working-tree suite. Re-run relevant
+The latest 2026-11-04 implementation passed the complete working-tree suite. Re-run relevant
 checks when code or runtime configuration changes.
 
 ## Git Checkpoint and Completed Increments
@@ -181,9 +186,9 @@ The original 2026-10-29 handoff followed 0682f78 and was committed as dfe7b23.
 The 2026-10-30 handoff is a1a045d; the training-preference checkpoint is 335862a.
 The food-preference checkpoint is b5d4a3c; catalog documentation is fc89ac6,
 followed by handoff dd69dc4. Allergy readiness handoff is f5b59ce. The latest
-implementation is 1e55091 on develop, completing private energy onboarding after
-separate storage, collection API, and estimate API increments. The initial energy
-service handoff is ca710a4; the prior portion checkpoint is da04b5a.
+implementation is 589bb99 on develop, after explicit-preview policy/service
+increments 4d50a97 and b76ecfa. The energy onboarding handoff is cbb64c0;
+its initial service handoff is ca710a4, and the portion checkpoint is da04b5a.
 Master remains at a8ddfd9, the initial web setup. Subsequent work belongs only on
 develop. Each verified milestone ends with a separate documentation checkpoint.
 
@@ -251,6 +256,10 @@ develop. Each verified milestone ends with a separate documentation checkpoint.
 | 96ebe4c | Strict guarded three-field energy-preference API |
 | d8acc04 | Owner-scoped current-input estimate API and one-snapshot read |
 | 1e55091 | Explicit responsive energy form and saved estimate view |
+| cbb64c0 | Verified private energy onboarding and migration checkpoint |
+| 4d50a97 | Calorie-preview evidence review and authored application limits |
+| b76ecfa | Explicit bounded calorie preview service without target activation |
+| 589bb99 | Guarded preview API and single-snapshot owner inputs |
 
 ## Historical Password Edit — Resolved on 2026-10-30
 
@@ -586,20 +595,27 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - Five targeted API checks and isolated migration round trips passed, including
   two-owner isolation, identity/result injection, revoked access, no input mutation,
   strict/ambiguous/oversized JSON, scope changes, and current weight vs goal baseline.
-- Next: complete regression and handoff, then an explicit explanatory browser
-  preview flow. Approval/versioning and plan generation remain separate.
+- API increment committed as 589bb99. Full isolated suite passed 171 tests, none
+  skipped, with migration round trips and owned-cluster cleanup. pip check and
+  offline catalogs passed. No schema/dependency/UI changes or configured database
+  access occurred; no browser check/advisory audit was repeated.
+- Started the capped canonical loopback server on port 8000. Live login returned
+  200; preview without Origin returned 403 and same-Origin anonymous preview 401,
+  all with no-store and no Server header. No private records were read/written.
+- Next: explanatory preview UI, then separately reviewed proposal persistence and
+  transactional approval/versioning. No calorie target or plan was activated.
 
 ## Next Work — Not Yet Completed
 
 The reference catalog seed milestone is complete. Continue the original
 profile → weekly plan → daily logging → weekly review → approved revision flow:
 
-1. Review bounded gain/loss target policies before converting maintenance energy
-   estimates into proposed calorie targets. Record sources, applicability,
-   exclusions, input requirements, and explicit bounds before coding. Do not
-   silently apply a fixed offset or treat target weight as a calorie formula.
-   Existing energy collection and estimation are complete; preserve unsure/context
-   checks and current-profile inputs. Sources are in docs/energy-estimation.md.
+1. Add an explicit explanatory browser preview flow for POST /api/calorie-preview,
+   including authored scope/limit information, no default adjustment, and stale
+   result clearing. Keep this separate from proposal storage and transactional
+   approval/version history. Preserve policy/version metadata and revalidate all
+   inputs for any future approval; no preview request may activate a target.
+   See docs/calorie-preview.md and docs/energy-estimation.md.
 2. Obtain separately identified product ingredient/diet/allergen evidence before
    automatic food selection. The current four composition-source reviews found
    insufficient evidence; do not repeat generic nutrient retrieval as if it

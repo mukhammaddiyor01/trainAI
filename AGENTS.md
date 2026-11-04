@@ -46,7 +46,7 @@ training and food preferences are implemented.
 The profile currently includes age, height, weight, and an explicit IANA time zone.
 Strict input/response schemas, shared authentication/origin guards, ownership-scoped
 profile operations, request/rate/resource limits, and safe errors are verified.
-All 158 working-tree checks passed with isolated PostgreSQL on 2026-11-02.
+All 171 working-tree checks passed with isolated PostgreSQL on 2026-11-04.
 Browser profile and training-preference flows were verified using synthetic data; the configured real database was upgraded
 explicitly to migration 0006. See docs/verification.md, docs/profiles.md, and
 docs/security.md and docs/goals.md. Goals keep a server-selected starting-weight
@@ -73,10 +73,14 @@ and whole-day activity choices, and general-adult context. Unsure/out-of-scope
 answers are saved honestly but do not produce an estimate. No choices are inferred
 from training/account data. Reads use one joined profile/preference snapshot.
 Estimates are recomputed from current weight; no calorie target or plan is saved.
-Next, review gain/loss target policies and exercise rules/limitations before
-prescriptions. Product-specific composition evidence is still required before
+An explicit-request calorie preview service/API now applies documented authored
+bounds without persisting or activating a target; see docs/calorie-preview.md.
+Its input is an adjustment magnitude only; server-side profile, energy choices,
+and goal are read in one owner-scoped snapshot. Next, add an explanatory preview
+UI, then separately reviewed proposal persistence/approval/versioning. Exercise
+rules/limitations still need review before prescriptions. Product-specific composition evidence is still required before
 food selection. The configured database is at 0006; the verified local launcher
-was started on 127.0.0.1:8000 after the energy onboarding milestone.
+was started on 127.0.0.1:8000 after the 2026-11-04 preview API milestone.
 Unsure allergy status and unmapped names must not silently permit food selection.
 The user selected an 8-character password minimum, shared
 across service, schema, and rendered forms; the earlier mismatch is resolved.

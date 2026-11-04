@@ -298,3 +298,32 @@ was denied; the same read-only check passed with authorized local network access
 The historical advisory audit was not rerun. The new output is an estimate of
 maintenance energy, not a prescribed calorie target, measured expenditure,
 automatically selected meal/workout, or approved plan revision.
+
+
+## Calorie preview service and guarded API — 2026-11-04
+
+Read all 16 existing Markdown files; develop was clean at cbb64c0. Reviewed
+NICE/NHS/NIDDK sources and documented experimental application bounds before
+implementation. Direct NICE access returned 403; official indexed text was
+available, and no access controls were bypassed. Policy review, service, and API
+were committed independently; the new policy document brings the inventory to 17.
+
+Eight service checks cover gain/loss/maintenance, explicit strict magnitude,
+absolute/relative limits, floor and BMI boundaries, current vs starting weights,
+reached/crossed goals, uncertain/excluded contexts, malformed inputs, immutability,
+precision, and offline operation. Five API checks passed in disposable PostgreSQL:
+Origin/session guards, complete prerequisites, seven-field response allowlisting,
+no saved-input changes, owner/result injection, two-owner isolation, revoked
+access, oversized/ambiguous JSON, redaction, and rejection of stale eligibility.
+
+The full suite passed 171 tests, none skipped, including disposable migration
+round trips and cluster cleanup. pip check and offline catalog verification passed.
+No dependencies or schema changed; the configured database was not contacted.
+No private real records were read or written. Expected revision remains 0006.
+
+Started the canonical capped local server on 127.0.0.1:8000 after confirming no
+listener. Live login returned 200, preview without Origin 403, and same-Origin
+anonymous preview 401, all with no-store and no Server header. No UI changed,
+so browser checks were not repeated; the historical advisory audit was not rerun.
+No calorie target or plan was stored/activated. Explanatory preview UI and
+transactional approval/version history remain next increments.
