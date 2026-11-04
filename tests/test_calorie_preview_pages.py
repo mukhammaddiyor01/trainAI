@@ -49,6 +49,8 @@ class CaloriePreviewPageTests(unittest.TestCase):
             self.assertNotIn('name="adjustment_kcal" type="number" value=', page.text)
             self.assertIn("No value is chosen for you.", page.text)
             self.assertIn("nothing was saved or activated", page.text)
+            self.assertIn('id="save-proposal"', page.text)
+            self.assertIn("does not activate a target or plan", page.text)
             self.assertIn("experimental application limits", page.text)
             client.put("/api/goal", json={"direction": "maintain"}, headers=headers)
             self.assertIn('data-direction="maintain"', client.get("/calorie-preview").text)
