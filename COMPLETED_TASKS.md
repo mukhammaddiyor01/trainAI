@@ -564,6 +564,17 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - No new dependency or advisory audit. Runtime remains available; prescriptions,
   plans, and food selection remain outside this completed onboarding increment.
 
+## Calorie-Preview Continuation — 2026-11-04
+
+- Read all 16 project-owned Markdown files; develop was clean and synchronized
+  at cbb64c0. No listener was observed on ports 8000/8001 during the startup check.
+- Reviewed official NICE/NHS/NIDDK guidance and recorded source limitations and
+  authored product bounds before implementation in docs/calorie-preview.md.
+  The preview requires an explicit requested adjustment; no universal offset,
+  clinical safety, nutrient adequacy, completion date, or approval is inferred.
+- Next small increment: plain bounded preview using revalidated current profile,
+  explicit energy choices, saved goal semantics, and precise immutable results.
+
 ## Next Work — Not Yet Completed
 
 The reference catalog seed milestone is complete. Continue the original
