@@ -572,8 +572,15 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
   authored product bounds before implementation in docs/calorie-preview.md.
   The preview requires an explicit requested adjustment; no universal offset,
   clinical safety, nutrient adequacy, completion date, or approval is inferred.
-- Next small increment: plain bounded preview using revalidated current profile,
-  explicit energy choices, saved goal semantics, and precise immutable results.
+- Policy review committed as 4d50a97. Added plain explicit-request previews with
+  strict magnitude/direction checks, current DRI estimate, saved-goal revalidation,
+  BMI scope, relative/absolute caps, and result floor. Excess requests are rejected
+  without clamping; reached/crossed goals require review without rewriting them.
+- Eight targeted tests passed for gain/loss/maintenance arithmetic, malformed
+  requests, caps/floor/BMI boundaries, stable goal snapshots, missing/forged and
+  ineligible inputs, precision, immutable preview status, and offline execution.
+- Next increment: guarded preview API reading the owner's complete saved inputs
+  in one database snapshot, without writing any target or plan.
 
 ## Next Work — Not Yet Completed
 
