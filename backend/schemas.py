@@ -106,3 +106,21 @@ class AdultEnergyEstimateResponse(BaseModel):
     method_version: Literal["dri-2023-adult-eer-v1"]
     equation_sex: Literal["male", "female"]
     activity_category: Literal["inactive", "low_active", "active", "very_active"]
+
+
+class CaloriePreviewInput(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    adjustment_kcal: int = Field(ge=0, le=250)
+
+
+class CaloriePreviewResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    maintenance_kcal_per_day: float = Field(gt=0, allow_inf_nan=False)
+    adjustment_kcal_per_day: int = Field(ge=-250, le=250)
+    preview_kcal_per_day: float = Field(ge=1500, allow_inf_nan=False)
+    goal_direction: Literal["gain", "lose", "maintain"]
+    energy_method_version: Literal["dri-2023-adult-eer-v1"]
+    policy_version: Literal["manual-adjustment-preview-2026-11-04-v1"]
+    status: Literal["preview"]

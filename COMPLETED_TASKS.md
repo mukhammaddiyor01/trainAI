@@ -579,8 +579,15 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 - Eight targeted tests passed for gain/loss/maintenance arithmetic, malformed
   requests, caps/floor/BMI boundaries, stable goal snapshots, missing/forged and
   ineligible inputs, precision, immutable preview status, and offline execution.
-- Next increment: guarded preview API reading the owner's complete saved inputs
-  in one database snapshot, without writing any target or plan.
+- Service increment committed as b76ecfa. Added POST /api/calorie-preview with
+  exact-Origin/session guards, strict one-field input, 2048-byte JSON cap, seven
+  allowlisted output fields, and one joined owner-scoped profile/preference/goal
+  snapshot. No target or plan is written and no default adjustment is inferred.
+- Five targeted API checks and isolated migration round trips passed, including
+  two-owner isolation, identity/result injection, revoked access, no input mutation,
+  strict/ambiguous/oversized JSON, scope changes, and current weight vs goal baseline.
+- Next: complete regression and handoff, then an explicit explanatory browser
+  preview flow. Approval/versioning and plan generation remain separate.
 
 ## Next Work — Not Yet Completed
 

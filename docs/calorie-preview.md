@@ -2,7 +2,8 @@
 
 Reviewed 2026-11-04. Policy: manual-adjustment-preview-2026-11-04-v1.
 This is an explicit-request arithmetic preview for future plan proposals. It
-creates no saved target or plan, and is not exposed through an API or form yet.
+creates no saved target or plan. A protected API is available; a browser form
+remains a separate next increment.
 
 ## Evidence and limits of the evidence
 
@@ -57,3 +58,22 @@ Retain calculation precision; presentation rounding belongs to a later UI.
 No values are logged, sent externally, persisted, approved, or converted to food
 selection. Approval/versioning and a guarded user-facing preview remain separate
 future work, with one owner-scoped snapshot of all inputs required at that stage.
+
+
+## Protected preview API
+
+POST /api/calorie-preview accepts exactly adjustment_kcal through the shared
+session/exact-Origin guards and a strict 2048-byte JSON contract. There is no
+default. The owner, direction, profile, energy values, versions, and result status
+cannot be supplied in the body. The server loads profile, energy preferences,
+and goal with one owner-scoped joined SQL statement and passes only plain values
+to the service. Missing inputs return 404; scope/goal review returns 409; invalid
+or excessive requests return 422. Existing time/rate/response limits apply.
+
+The allowlisted response contains seven preview fields. No target, goal, profile,
+preference, or plan is written. Query owner/calculation fields do not supply
+inputs. Repeated requests recompute from current saved inputs, without caching a
+previous eligible result. Five targeted API checks passed in disposable PostgreSQL,
+covering Origin/session guards, two-owner isolation, spoofed fields, revoked access,
+strict/missing/oversized/ambiguous JSON, response allowlisting, input preservation,
+and current-weight/context changes. No schema or dependency was introduced.

@@ -26,6 +26,7 @@ from backend.services.food_preferences import InvalidFoodPreferences
 from backend.services.energy_preferences import InvalidEnergyPreferences
 from backend.energy_preference_routes import router as energy_preference_router
 from backend.energy_estimate_routes import router as energy_estimate_router
+from backend.calorie_preview_routes import router as calorie_preview_router
 from backend.food_preference_routes import router as food_preference_router
 from backend.training_preference_routes import router as training_preference_router
 from backend.goals import GoalProfileRequired
@@ -111,6 +112,7 @@ def create_app() -> FastAPI:
     app.include_router(food_preference_router)
     app.include_router(energy_preference_router)
     app.include_router(energy_estimate_router)
+    app.include_router(calorie_preview_router)
     return app
 
 
