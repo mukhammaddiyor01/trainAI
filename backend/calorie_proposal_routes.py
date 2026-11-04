@@ -6,10 +6,10 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 
-from backend.calorie_proposals import CalorieProposalInputsRequired, PendingCalorieProposal, create_calorie_proposal, read_calorie_proposal
+from backend.calorie_proposals import CalorieProposalInputsRequired, PendingCalorieProposal, ProposalCursorNotFound, create_calorie_proposal, list_calorie_proposals, read_calorie_proposal
 from backend.guards import AuthenticatedAccount, require_same_origin
 from backend.request_validation import read_json
-from backend.schemas import CaloriePreviewInput, CalorieProposalResponse
+from backend.schemas import CaloriePreviewInput, CalorieProposalListResponse, CalorieProposalResponse
 from backend.services.calorie_preview import CaloriePreviewUnavailable, InvalidCalorieAdjustment
 from backend.services.energy_estimation import EnergyEstimateUnavailable
 
@@ -29,6 +29,17 @@ def _response(details: PendingCalorieProposal) -> CalorieProposalResponse:
     )
 
 
+def parse_proposal_cursor(request: Request) -> UUID | None:
+    if not request.query_params:
+        return None
+    if set(request.query_params) != {"before"} or len(request.query_params.getlist("before")) != 1:
+        raise HTTPException(422, "Use one valid proposal cursor.")
+    try:
+        return UUID(request.query_params["before"])
+    except (ValueError, AttributeError):
+        raise HTTPException(422, "Use one valid proposal cursor.") from None
+
+
 @router.post("", response_model=CalorieProposalResponse, status_code=201,
              dependencies=[Depends(require_same_origin)])
 async def create_proposal(request: Request, identity: AuthenticatedAccount):
@@ -46,6 +57,18 @@ async def create_proposal(request: Request, identity: AuthenticatedAccount):
     except (CaloriePreviewUnavailable, EnergyEstimateUnavailable) as error:
         raise HTTPException(409, str(error)) from None
     return _response(details)
+
+
+@router.get("", response_model=CalorieProposalListResponse)
+async def list_proposals(request: Request, identity: AuthenticatedAccount):
+    before = parse_proposal_cursor(request)
+    try:
+        page = await run_in_threadpool(list_calorie_proposals, identity.user_id, before)
+    except ProposalCursorNotFound:
+        raise HTTPException(404, "Proposal page not found.") from None
+    return CalorieProposalListResponse(
+        items=[_response(item) for item in page.items], next_before=page.next_before,
+    )
 
 
 @router.get("/{proposal_id}", response_model=CalorieProposalResponse)

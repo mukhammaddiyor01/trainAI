@@ -17,6 +17,7 @@ class CalorieProposalPublicGuardTests(unittest.TestCase):
             self.assertEqual(client.post("/api/calorie-proposals", json={"adjustment_kcal": 100},
                                          headers={"origin": "http://127.0.0.1"}).status_code, 401)
             self.assertEqual(client.get(f"/api/calorie-proposals/{uuid4()}").status_code, 401)
+            self.assertEqual(client.get("/api/calorie-proposals").status_code, 401)
 
 
 @unittest.skipUnless(os.environ.get("TRAINAI_TEST_DATABASE_URL"), "Disposable PostgreSQL not configured")
@@ -93,3 +94,22 @@ class CalorieProposalApiTests(unittest.TestCase):
                 "age": 30, "height_cm": 175, "weight_kg": 75, "timezone": "UTC",
             }, headers=headers).status_code, 200)
             self.assertEqual(client.post("/api/calorie-proposals", json={"adjustment_kcal": 100}, headers=headers).status_code, 409)
+
+    def test_list_is_bounded_allowlisted_and_owner_scoped(self):
+        with TestClient(create_app(), base_url="http://127.0.0.1") as first, TestClient(create_app(), base_url="http://127.0.0.1") as second:
+            headers = self.sign_in(first)
+            self.sign_in(second)
+            self.assertEqual(first.get("/api/calorie-proposals").json(), {"items": [], "next_before": None})
+            self.inputs(first, headers)
+            created = first.post("/api/calorie-proposals", json={"adjustment_kcal": 100}, headers=headers).json()
+            listed = first.get("/api/calorie-proposals")
+            self.assertEqual(listed.status_code, 200)
+            self.assertEqual(listed.headers["cache-control"], "no-store")
+            self.assertEqual(listed.json(), {"items": [created], "next_before": None})
+            self.assertEqual(second.get("/api/calorie-proposals").json(), {"items": [], "next_before": None})
+            self.assertEqual(second.get(f"/api/calorie-proposals?before={created['proposal_id']}").status_code, 404)
+            self.assertEqual(first.get("/api/calorie-proposals?user_id=other").status_code, 422)
+            self.assertEqual(first.get("/api/calorie-proposals?before=bad").status_code, 422)
+            self.assertEqual(first.get("/api/calorie-proposals?before=bad&before=bad").status_code, 422)
+            self.assertEqual(first.get(f"/api/calorie-proposals?before={created['proposal_id']}").json(),
+                             {"items": [], "next_before": None})

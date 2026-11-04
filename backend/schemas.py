@@ -139,3 +139,10 @@ class CalorieProposalResponse(BaseModel):
     goal_direction: Literal["gain", "lose", "maintain"]
     energy_method_version: Literal["dri-2023-adult-eer-v1"]
     policy_version: Literal["manual-adjustment-preview-2026-11-04-v1"]
+
+
+class CalorieProposalListResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    items: list[CalorieProposalResponse] = Field(max_length=20)
+    next_before: UUID | None
