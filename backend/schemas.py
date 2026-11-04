@@ -1,5 +1,6 @@
 """Strict HTTP contracts; secrets never belong in public response models."""
 
+from datetime import datetime
 from uuid import UUID
 from typing import Annotated, Literal
 
@@ -124,3 +125,17 @@ class CaloriePreviewResponse(BaseModel):
     energy_method_version: Literal["dri-2023-adult-eer-v1"]
     policy_version: Literal["manual-adjustment-preview-2026-11-04-v1"]
     status: Literal["preview"]
+
+
+class CalorieProposalResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    proposal_id: UUID
+    created_at: datetime
+    status: Literal["pending"]
+    maintenance_kcal_per_day: float = Field(gt=0, allow_inf_nan=False)
+    adjustment_kcal_per_day: int = Field(ge=-250, le=250)
+    preview_kcal_per_day: float = Field(ge=1500, allow_inf_nan=False)
+    goal_direction: Literal["gain", "lose", "maintain"]
+    energy_method_version: Literal["dri-2023-adult-eer-v1"]
+    policy_version: Literal["manual-adjustment-preview-2026-11-04-v1"]
