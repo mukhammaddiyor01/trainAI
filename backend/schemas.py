@@ -132,7 +132,7 @@ class CalorieProposalResponse(BaseModel):
 
     proposal_id: UUID
     created_at: datetime
-    status: Literal["pending"]
+    status: Literal["pending", "approved"]
     maintenance_kcal_per_day: float = Field(gt=0, allow_inf_nan=False)
     adjustment_kcal_per_day: int = Field(ge=-250, le=250)
     preview_kcal_per_day: float = Field(ge=1500, allow_inf_nan=False)
@@ -146,3 +146,27 @@ class CalorieProposalListResponse(BaseModel):
 
     items: list[CalorieProposalResponse] = Field(max_length=20)
     next_before: UUID | None
+
+
+class CalorieApprovalInput(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    confirm: bool = Field(strict=True)
+
+    @field_validator("confirm")
+    @classmethod
+    def requires_explicit_true(cls, value: bool) -> bool:
+        if value is not True:
+            raise ValueError("Explicit confirmation is required.")
+        return value
+
+
+class CalorieTargetResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    target_id: UUID
+    proposal_id: UUID
+    version: int = Field(ge=1)
+    status: Literal["active", "superseded"]
+    target_kcal_per_day: float = Field(ge=1500, allow_inf_nan=False)
+    approved_at: datetime

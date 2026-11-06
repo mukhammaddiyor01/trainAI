@@ -35,9 +35,11 @@ class CalorieTargetDetails:
 
 
 def _plain_target(row: CalorieTargetVersion) -> CalorieTargetDetails:
+    approved_at = row.approved_at.astimezone(timezone.utc)
+    superseded_at = None if row.superseded_at is None else row.superseded_at.astimezone(timezone.utc)
     return CalorieTargetDetails(row.id, row.user_id, row.proposal_id, row.version,
-                                row.status, row.target_kcal_per_day, row.approved_at,
-                                row.superseded_at)
+                                row.status, row.target_kcal_per_day, approved_at,
+                                superseded_at)
 
 
 def _matches_current(proposal: CalorieProposal, profile: Profile,
