@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import ARRAY, CheckConstraint, DateTime, ForeignKey, Float, SmallInteger, String, Text, func
+from sqlalchemy import ARRAY, CheckConstraint, DateTime, ForeignKey, ForeignKeyConstraint, Float, Index, Integer, SmallInteger, String, Text, UniqueConstraint, func, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.database import Base
@@ -130,7 +130,9 @@ class EnergyPreferences(Base):
 class CalorieProposal(Base):
     __tablename__ = "calorie_proposals"
     __table_args__ = (
-        CheckConstraint("status = 'pending'", name="ck_proposal_pending"),
+        UniqueConstraint("user_id", "id", name="uq_proposal_owner_id"),
+        CheckConstraint("(status = 'pending' AND approved_at IS NULL) OR "
+                        "(status = 'approved' AND approved_at IS NOT NULL)", name="ck_proposal_lifecycle"),
         CheckConstraint("profile_age BETWEEN 19 AND 120", name="ck_proposal_age"),
         CheckConstraint("profile_height_cm BETWEEN 50 AND 300", name="ck_proposal_height"),
         CheckConstraint("profile_weight_kg BETWEEN 20 AND 500", name="ck_proposal_weight"),
@@ -159,6 +161,8 @@ class CalorieProposal(Base):
     user_id: Mapped[UUID] = mapped_column(ForeignKey("profiles.user_id", ondelete="CASCADE"), index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     status: Mapped[str] = mapped_column(String(16))
+    approved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    base_version_id: Mapped[UUID | None] = mapped_column(nullable=True)
     profile_age: Mapped[int] = mapped_column(SmallInteger)
     profile_height_cm: Mapped[float] = mapped_column(Float)
     profile_weight_kg: Mapped[float] = mapped_column(Float)
@@ -174,3 +178,28 @@ class CalorieProposal(Base):
     preview_kcal_per_day: Mapped[float] = mapped_column(Float)
     energy_method_version: Mapped[str] = mapped_column(String(40))
     policy_version: Mapped[str] = mapped_column(String(64))
+
+
+class CalorieTargetVersion(Base):
+    __tablename__ = "calorie_target_versions"
+    __table_args__ = (
+        ForeignKeyConstraint(["user_id", "proposal_id"],
+                             ["calorie_proposals.user_id", "calorie_proposals.id"], ondelete="CASCADE"),
+        UniqueConstraint("user_id", "version", name="uq_calorie_target_owner_version"),
+        UniqueConstraint("proposal_id", name="uq_calorie_target_proposal"),
+        CheckConstraint("version >= 1", name="ck_calorie_target_version"),
+        CheckConstraint("(status = 'active' AND superseded_at IS NULL) OR "
+                        "(status = 'superseded' AND superseded_at IS NOT NULL)", name="ck_calorie_target_lifecycle"),
+        CheckConstraint("target_kcal_per_day >= 1500", name="ck_calorie_target_floor"),
+        Index("uq_calorie_target_active_owner", "user_id", unique=True,
+              postgresql_where=text("status = 'active'")),
+    )
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("profiles.user_id", ondelete="CASCADE"))
+    proposal_id: Mapped[UUID] = mapped_column()
+    version: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String(16))
+    target_kcal_per_day: Mapped[float] = mapped_column(Float)
+    approved_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    superseded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
