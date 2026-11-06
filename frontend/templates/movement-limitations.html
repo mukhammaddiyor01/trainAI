@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Movement limitations — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/profile.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/movement-limitations.css').path }}">
+  <script defer src="{{ url_for('static', path='/js/movement-limitations.js').path }}"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Movement navigation"><a href="/training-preferences">Training preferences</a><a href="/account">Your account</a></nav></header>
+  <main id="main" class="wrap profile-page movement-page">
+    <h1>What should movement respect?</h1>
+    <p class="lead">Tell us whether pain, an injury, a disability, or another health concern affects the activity you can do. You do not need to describe a diagnosis here.</p>
+    <section class="auth-panel" aria-labelledby="movement-title">
+      <h2 id="movement-title">Your current answer</h2>
+      {% if saved %}<p id="movement-saved-notice" class="success-message" role="status">Movement limitation answer saved.</p>{% endif %}
+      <form id="movement-form" action="/api/movement-limitations" method="post" aria-describedby="movement-message">
+        <fieldset id="movement-fields">
+          <legend class="movement-legend">Choose one answer</legend>
+          <label class="movement-choice"><input type="radio" name="status" value="unsure" {% if limitations and limitations.status == 'unsure' %}checked{% endif %}><span><strong>I'm not sure</strong><small>Keep this unknown while you consider what activity fits.</small></span></label>
+          <label class="movement-choice"><input type="radio" name="status" value="needs_adaptation" {% if limitations and limitations.status == 'needs_adaptation' %}checked{% endif %}><span><strong>I need adapted activity</strong><small>A professional or activity specialist can help with suitable types and amounts.</small></span></label>
+          <label class="movement-choice"><input type="radio" name="status" value="none_reported" {% if limitations and limitations.status == 'none_reported' %}checked{% endif %}><span><strong>No limitations to report</strong><small>This is your self-report, not medical clearance.</small></span></label>
+          <button class="button" type="submit">Save movement answer</button>
+        </fieldset>
+        <p id="movement-message" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+      <noscript><p>Enable JavaScript to save your movement answer.</p></noscript>
+    </section>
+    <p class="goal-next"><a href="/food-preferences">Continue to food preferences</a></p>
+    <p class="profile-scope">Your answer is private. It does not generate a workout, assess medical fitness, or restrict all physical activity.</p>
+  </main>
+</body>
+</html>

@@ -8,6 +8,7 @@ from backend.guards import optional_account
 from backend.profiles import read_profile
 from backend.goals import read_goal
 from backend.training_preferences import read_training_preferences
+from backend.movement_limitations import read_movement_limitations
 from backend.food_preferences import read_food_preferences
 from backend.energy_preferences import read_energy_inputs
 from backend.calorie_previews import read_calorie_preview_inputs
@@ -99,6 +100,25 @@ async def training_preferences_page(request: Request):
     return templates.TemplateResponse(request=request, name="training-preferences.html", context={
         "preferences": preferences, "saved": preferences is not None and request.query_params.get("saved") == "1",
         "min_session_minutes": MIN_SESSION_MINUTES, "max_session_minutes": MAX_SESSION_MINUTES,
+    })
+
+
+@router.get("/movement-limitations", response_class=HTMLResponse)
+async def movement_limitations_page(request: Request):
+    try:
+        identity = await optional_account(request)
+        if identity is None:
+            return RedirectResponse("/login", status_code=303)
+        profile = await run_in_threadpool(read_profile, identity.user_id)
+        if profile is None:
+            return RedirectResponse("/profile", status_code=303)
+        limitations = await run_in_threadpool(read_movement_limitations, identity.user_id)
+    except (DatabaseConfigurationError, SQLAlchemyError):
+        return templates.TemplateResponse(request=request, name="account.html", status_code=503,
+                                          context={"identity": None})
+    return templates.TemplateResponse(request=request, name="movement-limitations.html", context={
+        "limitations": limitations,
+        "saved": limitations is not None and request.query_params.get("saved") == "1",
     })
 
 
