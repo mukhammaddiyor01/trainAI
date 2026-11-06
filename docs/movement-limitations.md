@@ -45,3 +45,23 @@ Responses contain only the status. Do not log the choice, send it externally,
 include it in AI prompts, or infer it from energy context, training activity,
 age, or other saved fields. No existing profile or training preference changes
 when this answer is saved.
+
+## Implemented collection — 2026-11-06
+
+The plain validator keeps the three answers distinct and rejects missing,
+coercible, and forged values. Migration 0009 creates one status row per profile,
+with a SQL choice constraint and cascading owner foreign key. It has no default
+or backfill. GET and PUT `/api/movement-limitations` require a signed-in owner;
+PUT also requires exact Origin, a strict one-field schema, and at most 2048
+JSON bytes. A saved profile is required. The private `/movement-limitations`
+page starts with no selected answer, explains each choice, and reloads the saved
+choice. Account and training pages link to it.
+
+Two plain, three storage, three API, and two page tests passed independently.
+The full disposable PostgreSQL suite passed 206 tests, including migration
+round trips. A synthetic browser account verified profile-first navigation,
+empty-answer rejection, needs-adaptation save, and reload. The owned test tab,
+server, and cluster were removed. The configured database was checked at 0008
+with no table conflict, then upgraded to 0009; only schema metadata was read.
+The bounded loopback server was restarted with the new route. No exercise
+candidates, sets, reps, sessions, or weekly plans were generated.

@@ -131,3 +131,13 @@ The full 196-test disposable suite passed, including downgrade/upgrade and
 model parity. The configured database was checked at 0007 with no target table,
 then upgraded to 0008. Only schema metadata was inspected; no user rows or
 secrets were printed. A downgrade on the configured database remains unauthorized.
+
+## Movement limitation migration — 2026-11-06
+
+Migration 0009 creates `movement_limitations` with one non-null, SQL-constrained
+status per profile and a cascading owner foreign key. It does not change
+existing profile/training rows, infer an answer, or backfill users. The complete
+206-test disposable suite passed, including migration downgrade/upgrade and
+model parity. The configured database was at 0008 with no table conflict before
+the additive upgrade; revision 0009 and exactly the new `user_id`/`status`
+columns were confirmed afterward through schema metadata only.

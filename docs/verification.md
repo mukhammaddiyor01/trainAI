@@ -434,3 +434,29 @@ user rows, was inspected. No AI or full plan was activated.
 server started on port 8000. Live anonymous requests returned 303 to login for
 the private target page and 401 for active/history APIs, with no-store and no
 Server header. The server was left running for local use.
+
+## Movement limitation collection — 2026-11-06
+
+Read all 19 project-owned Markdown files, including AGENTS.md and the cumulative
+handoff, before implementation. Started on clean synchronized develop at af2c20d.
+Reviewed official WHO adult activity guidance and CDC chronic-condition and
+getting-started guidance; documented why source-level exercise metadata and
+population activity targets are not individual prescriptions. The boundary,
+strict plain validation, migration/storage, guarded API, and private page were
+verified and committed separately: 69f4a1c, 8ee183e, 5582b06, eec8bd1,
+65e1ab0. The new boundary document brings the Markdown inventory to 20.
+
+The full disposable PostgreSQL suite passed 206 tests, none skipped, including
+migration downgrade/upgrade and model parity. Focused tests covered unknown
+status preservation, two-user isolation, concurrent retries, SQL constraints,
+profile-first access, forged/malformed/oversized API input, and private page
+states. A synthetic browser account followed profile-first redirect, rejected
+an empty answer, saved `needs_adaptation`, and reloaded it. The tab, server, and
+cluster were removed. No real user row was entered into the browser test.
+
+`pip check` and offline catalog verification passed. Configured schema revision
+0008 and absent movement table were checked before applying additive migration
+0009; revision and two new columns were verified afterward without reading user
+rows. The owned loopback server was restarted. Live anonymous page/API requests
+returned 303/401, the local script 200, with no-store and no Server header.
+No workout, exercise dosage, medical clearance, or AI output was generated.

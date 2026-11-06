@@ -1,8 +1,31 @@
 # TrainAI — Completed Tasks and Session Handoff
 
-Last updated: 2026-11-05 (Asia/Seoul).
-The latest 2026-11-05 continuation read all 18 project-owned Markdown files
-before implementation.
+Last updated: 2026-11-06 (Asia/Seoul).
+The latest continuation read all 19 existing project-owned Markdown files before
+implementation. The new movement boundary brings the inventory to 20.
+
+## Current Checkpoint — Movement Limitation Collection
+
+- Started from clean synchronized develop at af2c20d. Reviewed official WHO
+  and CDC activity guidance; documented the self-report and non-prescription
+  boundary in docs/movement-limitations.md (69f4a1c).
+- Added strict three-state plain validation (8ee183e), owner-scoped storage and
+  migration 0009 with no default/backfill (5582b06), guarded GET/PUT API
+  (eec8bd1), and private English collection page (65e1ab0). Each increment
+  passed focused checks before its separate commit.
+- Full disposable PostgreSQL suite passed 206 tests, none skipped, with
+  downgrade/upgrade and model parity. `pip check` and offline catalogs passed.
+  Synthetic browser flow verified profile-first redirect, blank-answer rejection,
+  needs-adaptation save, and reload. Owned test assets were removed.
+- Configured database revision 0008 and absent table were checked; additive
+  migration 0009 was applied and its two columns verified using schema metadata.
+  No real user rows or secrets were inspected. The bounded server was restarted
+  on port 8000; live anonymous page/API guards and local asset passed.
+- Next: review and implement exercise-specific eligibility and dosage rules
+  before any generated workout. A saved `none_reported` answer is self-report,
+  not clinical clearance. `unsure`, missing, and `needs_adaptation` must block
+  automatic selection or lead to an adapted review path. Food composition
+  remains insufficient for automatic meal selection.
 
 ## Current Checkpoint — Private Proposal Discovery
 
@@ -165,12 +188,13 @@ Current documentation:
 - [Adult energy estimation](docs/energy-estimation.md)
 - [Calorie preview scope](docs/calorie-preview.md)
 - [Pending calorie proposals](docs/calorie-proposals.md)
+- [Movement limitation collection](docs/movement-limitations.md)
 - [Security boundaries](docs/security.md)
 - [Verification history](docs/verification.md)
 
 AGENTS.md and this handoff describe the latest agreed state. Some documents retain
 earlier milestone observations: the 7-test and 29-test results are historical;
-the latest complete working-tree suite passed 187 tests on 2026-11-05. If documents disagree, inspect Git
+the latest complete working-tree suite passed 206 tests on 2026-11-06. If documents disagree, inspect Git
 history and current code before proceeding. Do not silently assume which is right.
 
 ## Confirmed Working State
@@ -187,7 +211,8 @@ strict APIs, and explicit browser onboarding. Bounded explicit-request calorie
 previews are available in a plain service, guarded API, and temporary browser UI.
 Pending calorie proposals are saved through a guarded API and explicit browser
 action, then found in a private paged list and reviewed at a saved URL; product composition
-evidence, approved calorie targets, and plans remain pending.
+evidence and plans remain pending. Explicitly approved calorie targets and a
+private movement limitation self-report are now available.
 
 | Area | Completed behavior |
 | --- | --- |
@@ -200,7 +225,8 @@ evidence, approved calorie targets, and plans remain pending.
 | Allergy-name resolution | Nine reviewed groups/15 exact English terms, shared normalization, immutable results, preserved unknowns, unchanged ingredient/composition blockers, offline checks |
 | Adult energy onboarding | Versioned DRI 2023 estimate from one owner-scoped snapshot; explicit stored choices, strict guarded APIs, responsive form, uncertainty/scope checks, no saved calorie target |
 | Calorie preview | Explicit requested magnitude, authored caps/scope, stable goal semantics, one owner-scoped input snapshot, strict guarded API, temporary browser result; no target or plan writes |
-| Pending calorie proposals | Immutable owner-scoped snapshots, migration 0007, locked recomputation, strict create/read/list API, explicit browser save/private paged review, pending-only SQL state; no approval |
+| Calorie proposals and targets | Immutable owner-scoped proposal snapshots, explicit approval with stale checks, migration 0008, one active target per owner, bounded private version history |
+| Movement limitations | Explicit three-state self-report, migration 0009, private guarded API and browser form; no workout or medical clearance |
 | Portion totals | Exact-ID gram rows, bounded input, retained raw/cooked identity, immutable contributions, missing nutrients preserved independently |
 | Catalog seeds | Six pinned exercise records, complete equipment requirements, four sourced nutrient records, raw/cooked identity, exact-ID lookup, gram scaling, explicit blocked-food readiness, offline evidence check |
 | Food preferences | Explicit allergy states and bounded names, diet, spending style, preparation allowance, custom local meal times, private atomic storage, guarded API, responsive form |
@@ -223,16 +249,22 @@ height 50–300 cm, weight 20–500 kg. These are not medical reference ranges.
   and login_sessions; migration 0002 added profiles; migration 0003 added goals;
   migration 0004 added training preferences; migration 0005 added food preferences.
   Migration 0006 adds explicit energy preferences. Migration 0007 adds pending
-  calorie proposals. All were applied explicitly.
-- Current expected migration revision: 0007. Existing accounts were preserved.
+  calorie proposals. Migration 0008 adds approved calorie target versions;
+  migration 0009 adds movement limitation answers. All were applied explicitly.
+- Current expected migration revision: 0009. Existing accounts were preserved.
 - Synthetic browser accounts and profiles were created only in disposable test
   clusters; those clusters were stopped and removed.
 - The main local server was left running at http://127.0.0.1:8000. Do not assume
   its process survives until the next session or stop an unrelated process.
 - Canonical launcher: `.venv/bin/python -m backend` from the repository root.
-- Useful routes: /register, /login, /account, /profile, /goal, /training-preferences, /food-preferences, /energy-preferences, /calorie-preview, /calorie-proposals, /health.
+- Useful routes: /register, /login, /account, /profile, /goal, /training-preferences, /movement-limitations, /food-preferences, /energy-preferences, /calorie-preview, /calorie-proposals, /calorie-targets, /health.
 - APIs: POST /auth/register, POST /auth/login, GET /auth/me, POST /auth/logout,
-  GET/PUT /api/profile, GET/PUT /api/goal, GET/PUT /api/training-preferences, GET/PUT /api/food-preferences, GET/PUT /api/energy-preferences, GET /api/energy-estimate, POST /api/calorie-preview, GET/POST /api/calorie-proposals, and GET /api/calorie-proposals/{proposal_id}.
+  GET/PUT /api/profile, GET/PUT /api/goal, GET/PUT /api/training-preferences,
+  GET/PUT /api/movement-limitations, GET/PUT /api/food-preferences,
+  GET/PUT /api/energy-preferences, GET /api/energy-estimate,
+  POST /api/calorie-preview, GET/POST /api/calorie-proposals,
+  GET /api/calorie-proposals/{proposal_id}, POST approval by proposal ID,
+  and GET active/history calorie target reads.
 
 ## Verification Already Performed
 
@@ -242,7 +274,7 @@ Latest complete application check:
 .venv/bin/python scripts/test_postgres.py
 ```
 
-Latest result: 187 working-tree tests passed, none skipped (2026-11-05). Coverage includes account/session isolation,
+Latest result: 206 working-tree tests passed, none skipped (2026-11-06). Coverage includes account/session isolation,
 expiry/rotation/revocation, ownership and mass-assignment attempts, strict input,
 profile persistence, SQL constraints/timeouts, rate limits, slow/chunked requests,
 proxy spoofing, response leak prevention, and migration/model parity.

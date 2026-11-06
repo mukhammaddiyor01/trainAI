@@ -25,6 +25,7 @@ Plain business services remain independent of these HTTP controls.
 | --- | --- |
 | Calorie-preview bodies | 2048 bytes, strict single adjustment field, owner/Origin guards, no writes |
 | Calorie-proposal bodies | 2048 bytes, strict single adjustment field, owner/Origin guards, pending-only write |
+| Movement-limitation bodies | 2048 bytes, strict single self-report field, owner/Origin guards, no inferred answer |
 | Energy-preference bodies | 2048 bytes, strict three-field input, authenticated owner only |
 | Food-preference bodies | 8192 bytes, strict six-field input, authenticated owner only |
 | Training-preference bodies | 4096 bytes, strict five-field input, authenticated owner only |
@@ -260,3 +261,16 @@ targets return 404. The private pages preserve no-store, CSP, and existing
 single-process rate/request/response limits. A retry of an approved proposal
 returns its original version without reactivating it. The database also enforces
 one active target per owner. No OAuth or clinical safety claim was added.
+
+## Movement limitation self-report — 2026-11-06
+
+The one-field GET/PUT API derives ownership from the session. PUT additionally
+requires exact Origin, strict status choice, and at most 2048 JSON bytes. The
+response allowlists only `status`; owner IDs, free-text diagnoses, and calculated
+clearance are neither accepted nor returned. Missing status remains absent,
+not an inferred `none_reported`. Invalid/ambiguous/oversized updates preserve
+the prior answer. PostgreSQL limits values and ties each row to its owner profile.
+The private page uses the existing no-store/CSP protections and local script.
+Tests covered two-user isolation, forged owner fields, revocation, profile-first
+access, strict input, and private saved-state rendering. Rate limiting remains
+single-process and OAuth remains deferred.

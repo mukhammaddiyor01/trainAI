@@ -38,6 +38,9 @@ and activates a versioned daily target; prior versions remain visible in a bound
 private history. A target is an experimental estimate, not a meal or workout plan.
 See [proposal boundary](docs/calorie-proposals.md) and
 [approval boundary](docs/calorie-approval.md).
+An explicit private movement limitation answer can now be saved as unsure,
+none reported, or needs adaptation. It does not assess medical fitness or create
+a workout; see [movement limitation boundary](docs/movement-limitations.md).
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
@@ -70,6 +73,7 @@ Open `/register` to create your own account, `/login` to sign in, and `/account`
 to view your private account. Open `/profile` to save your basic details, then
 `/goal` to record your weight goal. Use `/training-preferences` to save experience,
 activity, available equipment, weekdays, and session duration. Use
+`/movement-limitations` to report whether activity needs adaptation, then
 `/food-preferences` for diet, reported allergies, spending style, preparation time,
 and meal times in your profile zone. Open `/energy-preferences` to save the
 three explicit calculation choices and view an eligible daily energy estimate.
@@ -81,7 +85,7 @@ activate it. `/calorie-targets` shows the latest 20 approved versions. A preview
 or saved pending proposal does not activate a target. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 196 checks, including PostgreSQL integration, use the disposable runner:
+For all 206 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
@@ -156,8 +160,7 @@ composition reviews. See [catalog provenance](docs/catalogs.md) and
 
 ## Next milestone
 
-Review exercise rules
-and user limitations before generating workouts.
+Review exercise-specific eligibility and dosage before generating workouts.
 The four current composition-source reviews found insufficient evidence; separately
 identified product composition and ingredient/allergen/diet evidence remain
 required before automatic food selection or meal planning. Expand the bounded
