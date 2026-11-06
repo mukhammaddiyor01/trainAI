@@ -22,6 +22,7 @@ from backend.profile_routes import router as profile_router
 from backend.services.profiles import InvalidProfile
 from backend.services.goals import InvalidGoal
 from backend.services.training_preferences import InvalidTrainingPreferences
+from backend.services.movement_limitations import InvalidMovementLimitations
 from backend.services.food_preferences import InvalidFoodPreferences
 from backend.services.energy_preferences import InvalidEnergyPreferences
 from backend.energy_preference_routes import router as energy_preference_router
@@ -31,6 +32,7 @@ from backend.calorie_proposal_routes import router as calorie_proposal_router
 from backend.calorie_target_routes import router as calorie_target_router
 from backend.food_preference_routes import router as food_preference_router
 from backend.training_preference_routes import router as training_preference_router
+from backend.movement_limitation_routes import router as movement_limitation_router
 from backend.goals import GoalProfileRequired
 from backend.goal_routes import router as goal_router
 from backend.rate_limits import AttemptLimiter
@@ -63,7 +65,7 @@ def create_app() -> FastAPI:
             status = 409
         return JSONResponse({"detail": str(error)}, status_code=status)
 
-    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable, InvalidProfile, InvalidGoal, GoalProfileRequired, InvalidTrainingPreferences, InvalidFoodPreferences, InvalidEnergyPreferences]:
+    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable, InvalidProfile, InvalidGoal, GoalProfileRequired, InvalidTrainingPreferences, InvalidMovementLimitations, InvalidFoodPreferences, InvalidEnergyPreferences]:
         app.add_exception_handler(error_type, account_error)
 
     async def persistence_error(request, error):
@@ -111,6 +113,7 @@ def create_app() -> FastAPI:
     app.include_router(profile_router)
     app.include_router(goal_router)
     app.include_router(training_preference_router)
+    app.include_router(movement_limitation_router)
     app.include_router(food_preference_router)
     app.include_router(energy_preference_router)
     app.include_router(energy_estimate_router)

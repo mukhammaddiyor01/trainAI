@@ -73,6 +73,16 @@ class TrainingPreferencesResponse(TrainingPreferencesInput):
     """Only the five preference fields; no ownership or storage internals."""
 
 
+class MovementLimitationsInput(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    status: Literal["unsure", "none_reported", "needs_adaptation"]
+
+
+class MovementLimitationsResponse(MovementLimitationsInput):
+    """Only the explicit self-report; no owner or health-history fields."""
+
+
 class FoodPreferencesInput(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
 
