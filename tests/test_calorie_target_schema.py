@@ -62,6 +62,9 @@ class CalorieTargetSchemaTests(unittest.TestCase):
             row.status = "approved"
             row.approved_at = now
         next_proposal = create_calorie_proposal(first, 100)
+        with session_scope() as session:
+            active = session.scalar(select(CalorieTargetVersion).where(CalorieTargetVersion.user_id == first))
+            self.assertEqual(next_proposal.base_version_id, active.id)
         for values in (
             dict(user_id=first, proposal_id=next_proposal.id, version=2, status="active",
                  target_kcal_per_day=next_proposal.preview_kcal_per_day),

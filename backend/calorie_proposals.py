@@ -7,7 +7,7 @@ from uuid import UUID, uuid4
 from sqlalchemy import and_, or_, select
 
 from backend.database import session_scope
-from backend.models import CalorieProposal, EnergyPreferences, Goal, Profile
+from backend.models import CalorieProposal, CalorieTargetVersion, EnergyPreferences, Goal, Profile
 from backend.services.calorie_preview import preview_calorie_adjustment
 from backend.services.energy_preferences import validate_energy_preferences
 from backend.services.goals import validate_goal
@@ -24,6 +24,7 @@ class PendingCalorieProposal:
     user_id: UUID
     created_at: datetime
     status: str
+    base_version_id: UUID | None
     profile_age: int
     profile_height_cm: float
     profile_weight_kg: float
@@ -56,7 +57,7 @@ class ProposalCursorNotFound(ValueError):
 
 def _plain_proposal(row: CalorieProposal) -> PendingCalorieProposal:
     return PendingCalorieProposal(
-        row.id, row.user_id, row.created_at, row.status, row.profile_age,
+        row.id, row.user_id, row.created_at, row.status, row.base_version_id, row.profile_age,
         row.profile_height_cm, row.profile_weight_kg, row.goal_direction,
         row.goal_starting_weight_kg, row.goal_target_weight_kg, row.equation_sex,
         row.activity_category, row.context, row.adjustment_kcal,
@@ -81,8 +82,12 @@ def create_calorie_proposal(user_id: UUID, adjustment_kcal: int) -> PendingCalor
         preferences = validate_energy_preferences(energy_row.equation_sex, energy_row.activity_category, energy_row.context)
         goal = validate_goal(goal_row.direction, goal_row.starting_weight_kg, goal_row.target_weight_kg)
         preview = preview_calorie_adjustment(profile, preferences, goal, adjustment_kcal)
+        active_version = session.scalar(select(CalorieTargetVersion).where(
+            CalorieTargetVersion.user_id == user_id, CalorieTargetVersion.status == "active",
+        ))
         row = CalorieProposal(
             id=uuid4(), user_id=user_id, status="pending",
+            base_version_id=None if active_version is None else active_version.id,
             profile_age=profile.age, profile_height_cm=profile.height_cm,
             profile_weight_kg=profile.weight_kg, goal_direction=goal.direction,
             goal_starting_weight_kg=goal.starting_weight_kg,
