@@ -708,18 +708,17 @@ edit remains pending. The previous 53-test result remains a historical snapshot.
 The reference catalog seed milestone is complete. Continue the original
 profile → weekly plan → daily logging → weekly review → approved revision flow:
 
-1. Review and implement transactional approval and active-plan version history
-   as separate schema, service, API, and UI increments.
-   Revalidate stored source snapshots and reject stale approvals; enforce one
-   active plan per owner in PostgreSQL. A preview or pending proposal cannot
-   activate a target. See docs/calorie-proposals.md and docs/calorie-preview.md.
+1. Review exercise prescription rules and user limitations before turning
+   equipment candidates into workouts. Upstream source levels are not suitability
+   approval. The calorie target approval milestone is complete; a calorie target
+   does not create a weekly plan. See docs/calorie-approval.md.
 2. Obtain separately identified product ingredient/diet/allergen evidence before
    automatic food selection. The current four composition-source reviews found
    insufficient evidence; do not repeat generic nutrient retrieval as if it
    supplies product composition. All four seeds remain nutrition-only and blocked.
    Unknown/ambiguous allergy names remain unresolved.
-3. Review exercise prescription rules and user limitations before turning equipment
-   candidates into workouts. Upstream source levels are not suitability approval.
+3. Review deterministic plan calculation inputs and safe failure states before
+   connecting nutrition and exercise candidates into a weekly plan.
 4. Build deterministic plan rules after inputs/catalogs are sufficient; then add
    owner-scoped persistence, guarded API, and UI in separate verified commits.
 
@@ -727,8 +726,9 @@ Later work remains: catalog expansion/composition review; verified calculation m
 deterministic plans; daily logs; weekly review and approved plan versions;
 TinyLlama/tokenizer integration; licensed datasets; LoRA/SFT and evaluation;
 OpenCV plus a separately reviewed pose model; complete fitness-flow verification.
-No model weights, AI inference, training, camera tracking, calorie targets, or
-workout/nutrition plans are implemented or verified yet.
+No model weights, AI inference, training, camera tracking, or workout/nutrition
+plans are implemented or verified yet. Explicitly approved daily calorie target
+versions use the existing experimental calorie preview policy.
 
 ## End-of-Day Handoff — 2026-10-30
 
@@ -755,3 +755,30 @@ workout/nutrition plans are implemented or verified yet.
 - Check runtime/database availability without exposing secrets or recreating data.
 - Preserve the last verified baseline and select one small next increment.
 - Implement, verify, update this record, and commit that increment separately.
+
+## Calorie target approval and version history — 2026-11-06
+
+- Read all 18 project-owned Markdown files before implementation. Started from
+  clean synchronized `develop` at ae1d787. Recorded the approval boundary in
+  `docs/calorie-approval.md` (738c596).
+- Migration 0008 adds proposal approval lifecycle and constrained target version
+  storage, including one active version per owner (c567eef). Proposal creation
+  snapshots the current active version for stale-approval detection (93efe69).
+- Transactional service locks owner inputs, revalidates source snapshots and
+  recalculates the preview, supersedes the old version, and supports idempotent
+  retries (bb9a8b5). The API requires strict exact-true confirmation and owner
+  guards (08734ef); version history is bounded and private (1dbc3a4).
+- The private proposal detail now offers explicit approval only while pending;
+  approved and superseded versions appear truthfully in the detail, list, and
+  target history pages (655ca7c). It creates a daily experimental calorie target,
+  not a workout, meal, or weekly plan. OAuth remains deferred.
+- Full disposable PostgreSQL regression passed 196 tests, none skipped, with
+  downgrade/upgrade round trips. The configured database was checked at 0007
+  without a target table and explicitly upgraded to 0008. Schema metadata only
+  was inspected; no real user records or secrets were read or written.
+- An isolated browser visit confirmed anonymous `/calorie-targets` redirects to
+  login. The temporary tab, server, and test cluster were removed. Manual signed-in
+  browser approval remains a verification gap; automated owner/page/API tests pass.
+- Next: review exercise rules and limitations, then independently review missing
+  food composition evidence before any automatic plan selection. Do not claim
+  the approved calorie target is a full plan or clinical recommendation.

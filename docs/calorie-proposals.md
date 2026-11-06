@@ -1,6 +1,7 @@
 # Calorie Proposal Storage Boundary
 
-Decision recorded 2026-11-05. A proposal is an immutable, private record of one
+Decision recorded 2026-11-05. The original pending-only boundary is described
+below; approval was added on 2026-11-06. A proposal is an immutable, private record of one
 explicit calorie-adjustment request and the exact saved inputs used to calculate
 it. It is **pending review**, not an active daily target, meal prescription, or
 plan version. The existing experimental preview policy and DRI method remain
@@ -96,16 +97,17 @@ and 390 px mobile widths without overflow, and no console warnings/errors. The
 full isolated PostgreSQL suite passed 187 tests, none skipped. No migration,
 dependency, configured user record, or active target changed.
 
-## Future approval boundary
+## Approval boundary added 2026-11-06
 
-Approval is a separate feature and requires an explicit user action. It must
+Approval is a separate feature and requires an explicit user action. It does
 lock the proposal, owner's source rows, and the active-plan pointer in a defined
 order, recompute under the stored policy/method, and compare source snapshots.
 Any changed input or superseding active plan makes an approval stale. Retries
 must be idempotent; concurrent approvals must leave at most one active plan per
 owner, enforced by PostgreSQL as well as service logic. Old plan versions must
-be preserved. A pending proposal cannot be treated as an approved plan until
-those controls and their tests exist.
+be preserved. These controls are now implemented for calorie target versions,
+not full plan versions. See [approval boundary](calorie-approval.md) for the
+implemented transaction. A pending proposal remains inactive.
 
 The exact offset/floor/BMI bounds are authored product scope, not clinical
 recommendations. Proposal storage does not establish nutritional adequacy,

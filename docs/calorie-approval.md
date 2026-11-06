@@ -62,3 +62,20 @@ version, even after a later version supersedes it.
 Read views must distinguish pending, active, and superseded truthfully. This
 boundary does not make a daily calorie target a complete plan or authorize
 automatic meal selection, exercise prescription, or clinical guidance.
+
+## Implemented surfaces and verification — 2026-11-06
+
+Migration 0008 adds the lifecycle columns and version table. The owner-only
+approval API requires a strict JSON boolean `true` confirmation and returns the
+approved version. A retry returns that version even if it was superseded. The
+active read returns 404 when none exists. The history API and `/calorie-targets`
+page show the latest 20 versions, newest first; older versions remain stored.
+The proposal detail page offers an explicit approval action only while pending
+and displays the resulting version status after approval.
+
+The complete disposable PostgreSQL suite passed 196 tests with migration round
+trips. It covers stale sources and baselines, concurrent retries, two-owner
+isolation, strict input, and the private page states. Configured schema revision
+0008 was applied after confirming 0007 and no target table; no user rows were
+inspected or changed by the migration. Browser interaction beyond the anonymous
+target-page redirect has not yet been manually exercised in this increment.

@@ -117,4 +117,17 @@ and pinned versions. It has no defaults/backfill for existing users. Disposable
 PostgreSQL upgrade/downgrade/upgrade, metadata parity, and SQL constraint tests
 passed with the complete 181-test suite. The configured database was checked at
 0006 with no table conflict, then explicitly upgraded to 0007. No real user
-rows were read or written. Approval and active-plan tables are not present.
+rows were read or written. Approval and active-plan tables were not present at
+this historical checkpoint.
+
+## Calorie target migration — 2026-11-06
+
+Migration 0008 adds approval lifecycle columns to proposals and a private
+`calorie_target_versions` table. SQL constraints enforce unique owner/version,
+one target per proposal, and a partial unique index for one active target per
+owner. A proposal records the active version seen at creation. The migration
+has no user-data backfill and does not activate existing pending proposals.
+The full 196-test disposable suite passed, including downgrade/upgrade and
+model parity. The configured database was checked at 0007 with no target table,
+then upgraded to 0008. Only schema metadata was inspected; no user rows or
+secrets were printed. A downgrade on the configured database remains unauthorized.

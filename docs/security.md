@@ -247,3 +247,16 @@ a 404 response. The API rejects duplicate, malformed, and unexpected query
 parameters and exposes only allowlisted proposal fields and the next UUID.
 The page renders at most 20 rows and retains no private data in browser storage.
 No approval control or broader sharing was added.
+
+## Calorie target approval — 2026-11-06
+
+Approval requires the signed-in owner, exact Origin, and a strict 2048-byte
+JSON object with `confirm: true`; numeric 1, false, duplicate keys, and extra
+fields are rejected. The server derives ownership from the session and locks
+the owner's rows in a defined order. A saved source mismatch or replaced active
+baseline returns 409 without mutation. The approval response contains only six
+target fields. Active and latest-20 history reads are owner scoped; absent active
+targets return 404. The private pages preserve no-store, CSP, and existing
+single-process rate/request/response limits. A retry of an approved proposal
+returns its original version without reactivating it. The database also enforces
+one active target per owner. No OAuth or clinical safety claim was added.

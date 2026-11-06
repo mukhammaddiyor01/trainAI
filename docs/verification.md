@@ -408,3 +408,24 @@ and synthetic database were removed. Full isolated PostgreSQL regression passed
 187 tests, none skipped, with migration round trips. pip check and the offline
 catalog check passed. No configured user data, migration, dependency, active
 target, or approval changed.
+
+## Explicit calorie target approval — 2026-11-06
+
+Read all 18 project-owned Markdown files before implementation, starting from
+clean synchronized develop at ae1d787. Reviewed and committed the approval
+boundary, constrained migration 0008, active-baseline proposal snapshot,
+transactional approval, guarded API, owner-only bounded history, and browser
+pages as separate small commits. The strict confirmation test caught Pydantic's
+coercion of `Literal[True]` from numeric 1; a strict boolean field with an exact
+true validator now rejects it. A UTC normalization fix makes approval retries
+return an identical timestamp representation.
+
+The full disposable PostgreSQL runner passed 196 tests, none skipped, with
+migration downgrade/upgrade and owned-cluster cleanup. Tests include concurrent
+idempotent retries, stale input/baseline rejection, SQL one-active constraints,
+two-owner API and page isolation, and pending/approved browser copy. An isolated
+port-8001 anonymous browser visit redirected `/calorie-targets` to login; no
+synthetic account was created in that manual browser check, and its tab/server/
+cluster were removed. The configured database was verified at revision 0007
+with no target table, then explicitly migrated to 0008. Schema metadata, not
+user rows, was inspected. No AI or full plan was activated.

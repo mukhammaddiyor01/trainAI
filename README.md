@@ -32,10 +32,12 @@ does not create a gain/loss target or plan. See [energy inputs](docs/energy-esti
 A protected explicit-request calorie preview API and browser form are available;
 they write no target or plan. Experimental bounds are documented in
 [preview policy](docs/calorie-preview.md).
-Authenticated users can save a private pending calorie proposal from the preview
-and find it later in a private, paged list. The guarded API supports create,
-owner-only detail reads, and bounded list reads. Proposals snapshot the calculation and do not activate a target; see
-[proposal boundary](docs/calorie-proposals.md).
+Authenticated users can save a private calorie proposal from the preview and
+find it later in a private, paged list. Explicit approval rechecks its snapshot
+and activates a versioned daily target; prior versions remain visible in a bounded
+private history. A target is an experimental estimate, not a meal or workout plan.
+See [proposal boundary](docs/calorie-proposals.md) and
+[approval boundary](docs/calorie-approval.md).
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
@@ -74,10 +76,12 @@ three explicit calculation choices and view an eligible daily energy estimate.
 Open `/calorie-preview` to request an adjustment after saving a profile, goal,
 and energy choices. The preview is temporary; use **Save pending proposal** to
 store a reviewable snapshot, then open `/calorie-proposals` to find it again.
-Neither action activates a target. Passwords
+Review its detail page and explicitly choose **Approve calorie target** to
+activate it. `/calorie-targets` shows the latest 20 approved versions. A preview
+or saved pending proposal does not activate a target. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 187 checks, including PostgreSQL integration, use the disposable runner:
+For all 196 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
@@ -152,9 +156,7 @@ composition reviews. See [catalog provenance](docs/catalogs.md) and
 
 ## Next milestone
 
-Add an explicit browser flow for saving and reviewing pending proposals. Then
-implement transactional approval and version history as separate reviewed steps;
-previews and pending proposals do not activate a target or plan. Review exercise rules
+Review exercise rules
 and user limitations before generating workouts.
 The four current composition-source reviews found insufficient evidence; separately
 identified product composition and ingredient/allergen/diet evidence remain
@@ -194,5 +196,8 @@ POST /api/calorie-proposals uses the same explicit adjustment-only input, exact
 Origin, authentication, and strict 2048-byte JSON limit. It recomputes from locked
 current saved inputs and creates a pending private snapshot. GET
 /api/calorie-proposals/{proposal_id} returns that owner's nine-field summary.
-There is no browser save control or approval endpoint yet. Migration 0007 is
-required. Repeated POSTs create separate pending records.
+`POST /api/calorie-proposals/{proposal_id}/approve` requires `{"confirm":true}`
+and revalidates the owner snapshot before activation. `GET /api/calorie-targets/active`
+reads the active version; `GET /api/calorie-targets` lists the latest 20 versions.
+Migration 0008 is required. Repeated proposal-create POSTs create separate
+pending records; retrying approval of the same proposal returns its original version.
