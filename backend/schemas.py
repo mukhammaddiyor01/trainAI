@@ -170,3 +170,9 @@ class CalorieTargetResponse(BaseModel):
     status: Literal["active", "superseded"]
     target_kcal_per_day: float = Field(ge=1500, allow_inf_nan=False)
     approved_at: datetime
+
+
+class CalorieTargetListResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    items: list[CalorieTargetResponse] = Field(max_length=20)

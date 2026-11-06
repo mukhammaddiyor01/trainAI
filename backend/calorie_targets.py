@@ -131,3 +131,20 @@ def read_active_calorie_target(user_id: UUID) -> CalorieTargetDetails | None:
             CalorieTargetVersion.status == "active",
         ))
         return None if row is None else _plain_target(row)
+
+
+def read_target_for_proposal(user_id: UUID, proposal_id: UUID) -> CalorieTargetDetails | None:
+    with session_scope() as session:
+        row = session.scalar(select(CalorieTargetVersion).where(
+            CalorieTargetVersion.user_id == user_id,
+            CalorieTargetVersion.proposal_id == proposal_id,
+        ))
+        return None if row is None else _plain_target(row)
+
+
+def list_calorie_target_versions(user_id: UUID) -> list[CalorieTargetDetails]:
+    with session_scope() as session:
+        rows = session.scalars(select(CalorieTargetVersion).where(
+            CalorieTargetVersion.user_id == user_id,
+        ).order_by(CalorieTargetVersion.version.desc()).limit(20)).all()
+        return [_plain_target(row) for row in rows]

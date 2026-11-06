@@ -8,10 +8,10 @@ from starlette.concurrency import run_in_threadpool
 
 from backend.calorie_targets import (CalorieProposalNotFound, CalorieTargetDetails,
                                      StaleCalorieProposal, approve_calorie_proposal,
-                                     read_active_calorie_target)
+                                     list_calorie_target_versions, read_active_calorie_target)
 from backend.guards import AuthenticatedAccount, require_same_origin
 from backend.request_validation import read_json
-from backend.schemas import CalorieApprovalInput, CalorieTargetResponse
+from backend.schemas import CalorieApprovalInput, CalorieTargetListResponse, CalorieTargetResponse
 
 router = APIRouter()
 MAX_APPROVAL_BYTES = 2048
@@ -48,3 +48,9 @@ async def get_active_target(identity: AuthenticatedAccount):
     if target is None:
         raise HTTPException(404, "No active calorie target.")
     return _response(target)
+
+
+@router.get("/api/calorie-targets", response_model=CalorieTargetListResponse)
+async def get_target_history(identity: AuthenticatedAccount):
+    targets = await run_in_threadpool(list_calorie_target_versions, identity.user_id)
+    return CalorieTargetListResponse(items=[_response(target) for target in targets])

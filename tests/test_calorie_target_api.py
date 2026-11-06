@@ -19,6 +19,7 @@ class CalorieTargetPublicGuardTests(unittest.TestCase):
             self.assertEqual(client.post(path, json={"confirm": True},
                                          headers={"origin": "http://127.0.0.1"}).status_code, 401)
             self.assertEqual(client.get("/api/calorie-targets/active").status_code, 401)
+            self.assertEqual(client.get("/api/calorie-targets").status_code, 401)
 
 
 @unittest.skipUnless(os.environ.get("TRAINAI_TEST_DATABASE_URL"), "Disposable PostgreSQL not configured")
@@ -66,7 +67,9 @@ class CalorieTargetApiTests(unittest.TestCase):
             self.assertEqual((response.json()["version"], response.json()["status"]), (1, "active"))
             self.assertEqual(first.post(path, json={"confirm": True}, headers=headers).json(), response.json())
             self.assertEqual(first.get("/api/calorie-targets/active").json(), response.json())
+            self.assertEqual(first.get("/api/calorie-targets").json(), {"items": [response.json()]})
             self.assertEqual(second.get("/api/calorie-targets/active").status_code, 404)
+            self.assertEqual(second.get("/api/calorie-targets").json(), {"items": []})
             self.assertEqual(first.get(f"/api/calorie-proposals/{created['proposal_id']}").json()["status"], "approved")
             first.post("/auth/logout", headers=headers)
             self.assertEqual(first.get("/api/calorie-targets/active").status_code, 401)
@@ -88,3 +91,24 @@ class CalorieTargetApiTests(unittest.TestCase):
             self.assertEqual(response.status_code, 409)
             self.assertEqual(client.get("/api/calorie-targets/active").status_code, 404)
             self.assertEqual(client.get(f"/api/calorie-proposals/{created['proposal_id']}").json()["status"], "pending")
+
+    def test_history_preserves_superseded_versions(self):
+        with TestClient(create_app(), base_url="http://127.0.0.1") as client:
+            headers = self.sign_in(client)
+            self.inputs(client, headers)
+            first_proposal = client.post("/api/calorie-proposals", json={"adjustment_kcal": 100},
+                                         headers=headers).json()
+            first_path = f"/api/calorie-proposals/{first_proposal['proposal_id']}/approve"
+            first = client.post(first_path, json={"confirm": True}, headers=headers).json()
+            second_proposal = client.post("/api/calorie-proposals", json={"adjustment_kcal": 200},
+                                          headers=headers).json()
+            second = client.post(f"/api/calorie-proposals/{second_proposal['proposal_id']}/approve",
+                                 json={"confirm": True}, headers=headers).json()
+            history = client.get("/api/calorie-targets").json()["items"]
+            self.assertEqual([(item["version"], item["status"]) for item in history],
+                             [(2, "active"), (1, "superseded")])
+            self.assertEqual(history[0]["target_id"], second["target_id"])
+            self.assertEqual(history[1]["target_id"], first["target_id"])
+            self.assertEqual(client.get("/api/calorie-targets/active").json(), second)
+            self.assertEqual(client.post(first_path, json={"confirm": True},
+                                         headers=headers).json(), history[1])
