@@ -52,6 +52,7 @@ class CalorieProposalPageTests(unittest.TestCase):
             self.assertEqual(page.headers["cache-control"], "no-store")
             self.assertIn("Pending review", page.text)
             self.assertIn("has not activated a daily target or plan", page.text)
+            self.assertIn('id="approve-proposal"', page.text)
             self.assertIn("+200 kcal/day", page.text)
             self.assertNotIn("synthetic proposal password", page.text)
             self.assertEqual(second.get(path).status_code, 404)
@@ -59,3 +60,31 @@ class CalorieProposalPageTests(unittest.TestCase):
             self.assertEqual(first.get(f"/calorie-proposals/{uuid4()}").status_code, 404)
             first.post("/auth/logout", headers=headers)
             self.assertEqual(first.get(path, follow_redirects=False).headers["location"], "/login")
+
+    def test_approved_proposal_and_target_history_are_truthful_and_private(self):
+        with TestClient(create_app(), base_url="http://127.0.0.1") as first, TestClient(create_app(), base_url="http://127.0.0.1") as second:
+            headers = self.sign_in(first)
+            self.sign_in(second)
+            self.assertIn("No approved targets yet", first.get("/calorie-targets").text)
+            self.assertEqual(first.put("/api/profile", json={
+                "age": 30, "height_cm": 175, "weight_kg": 70, "timezone": "UTC",
+            }, headers=headers).status_code, 200)
+            self.assertEqual(first.put("/api/goal", json={
+                "direction": "gain", "target_weight_kg": 75,
+            }, headers=headers).status_code, 200)
+            self.assertEqual(first.put("/api/energy-preferences", json={
+                "equation_sex": "male", "activity_category": "inactive", "context": "general_adult",
+            }, headers=headers).status_code, 200)
+            proposal_id = first.post("/api/calorie-proposals", json={"adjustment_kcal": 100},
+                                     headers=headers).json()["proposal_id"]
+            self.assertEqual(first.post(f"/api/calorie-proposals/{proposal_id}/approve",
+                                        json={"confirm": True}, headers=headers).status_code, 200)
+            page = first.get(f"/calorie-proposals/{proposal_id}")
+            self.assertIn("Approved · active target v1", page.text)
+            self.assertNotIn('id="approve-proposal"', page.text)
+            self.assertIn("Version 1", first.get("/calorie-targets").text)
+            self.assertIn("Approved", first.get("/calorie-proposals").text)
+            self.assertNotIn(proposal_id, second.get("/calorie-targets").text)
+            self.assertEqual(second.get(f"/calorie-proposals/{proposal_id}").status_code, 404)
+            first.post("/auth/logout", headers=headers)
+            self.assertEqual(first.get("/calorie-targets", follow_redirects=False).headers["location"], "/login")

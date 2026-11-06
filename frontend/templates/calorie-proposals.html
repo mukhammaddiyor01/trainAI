@@ -15,15 +15,15 @@
   <main id="main" class="wrap profile-page calorie-page">
     {% if page %}
     <h1>Saved proposals.</h1>
-    <p class="lead">Review your pending calorie calculations. Each is a saved snapshot, not an active target or plan.</p>
+    <p class="lead">Review saved calorie calculations and their approval status. A proposal is a snapshot; approved targets appear in <a href="/calorie-targets">target history</a>.</p>
     {% if page.items %}
-    <section aria-label="Pending proposals">
+    <section aria-label="Saved proposals">
       <ol class="proposal-list">
         {% for proposal in page.items %}
         <li>
           <a href="/calorie-proposals/{{ proposal.id }}">
             <span class="proposal-list-value">{{ '%.0f'|format(proposal.preview_kcal_per_day) }} kcal/day</span>
-            <span class="proposal-list-meta">{{ proposal.created_at.strftime('%Y-%m-%d %H:%M UTC') }} · {{ proposal.goal_direction }} · {{ '%+d'|format(proposal.signed_adjustment_kcal) }} kcal/day · Pending review</span>
+            <span class="proposal-list-meta">{{ proposal.created_at.strftime('%Y-%m-%d %H:%M UTC') }} · {{ proposal.goal_direction }} · {{ '%+d'|format(proposal.signed_adjustment_kcal) }} kcal/day · {{ 'Approved' if proposal.status == 'approved' else 'Pending review' }}</span>
             <span class="proposal-list-action">Review proposal</span>
           </a>
         </li>

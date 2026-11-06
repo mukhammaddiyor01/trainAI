@@ -19,4 +19,7 @@
 .proposal-list-meta { grid-column: 1; font-size: 12px; line-height: 1.5; color: var(--muted); overflow-wrap: anywhere; }
 .proposal-list-action { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 13px; text-decoration: underline; text-underline-offset: 4px; }
 .proposal-more { margin-top: 24px; font-size: 14px; }
+.approval-panel { margin-top: 28px; }
+.approval-panel p { max-width: 62ch; line-height: 1.6; }
+.approval-panel button { margin-top: 8px; }
 @media (max-width: 700px) { .proposal-list a { grid-template-columns: 1fr; } .proposal-list-action { grid-column: 1; grid-row: 3; margin-top: 4px; } }

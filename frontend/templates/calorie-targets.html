@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calorie targets — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/profile.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/calorie-preview.css').path }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Target navigation"><a href="/calorie-proposals">Saved proposals</a><a href="/calorie-preview">New preview</a><a href="/account">Your account</a></nav></header>
+  <main id="main" class="wrap profile-page calorie-page">
+    <h1>Calorie targets.</h1>
+    <p class="lead">Your latest approved daily estimates. Only the newest version is active. These estimates do not create meal or workout plans.</p>
+    {% if targets %}
+    <section aria-label="Approved target history">
+      <ol class="proposal-list">
+        {% for target in targets %}
+        <li>
+          <a href="/calorie-proposals/{{ target.proposal_id }}">
+            <span class="proposal-list-value">{{ '%.0f'|format(target.target_kcal_per_day) }} kcal/day</span>
+            <span class="proposal-list-meta">Version {{ target.version }} · {{ target.status|capitalize }} · Approved {{ target.approved_at.strftime('%Y-%m-%d %H:%M UTC') }}</span>
+            <span class="proposal-list-action">View proposal</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ol>
+      {% if targets|length == 20 %}<p class="field-help">Showing your latest 20 versions.</p>{% endif %}
+    </section>
+    {% else %}
+    <section class="auth-panel" aria-labelledby="empty-title"><h2 id="empty-title">No approved targets yet.</h2><p>Start with a preview, save the proposal, then review and approve it.</p><a href="/calorie-preview">Create a preview</a></section>
+    {% endif %}
+  </main>
+</body>
+</html>

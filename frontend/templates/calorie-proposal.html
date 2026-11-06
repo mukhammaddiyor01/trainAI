@@ -11,17 +11,17 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Proposal navigation"><a href="/calorie-proposals">Saved proposals</a><a href="/calorie-preview">New preview</a><a href="/account">Your account</a></nav></header>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Proposal navigation"><a href="/calorie-proposals">Saved proposals</a><a href="/calorie-targets">Target history</a><a href="/account">Your account</a></nav></header>
   <main id="main" class="wrap profile-page calorie-page">
     {% if proposal %}
     <h1>Saved proposal.</h1>
-    <p class="lead">This is a snapshot of your calculation when you saved it. It is pending review and has not activated a daily target or plan.</p>
+    <p class="lead">This is a snapshot of your calculation when you saved it. {% if proposal.status == 'pending' %}It is pending review and has not activated a daily target or plan.{% elif target %}You approved it as calorie target version {{ target.version }}. This did not create a meal or workout plan.{% else %}Its approval record is unavailable.{% endif %}</p>
     <section class="auth-panel" aria-labelledby="proposal-title">
-      <h2 id="proposal-title">Your pending proposal</h2>
+      <h2 id="proposal-title">Your {{ proposal.status }} proposal</h2>
       <p class="preview-value">{{ '%.0f'|format(proposal.preview_kcal_per_day) }} kcal/day</p>
       <dl class="preview-breakdown">
         <div><dt>Saved on</dt><dd>{{ proposal.created_at.strftime('%Y-%m-%d %H:%M UTC') }}</dd></div>
-        <div><dt>Status</dt><dd>Pending review</dd></div>
+        <div><dt>Status</dt><dd>{% if target %}Approved · {{ target.status }} target v{{ target.version }}{% else %}Pending review{% endif %}</dd></div>
         <div><dt>Maintenance estimate</dt><dd>{{ '%.0f'|format(proposal.maintenance_kcal_per_day) }} kcal/day</dd></div>
         <div><dt>Requested change</dt><dd>{{ '%+d'|format(proposal.signed_adjustment_kcal) }} kcal/day</dd></div>
         <div><dt>Saved goal</dt><dd>{{ proposal.goal_direction }}</dd></div>
@@ -30,7 +30,16 @@
       </dl>
       <p class="field-help">Displayed calories are rounded to whole numbers; the stored calculation keeps its original precision. Changes to your profile, goal, or energy choices do not update this snapshot.</p>
     </section>
-    <p class="field-help"><a href="/calorie-proposals">View your saved proposals</a>. Approval and an active target are not available yet.</p>
+    {% if proposal.status == 'pending' %}
+    <section class="auth-panel approval-panel" aria-labelledby="approval-title">
+      <h2 id="approval-title">Approve this calorie target</h2>
+      <p>Confirming will make this daily calorie estimate active. If your inputs or active target changed, create a new preview. This estimate is experimental and is not a meal or workout plan.</p>
+      <button id="approve-proposal" type="button" data-proposal-id="{{ proposal.id }}">Approve calorie target</button>
+      <p id="approval-message" class="form-message" role="status" aria-live="polite"></p>
+    </section>
+    <script defer src="{{ url_for('static', path='/js/calorie-approval.js').path }}"></script>
+    {% endif %}
+    <p class="field-help"><a href="/calorie-targets">View target history</a> · <a href="/calorie-preview">Create a new preview</a></p>
     {% else %}
     <h1>Proposal unavailable.</h1>
     <p class="lead">This proposal was not found in your account. <a href="/calorie-preview">Start a new preview</a>.</p>

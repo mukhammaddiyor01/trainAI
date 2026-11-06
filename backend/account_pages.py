@@ -12,6 +12,7 @@ from backend.food_preferences import read_food_preferences
 from backend.energy_preferences import read_energy_inputs
 from backend.calorie_previews import read_calorie_preview_inputs
 from backend.calorie_proposals import ProposalCursorNotFound, list_calorie_proposals, read_calorie_proposal
+from backend.calorie_targets import list_calorie_target_versions, read_target_for_proposal
 from backend.services.energy_estimation import EnergyEstimateUnavailable, estimate_adult_energy
 from backend.services.food_preferences import MAX_ALLERGIES, MAX_ALLERGY_LENGTH, MAX_MEALS, MAX_PREP_MINUTES
 from backend.services.training_preferences import MIN_SESSION_MINUTES, MAX_SESSION_MINUTES
@@ -179,8 +180,23 @@ async def calorie_proposal_page(request: Request, proposal_id: UUID):
     if proposal is None:
         return templates.TemplateResponse(request=request, name="calorie-proposal.html",
                                           status_code=404, context={"proposal": None})
+    target = await run_in_threadpool(read_target_for_proposal, identity.user_id, proposal_id)
     return templates.TemplateResponse(request=request, name="calorie-proposal.html",
-                                      context={"proposal": proposal})
+                                      context={"proposal": proposal, "target": target})
+
+
+@router.get("/calorie-targets", response_class=HTMLResponse)
+async def calorie_targets_page(request: Request):
+    try:
+        identity = await optional_account(request)
+        if identity is None:
+            return RedirectResponse("/login", status_code=303)
+        targets = await run_in_threadpool(list_calorie_target_versions, identity.user_id)
+    except (DatabaseConfigurationError, SQLAlchemyError):
+        return templates.TemplateResponse(request=request, name="account.html", status_code=503,
+                                          context={"identity": None})
+    return templates.TemplateResponse(request=request, name="calorie-targets.html",
+                                      context={"targets": targets})
 
 
 @router.get("/calorie-proposals", response_class=HTMLResponse)
