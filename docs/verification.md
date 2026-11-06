@@ -429,3 +429,8 @@ synthetic account was created in that manual browser check, and its tab/server/
 cluster were removed. The configured database was verified at revision 0007
 with no target table, then explicitly migrated to 0008. Schema metadata, not
 user rows, was inspected. No AI or full plan was activated.
+
+`pip check` and offline catalog verification passed. The updated bounded local
+server started on port 8000. Live anonymous requests returned 303 to login for
+the private target page and 401 for active/history APIs, with no-store and no
+Server header. The server was left running for local use.

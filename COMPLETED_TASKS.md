@@ -779,6 +779,10 @@ versions use the existing experimental calorie preview policy.
 - An isolated browser visit confirmed anonymous `/calorie-targets` redirects to
   login. The temporary tab, server, and test cluster were removed. Manual signed-in
   browser approval remains a verification gap; automated owner/page/API tests pass.
+- `pip check` and offline catalog verification passed. The updated bounded
+  loopback server was started on port 8000; live anonymous checks returned 303
+  for the target page and 401 for both target read APIs, with `no-store` and
+  no `Server` response header.
 - Next: review exercise rules and limitations, then independently review missing
   food composition evidence before any automatic plan selection. Do not claim
   the approved calorie target is a full plan or clinical recommendation.
