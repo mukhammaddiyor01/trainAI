@@ -88,6 +88,17 @@ class TrainingPreferences(Base):
     session_minutes: Mapped[int] = mapped_column(SmallInteger)
 
 
+class MovementLimitations(Base):
+    __tablename__ = "movement_limitations"
+    __table_args__ = (
+        CheckConstraint("status IN ('unsure', 'none_reported', 'needs_adaptation')",
+                        name="ck_movement_limitations_status"),
+    )
+
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("profiles.user_id", ondelete="CASCADE"), primary_key=True)
+    status: Mapped[str] = mapped_column(String(20))
+
+
 class FoodPreferences(Base):
     __tablename__ = "food_preferences"
     __table_args__ = (
