@@ -460,3 +460,15 @@ cluster were removed. No real user row was entered into the browser test.
 rows. The owned loopback server was restarted. Live anonymous page/API requests
 returned 303/401, the local script 200, with no-store and no Server header.
 No workout, exercise dosage, medical clearance, or AI output was generated.
+
+## Strength-day scheduling rule — 2026-11-07
+
+Read all 20 project-owned Markdown files before implementation. Reviewed official
+U.S. activity-guideline evidence and CDC adaptation guidance. Committed the
+scheduling boundary and plain rule in separate increments. Three targeted checks
+passed for availability, deterministic options, weekly wraparound recovery, and
+invalid inputs. The full disposable PostgreSQL suite passed 209 tests, none
+skipped, with migration round trips and owned-cluster cleanup. `pip check` and
+offline catalogs passed. No schema, dependency, API, UI, configured database, or
+server changed; browser checks were not repeated. No schedule was selected or
+workout prescribed.

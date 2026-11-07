@@ -1,8 +1,25 @@
 # TrainAI — Completed Tasks and Session Handoff
 
-Last updated: 2026-11-06 (Asia/Seoul).
-The latest continuation read all 19 existing project-owned Markdown files before
-implementation. The new movement boundary brings the inventory to 20.
+Last updated: 2026-11-07 (Asia/Seoul).
+The latest continuation read all 20 existing project-owned Markdown files before
+implementation. The new scheduling boundary brings the inventory to 21.
+
+## Current Checkpoint — Strength-Day Options
+
+- Started from clean synchronized `develop` at 37a81c5. Reviewed the U.S.
+  Physical Activity Guidelines Advisory Committee report and CDC guidance.
+  Documented the nonconsecutive-day boundary separately (dbf4fc7).
+- Added a plain service that enumerates only pairs within explicitly available
+  weekdays, with a recovery day across the Sunday/Monday boundary. It selects
+  no pair and generates no sessions or exercise dosage (0e316de).
+- Three focused checks and all 209 disposable PostgreSQL checks passed, none
+  skipped; migration round trips and owned-cluster cleanup passed. `pip check`
+  and the offline catalog check passed. No migration, dependency, API, UI, or
+  configured-database change was made; browser checks were not repeated.
+- Next: review exercise-specific suitability, dosage, alternatives, and the
+  movement-limitation gate before generating a workout. An empty pair list is
+  not filled with invented availability. Food composition still blocks automatic
+  meal selection.
 
 ## Current Checkpoint — Movement Limitation Collection
 

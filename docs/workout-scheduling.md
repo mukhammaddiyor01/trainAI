@@ -24,3 +24,11 @@ inputs but do not supply an intensity, exercise, set, repetition, or rest period
 The movement-limitation self-report still gates future exercise selection.
 `none_reported` is not clearance. Exercise-specific suitability, dosage,
 alternatives, and the actual weekly plan require separate review and rules.
+
+## Verification — 2026-11-07
+
+Three isolated service checks cover deterministic options, one-day and adjacent
+availability, Sunday/Monday recovery, and invalid or forged saved values. All
+209 disposable PostgreSQL checks passed with migration round trips and cluster
+cleanup. `pip check` and offline catalog verification passed. No database schema,
+API, browser page, or configured user record changed in this increment.

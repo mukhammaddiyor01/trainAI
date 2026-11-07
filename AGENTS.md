@@ -46,7 +46,7 @@ training and food preferences are implemented.
 The profile currently includes age, height, weight, and an explicit IANA time zone.
 Strict input/response schemas, shared authentication/origin guards, ownership-scoped
 profile operations, request/rate/resource limits, and safe errors are verified.
-All 206 working-tree checks passed with isolated PostgreSQL on 2026-11-06.
+All 209 working-tree checks passed with isolated PostgreSQL on 2026-11-07.
 Browser profile and training-preference flows were verified using synthetic data; the configured real database was upgraded
 explicitly to migration 0009. See docs/verification.md, docs/profiles.md, and
 docs/security.md and docs/goals.md. Goals keep a server-selected starting-weight
@@ -86,7 +86,9 @@ target per owner. A bounded private version history is available; see
 docs/calorie-approval.md. A private, explicit three-state movement limitation
 self-report is now collected without generating a workout; see
 docs/movement-limitations.md. Exercise dosage and suitability rules still need
-review before prescriptions. Product-specific composition evidence is still
+review before prescriptions. A plain service enumerates recovery-spaced pairs
+from available weekdays without choosing a schedule; see docs/workout-scheduling.md.
+Product-specific composition evidence is still
 required before food selection. The configured database is at 0009.
 Unsure allergy status and unmapped names must not silently permit food selection.
 The user selected an 8-character password minimum, shared
