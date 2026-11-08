@@ -1,0 +1,26 @@
+.readiness-page { padding-block: 55px 80px; }
+.readiness-page h1 { max-width: 14ch; }
+.readiness-page .lead { max-width: 62ch; }
+.readiness-status { max-width: 850px; margin-top: 50px; padding: 30px 36px; background: var(--white); border: 1px solid var(--line); border-radius: 12px; }
+.readiness-status h2, .readiness-exercises h2 { font-size: clamp(25px, 3vw, 36px); letter-spacing: -1.3px; font-weight: 550; margin: 0 0 25px; }
+.readiness-status dl div { grid-template-columns: 165px 1fr; font-size: 14px; }
+.readiness-status dl div:last-child { border-bottom: 0; padding-bottom: 0; }
+.readiness-exercises { margin-top: 65px; }
+.readiness-section-head { display: flex; align-items: end; justify-content: space-between; gap: 25px; border-bottom: 1px solid var(--line); }
+.readiness-section-head h2 { margin-bottom: 20px; }
+.readiness-section-head p { max-width: 44ch; color: var(--muted); font-size: 14px; line-height: 1.6; margin: 0 0 20px; }
+.readiness-exercises ul { list-style: none; padding: 0; margin: 0; }
+.readiness-exercises li { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(175px, 1fr) minmax(170px, 1fr); gap: 16px; align-items: baseline; padding: 18px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.readiness-exercises li strong { font-weight: 600; }
+.readiness-exercises li span, .readiness-exercises li small { color: var(--muted); font-size: 13px; }
+.readiness-footnote { max-width: 70ch; color: var(--muted); font-size: 13px; line-height: 1.7; margin-top: 35px; }
+@media (max-width: 700px) {
+  .readiness-page { padding-block: 40px 60px; }
+  .readiness-page h1 { font-size: clamp(45px, 10vw, 62px); }
+  .readiness-status { padding: 25px 20px; margin-top: 35px; }
+  .readiness-status dl div { display: block; }
+  .readiness-status dd { margin-top: 5px; }
+  .readiness-section-head { display: block; }
+  .readiness-exercises { margin-top: 45px; }
+  .readiness-exercises li { grid-template-columns: 1fr; gap: 4px; }
+}

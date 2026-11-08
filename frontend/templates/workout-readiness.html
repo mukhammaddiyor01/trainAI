@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workout readiness — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/workout-readiness.css').path }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Workout navigation"><a href="/training-preferences">Training preferences</a><a href="/account">Your account</a></nav></header>
+  <main id="main" class="wrap readiness-page">
+    <h1>Before a workout<br>can take shape.</h1>
+    <p class="lead">Your saved choices help narrow the options. Exercise instructions and amounts still need review before TrainAI can build a workout.</p>
+    <section class="readiness-status" aria-labelledby="readiness-title">
+      <h2 id="readiness-title">What we know so far</h2>
+      <dl>
+        <div><dt>Training choices</dt><dd>{% if preferences %}Saved. <a href="/training-preferences">Edit choices</a>{% else %}Not saved. <a href="/training-preferences">Add training choices</a>{% endif %}</dd></div>
+        <div><dt>Movement answer</dt><dd>{% if not limitations %}Not saved. <a href="/movement-limitations">Add your answer</a>{% elif limitations.status == 'unsure' %}Not sure yet. <a href="/movement-limitations">Review answer</a>{% elif limitations.status == 'needs_adaptation' %}Adapted activity needed. <a href="/movement-limitations">Review answer</a>{% else %}No limitations reported. <a href="/movement-limitations">Review answer</a>{% endif %}</dd></div>
+        <div><dt>Day spacing</dt><dd>{% if pair_count is none %}Add available weekdays first.{% elif pair_count == 0 %}No two-day pair has a rest day between it in your saved availability.{% else %}{{ pair_count }} possible two-day {% if pair_count == 1 %}pair{% else %}pairs{% endif %} with a rest day between them. No pair has been selected.{% endif %}</dd></div>
+        <div><dt>Exercise review</dt><dd>Pending for every catalog movement. No workout has been created.</dd></div>
+      </dl>
+    </section>
+    <section class="readiness-exercises" aria-labelledby="exercise-title">
+      <div class="readiness-section-head"><h2 id="exercise-title">Catalog movements</h2><p>Equipment checks show what your saved setup could support. They do not mean a movement is suitable for you.</p></div>
+      <ul>
+        {% for row in rows %}
+        <li><strong>{{ row.name }}</strong><span>{% if not preferences %}Add equipment choices{% elif row.equipment_ready %}Equipment available{% else %}Required equipment unavailable{% endif %}</span><small>Prescription review pending</small></li>
+        {% endfor %}
+      </ul>
+    </section>
+    <p class="readiness-footnote">A “no limitations reported” answer is a self-report, not medical clearance. If activity needs adaptation, discuss suitable types and amounts with a qualified professional.</p>
+  </main>
+</body>
+</html>

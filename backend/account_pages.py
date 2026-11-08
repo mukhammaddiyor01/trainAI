@@ -20,6 +20,11 @@ from backend.services.training_preferences import MIN_SESSION_MINUTES, MAX_SESSI
 from backend.services.accounts import MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH
 from starlette.concurrency import run_in_threadpool
 from backend.config import DatabaseConfigurationError
+from backend.catalogs import load_exercises
+from backend.exercise_readiness import read_exercise_readiness_inputs
+from backend.services.catalog_use import exercise_selection_blockers
+from backend.services.catalogs import InvalidCatalog
+from backend.services.workout_schedule import strength_day_pairs
 from backend.routes import templates
 
 router = APIRouter()
@@ -119,6 +124,34 @@ async def movement_limitations_page(request: Request):
     return templates.TemplateResponse(request=request, name="movement-limitations.html", context={
         "limitations": limitations,
         "saved": limitations is not None and request.query_params.get("saved") == "1",
+    })
+
+
+@router.get("/workout-readiness", response_class=HTMLResponse)
+async def workout_readiness_page(request: Request):
+    try:
+        identity = await optional_account(request)
+        if identity is None:
+            return RedirectResponse("/login", status_code=303)
+        inputs = await run_in_threadpool(read_exercise_readiness_inputs, identity.user_id)
+        if inputs is None:
+            return RedirectResponse("/profile", status_code=303)
+        preferences, limitations = inputs
+        exercises = await run_in_threadpool(load_exercises)
+        rows = tuple({
+            "name": exercise.name,
+            "required_equipment": exercise.required_equipment,
+            "equipment_ready": "equipment_unavailable" not in exercise_selection_blockers(
+                exercises, exercise.id, preferences, limitations,
+            ),
+        } for exercise in exercises)
+        pair_count = len(strength_day_pairs(preferences)) if preferences is not None else None
+    except (DatabaseConfigurationError, SQLAlchemyError, InvalidCatalog):
+        return templates.TemplateResponse(request=request, name="account.html", status_code=503,
+                                          context={"identity": None})
+    return templates.TemplateResponse(request=request, name="workout-readiness.html", context={
+        "preferences": preferences, "limitations": limitations, "rows": rows,
+        "pair_count": pair_count,
     })
 
 
