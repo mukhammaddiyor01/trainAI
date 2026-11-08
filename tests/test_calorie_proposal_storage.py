@@ -1,6 +1,7 @@
 """Pending proposals use current owner inputs and never activate a target."""
 
 from dataclasses import FrozenInstanceError
+from datetime import datetime, timedelta, timezone
 import os
 import unittest
 from uuid import uuid4
@@ -8,7 +9,7 @@ from uuid import uuid4
 from sqlalchemy import func, select
 
 from backend.accounts import register_account
-from backend.calorie_proposals import CalorieProposalInputsRequired, ProposalCursorNotFound, create_calorie_proposal, list_calorie_proposals, read_calorie_proposal
+from backend.calorie_proposals import CalorieProposalInputsRequired, ProposalCursorNotFound, _plain_proposal, create_calorie_proposal, list_calorie_proposals, read_calorie_proposal
 from backend.database import close_database, session_scope
 from backend.energy_preferences import save_energy_preferences
 from backend.goals import save_goal
@@ -78,6 +79,17 @@ class CalorieProposalStorageTests(unittest.TestCase):
         with self.assertRaises(CaloriePreviewUnavailable):
             create_calorie_proposal(owner, 200)
         self.assertEqual(self.count(owner), 0)
+
+    def test_proposal_timestamp_is_normalized_from_non_utc_session(self):
+        owner = self.owner()
+        proposal = create_calorie_proposal(owner, 100)
+        with session_scope() as session:
+            row = session.get(CalorieProposal, proposal.id)
+            row.created_at = datetime(2026, 11, 8, 19, 4, tzinfo=timezone(timedelta(hours=9)))
+            actual = _plain_proposal(row).created_at
+            session.rollback()
+        self.assertEqual(actual, datetime(2026, 11, 8, 10, 4, tzinfo=timezone.utc))
+        self.assertEqual(actual.utcoffset(), timedelta(0))
 
     def test_new_proposal_recomputes_changed_weight_without_rewriting_old_snapshot(self):
         owner = self.owner()

@@ -1,7 +1,7 @@
 """Create private pending proposals from locked, current source rows."""
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
 from sqlalchemy import and_, or_, select
@@ -57,7 +57,7 @@ class ProposalCursorNotFound(ValueError):
 
 def _plain_proposal(row: CalorieProposal) -> PendingCalorieProposal:
     return PendingCalorieProposal(
-        row.id, row.user_id, row.created_at, row.status, row.base_version_id, row.profile_age,
+        row.id, row.user_id, row.created_at.astimezone(timezone.utc), row.status, row.base_version_id, row.profile_age,
         row.profile_height_cm, row.profile_weight_kg, row.goal_direction,
         row.goal_starting_weight_kg, row.goal_target_weight_kg, row.equation_sex,
         row.activity_category, row.context, row.adjustment_kcal,

@@ -2,6 +2,7 @@
 
 import os
 import unittest
+from datetime import datetime, timezone
 from uuid import uuid4
 
 from fastapi.testclient import TestClient
@@ -49,6 +50,8 @@ class CalorieProposalPageTests(unittest.TestCase):
             path = f"/calorie-proposals/{created.json()['proposal_id']}"
             page = first.get(path)
             self.assertEqual(page.status_code, 200)
+            created_at = datetime.fromisoformat(created.json()["created_at"])
+            self.assertIn(created_at.astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"), page.text)
             self.assertEqual(page.headers["cache-control"], "no-store")
             self.assertIn("Pending review", page.text)
             self.assertIn("has not activated a daily target or plan", page.text)
