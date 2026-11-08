@@ -45,6 +45,8 @@ Plain scheduling logic can enumerate recovery-spaced pairs from saved available
 weekdays without choosing a schedule; see [scheduling boundary](docs/workout-scheduling.md).
 An [exercise readiness gate](docs/exercise-readiness.md) keeps all six metadata
 records out of automatic selection until suitability and dosage are reviewed.
+The private `/workout-readiness` page shows saved-input status and catalog
+equipment checks without creating a workout.
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
@@ -77,10 +79,11 @@ Open `/register` to create your own account, `/login` to sign in, and `/account`
 to view your private account. Open `/profile` to save your basic details, then
 `/goal` to record your weight goal. Use `/training-preferences` to save experience,
 activity, available equipment, weekdays, and session duration. Use
-`/movement-limitations` to report whether activity needs adaptation, then
-`/food-preferences` for diet, reported allergies, spending style, preparation time,
-and meal times in your profile zone. Open `/energy-preferences` to save the
-three explicit calculation choices and view an eligible daily energy estimate.
+`/movement-limitations` to report whether activity needs adaptation. Open
+`/workout-readiness` to review what is saved and what still blocks a workout.
+Use `/food-preferences` for diet, reported allergies, spending style,
+preparation time, and meal times in your profile zone. Open `/energy-preferences`
+to save the three explicit calculation choices and view an eligible daily energy estimate.
 Open `/calorie-preview` to request an adjustment after saving a profile, goal,
 and energy choices. The preview is temporary; use **Save pending proposal** to
 store a reviewable snapshot, then open `/calorie-proposals` to find it again.
@@ -89,7 +92,7 @@ activate it. `/calorie-targets` shows the latest 20 approved versions. A preview
 or saved pending proposal does not activate a target. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 214 checks, including PostgreSQL integration, use the disposable runner:
+For all 219 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py

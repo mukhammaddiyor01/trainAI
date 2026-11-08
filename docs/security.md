@@ -274,3 +274,13 @@ The private page uses the existing no-store/CSP protections and local script.
 Tests covered two-user isolation, forged owner fields, revocation, profile-first
 access, strict input, and private saved-state rendering. Rate limiting remains
 single-process and OAuth remains deferred.
+
+## Private workout readiness view — 2026-11-08
+
+The authenticated page derives owner identity from the existing session. Its
+storage read joins the owner's profile to optional training and movement rows in
+one query, then validates saved values before display. A query parameter cannot
+select another owner. Anonymous users are redirected, users without profiles go
+through profile-first onboarding, and the page inherits no-store and CSP response
+headers. It displays no diagnosis, raw account identifier, or generated exercise
+prescription. Two-user, anonymous, and query-spoofing checks passed.

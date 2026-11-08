@@ -484,3 +484,16 @@ unknown IDs, and forged saved values. The full disposable PostgreSQL suite passe
 `pip check` and offline catalog verification passed. No schema, dependencies,
 API, UI, configured database, or server changed; browser checks were not repeated.
 No exercise prescription or workout was generated.
+
+## Private workout readiness view — 2026-11-08
+
+Read all 22 project-owned Markdown files before implementation. Added an
+owner-scoped training/movement snapshot and private read-only page in separate
+commits. Focused checks covered profile-first access, missing/saved answers,
+two-user isolation, anonymous redirect, local styles, and query-owner spoofing.
+The full disposable PostgreSQL suite passed 219 tests, none skipped, with
+migration round trips and owned-cluster cleanup. `pip check` and offline catalog
+verification passed. A synthetic disposable browser session verified
+profile-first onboarding and the empty readiness state; its
+temporary tab, server, account, and database were removed. No plan, workout,
+schema, dependency, or configured user record changed.

@@ -46,7 +46,7 @@ training and food preferences are implemented.
 The profile currently includes age, height, weight, and an explicit IANA time zone.
 Strict input/response schemas, shared authentication/origin guards, ownership-scoped
 profile operations, request/rate/resource limits, and safe errors are verified.
-All 214 working-tree checks passed with isolated PostgreSQL on 2026-11-08.
+All 219 working-tree checks passed with isolated PostgreSQL on 2026-11-08.
 Browser profile and training-preference flows were verified using synthetic data; the configured real database was upgraded
 explicitly to migration 0009. See docs/verification.md, docs/profiles.md, and
 docs/security.md and docs/goals.md. Goals keep a server-selected starting-weight
@@ -90,6 +90,8 @@ review before prescriptions. A plain service enumerates recovery-spaced pairs
 from available weekdays without choosing a schedule; see docs/workout-scheduling.md.
 An exact-ID exercise readiness gate reports missing inputs, equipment, movement
 answer, and unreviewed prescription blockers; see docs/exercise-readiness.md.
+An authenticated read-only workout readiness page shows the owner's saved-input
+status and equipment checks; it creates no schedule or prescription.
 Product-specific composition evidence is still
 required before food selection. The configured database is at 0009.
 Unsure allergy status and unmapped names must not silently permit food selection.

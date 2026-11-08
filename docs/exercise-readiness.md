@@ -31,9 +31,13 @@ it is not clinical clearance. Every current exercise still receives
 record with blockers. No source level, equipment access, schedule pair, or
 general guideline silently supplies the missing review.
 
-This service is offline and contains no account data. Future private API or plan
-storage must read only the authenticated owner's saved inputs and retain the
-existing strict request/response, rate, and ownership controls.
+The plain rule is offline and contains no account data. The private read-only
+`/workout-readiness` page obtains training preferences and movement answers from
+one owner-scoped database read after authentication and profile-first checks. It
+shows only saved-input status, possible day-pair count, and catalog equipment
+checks. It never calls a selector, chooses a day pair, or saves a workout. Future
+private API or plan storage must retain strict request/response, rate, and
+ownership controls.
 
 ## Verification — 2026-11-08
 
@@ -43,3 +47,9 @@ the refusal to select even with `none_reported`. All 214 disposable PostgreSQL
 checks passed with migration round trips and owned-cluster cleanup. `pip check`
 and offline catalog verification passed. No private data, schema, API, or browser
 surface changed.
+
+The later private-page increment passed 219 disposable PostgreSQL checks. Tests
+cover owner isolation, profile-first access, anonymous redirect, missing/saved
+inputs, and query-owner spoofing. A disposable synthetic browser session verified
+the empty state after profile setup. No schema, dependency, or configured user
+record changed.

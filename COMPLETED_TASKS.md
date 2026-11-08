@@ -2,7 +2,28 @@
 
 Last updated: 2026-11-08 (Asia/Seoul).
 The latest continuation read all 21 existing project-owned Markdown files before
-implementation. The new exercise-readiness boundary brings the inventory to 22.
+implementation. The exercise-readiness boundary brings the inventory to 22.
+
+## Current Checkpoint — Private Workout Readiness View
+
+- Continued after reading all 22 project-owned Markdown files and checking clean,
+  synchronized `develop`. Added a single owner-scoped read of saved training and
+  movement answers, with profile-first handling (22d5d37).
+- Added authenticated `/workout-readiness` and an account link (909a466). The
+  English page shows missing/saved inputs, optional recovery-spaced day-pair
+  count, and equipment status for six catalog movements. Every movement still
+  says prescription review pending; it selects no exercise or schedule and
+  creates no workout. Responses use the existing private-page protections.
+- Focused storage/page checks passed, including two-user isolation, anonymous
+  redirect, profile-first access, and forged query-owner isolation. A synthetic
+  disposable browser session verified profile-first onboarding and the empty
+  readiness view. All 219 disposable PostgreSQL checks passed, none skipped,
+  with migration round trips and owned-cluster cleanup. `pip check` and offline
+  catalog verification passed. No schema, dependency, configured database, or
+  real user record changed.
+- Next: author and review exercise-specific suitability and prescription data
+  before enabling selection. Keep self-reported limitations distinct from
+  medical clearance, and retain the strict owner-scoped boundary on future APIs.
 
 ## Current Checkpoint — Exercise Selection Readiness
 
