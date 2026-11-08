@@ -34,3 +34,12 @@ general guideline silently supplies the missing review.
 This service is offline and contains no account data. Future private API or plan
 storage must read only the authenticated owner's saved inputs and retain the
 existing strict request/response, rate, and ownership controls.
+
+## Verification — 2026-11-08
+
+Five offline service checks cover all six records, complete equipment matching,
+missing and uncertain answers, adaptation, unknown IDs, forged saved values, and
+the refusal to select even with `none_reported`. All 214 disposable PostgreSQL
+checks passed with migration round trips and owned-cluster cleanup. `pip check`
+and offline catalog verification passed. No private data, schema, API, or browser
+surface changed.

@@ -472,3 +472,15 @@ skipped, with migration round trips and owned-cluster cleanup. `pip check` and
 offline catalogs passed. No schema, dependency, API, UI, configured database, or
 server changed; browser checks were not repeated. No schedule was selected or
 workout prescribed.
+
+## Exercise selection readiness — 2026-11-08
+
+Read all 21 project-owned Markdown files before implementation. Reviewed current
+official U.S. physical activity and CDC adaptation guidance. The boundary and
+plain gate were committed separately. Five focused checks passed for all six
+unreviewed records, equipment completeness, missing/uncertain/adaptation answers,
+unknown IDs, and forged saved values. The full disposable PostgreSQL suite passed
+214 tests, none skipped, with migration round trips and owned-cluster cleanup.
+`pip check` and offline catalog verification passed. No schema, dependencies,
+API, UI, configured database, or server changed; browser checks were not repeated.
+No exercise prescription or workout was generated.

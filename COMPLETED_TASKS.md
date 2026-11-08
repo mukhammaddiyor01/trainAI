@@ -1,8 +1,25 @@
 # TrainAI — Completed Tasks and Session Handoff
 
-Last updated: 2026-11-07 (Asia/Seoul).
-The latest continuation read all 20 existing project-owned Markdown files before
-implementation. The new scheduling boundary brings the inventory to 21.
+Last updated: 2026-11-08 (Asia/Seoul).
+The latest continuation read all 21 existing project-owned Markdown files before
+implementation. The new exercise-readiness boundary brings the inventory to 22.
+
+## Current Checkpoint — Exercise Selection Readiness
+
+- Started from clean synchronized `develop` at 310082a. Reviewed current U.S.
+  activity guidelines and CDC adaptation guidance. Documented why catalog
+  source levels cannot supply exercise-specific suitability or dosage (762b631).
+- Added a plain exact-ID readiness gate with distinct missing-preference,
+  equipment, and movement-answer blockers. Every current metadata record retains
+  `exercise_prescription_unreviewed`, including when the user reports no known
+  limitation (06244aa). Unknown IDs and forged preference answers fail closed.
+- Five focused checks and all 214 disposable PostgreSQL checks passed, none
+  skipped, with migration round trips and owned-cluster cleanup. `pip check`
+  and the offline catalog check passed. No schema, dependency, API, UI, or
+  configured-database changes; browser checks were not repeated.
+- Next: author and review exercise-specific suitability, dosage, rest, and
+  alternatives before enabling any selection. The saved self-report is not
+  clearance. Food composition still blocks automatic meal selection.
 
 ## Current Checkpoint — Strength-Day Options
 

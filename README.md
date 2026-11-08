@@ -43,6 +43,8 @@ none reported, or needs adaptation. It does not assess medical fitness or create
 a workout; see [movement limitation boundary](docs/movement-limitations.md).
 Plain scheduling logic can enumerate recovery-spaced pairs from saved available
 weekdays without choosing a schedule; see [scheduling boundary](docs/workout-scheduling.md).
+An [exercise readiness gate](docs/exercise-readiness.md) keeps all six metadata
+records out of automatic selection until suitability and dosage are reviewed.
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 
@@ -87,7 +89,7 @@ activate it. `/calorie-targets` shows the latest 20 approved versions. A preview
 or saved pending proposal does not activate a target. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 209 checks, including PostgreSQL integration, use the disposable runner:
+For all 214 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
