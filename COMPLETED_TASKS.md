@@ -1,8 +1,18 @@
 # TrainAI — Completed Tasks and Session Handoff
 
 Last updated: 2026-11-08 (Asia/Seoul).
-The latest continuation read all 21 existing project-owned Markdown files before
-implementation. The exercise-readiness boundary brings the inventory to 22.
+The last implementation continuation read all 22 project-owned Markdown files
+before changing application code.
+
+## Current Checkpoint — PostgreSQL ER Diagram
+
+- Generated a dark, standalone SVG from the current SQLAlchemy metadata at
+  schema revision 0009. It shows all 10 tables, PostgreSQL column types, PK/FK
+  fields, nullability, and the current foreign-key relationships. The generator
+  fails when model tables change without an updated layout.
+- Checked SVG parsing, table count, PostgreSQL type labels, and browser rendering.
+  Added the diagram and regeneration command to README. This documentation
+  increment changes no schema, data, API, or workout behavior.
 
 ## Current Checkpoint — Private Workout Readiness View
 

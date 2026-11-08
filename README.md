@@ -116,6 +116,10 @@ third-party frontend requests.
 
 ## Structure
 
+The current PostgreSQL schema is shown in the [dark ER diagram](docs/trainai-postgresql-er.svg).
+Regenerate it after model changes with
+`.venv/bin/python -m scripts.generate_er_diagram`.
+
 ```text
 backend/
   __main__.py             Local server with transport limits
