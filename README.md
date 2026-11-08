@@ -46,7 +46,7 @@ weekdays without choosing a schedule; see [scheduling boundary](docs/workout-sch
 An [exercise readiness gate](docs/exercise-readiness.md) keeps all six metadata
 records out of automatic selection until suitability and dosage are reviewed.
 The private `/workout-readiness` page shows saved-input status and catalog
-equipment checks without creating a workout.
+equipment checks and expands recovery-spaced day options without creating a workout.
 Fitness planning, logging, AI inference, training,
 and camera tracking are not implemented yet.
 

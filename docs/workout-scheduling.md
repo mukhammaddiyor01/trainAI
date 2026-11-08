@@ -32,3 +32,12 @@ availability, Sunday/Monday recovery, and invalid or forged saved values. All
 209 disposable PostgreSQL checks passed with migration round trips and cluster
 cleanup. `pip check` and offline catalog verification passed. No database schema,
 API, browser page, or configured user record changed in this increment.
+
+## Private readiness display — 2026-11-08
+
+The authenticated `/workout-readiness` page now lists the computed pairs behind
+an expandable control when saved availability contains an option. The list uses
+Monday-first day names and retains the service's sorted order. Missing training
+preferences and adjacent-only availability show distinct empty states. These are
+spacing options, not scheduled workouts; no pair is selected or persisted.
+Owner-scoped page checks cover distinct users' saved days and query-owner spoofing.

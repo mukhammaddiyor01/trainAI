@@ -4,6 +4,23 @@ Last updated: 2026-11-08 (Asia/Seoul).
 The last implementation continuation read all 22 project-owned Markdown files
 before changing application code.
 
+## Current Checkpoint — Visible Strength-Day Options
+
+- Continued from clean synchronized `develop` after reading all 22 project-owned
+  Markdown files and the frontend-design guidance. The existing recovery-spaced
+  pair service now feeds an expandable list on the private workout readiness
+  page (25cff42). Names are derived from the signed-in owner's saved Monday-first
+  availability; no pair is chosen, persisted, or treated as a workout.
+- Page checks cover one valid pair, adjacent days with no pair, and cross-owner
+  query spoofing. The full disposable PostgreSQL suite passed 219 tests, none
+  skipped, with migration round trips and cluster cleanup. A synthetic browser
+  session verified the expanded list and truthful empty movement answer. The
+  temporary tab, server, account, and database were removed. `pip check` and
+  offline catalog verification passed.
+- No schema, dependency, real user record, exercise prescription, or plan changed.
+  Next: review exercise-specific suitability and dosage evidence before opening
+  selection; the availability options remain informational.
+
 ## Current Checkpoint — PostgreSQL ER Diagram
 
 - Generated a dark, standalone SVG from the current SQLAlchemy metadata at

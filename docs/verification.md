@@ -497,3 +497,14 @@ verification passed. A synthetic disposable browser session verified
 profile-first onboarding and the empty readiness state; its
 temporary tab, server, account, and database were removed. No plan, workout,
 schema, dependency, or configured user record changed.
+
+## Recovery-spaced day options in readiness — 2026-11-08
+
+After reading all 22 project-owned Markdown files, connected the existing plain
+pair service to the private readiness page. Targeted tests covered a valid pair,
+adjacent-only availability, and two-user/query-owner isolation. All 219 disposable
+PostgreSQL checks passed, none skipped, with migration round trips and owned
+cluster cleanup. A synthetic browser session verified the expandable pair list;
+its temporary account, tab, server, and database were removed. `pip check` and
+offline catalog verification passed. No schedule was
+chosen, no workout was created, and no schema or dependency changed.
