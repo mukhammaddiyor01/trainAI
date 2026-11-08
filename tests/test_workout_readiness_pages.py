@@ -56,9 +56,17 @@ class WorkoutReadinessPageTests(unittest.TestCase):
             saved = client.get("/workout-readiness")
             for phrase in ("1 possible two-day pair", "Equipment available",
                            "Required equipment unavailable", "No limitations reported",
-                           "No workout has been created", "Prescription review pending"):
+                           "No workout has been created", "Prescription review pending",
+                           "Monday and Wednesday", "not scheduled workouts"):
                 self.assertIn(phrase, saved.text)
             self.assertEqual(saved.headers["cache-control"], "no-store")
+            self.assertEqual(client.put("/api/training-preferences", json={
+                "experience": "beginner", "activity": "mostly_seated", "equipment": [],
+                "weekdays": [1, 2], "session_minutes": 30,
+            }, headers=headers).status_code, 200)
+            adjacent = client.get("/workout-readiness")
+            self.assertIn("No two-day pair has a rest day", adjacent.text)
+            self.assertNotIn("See possible day pairs", adjacent.text)
 
     def test_query_owner_spoofing_cannot_show_another_answer(self):
         with TestClient(create_app(), base_url="http://127.0.0.1") as first:
@@ -69,7 +77,15 @@ class WorkoutReadinessPageTests(unittest.TestCase):
                 self.assertEqual(first.put("/api/movement-limitations", json={
                     "status": "needs_adaptation",
                 }, headers=first_headers).status_code, 200)
+                for client, headers, days in ((first, first_headers, [1, 3]),
+                                              (second, second_headers, [2, 4])):
+                    self.assertEqual(client.put("/api/training-preferences", json={
+                        "experience": "beginner", "activity": "mostly_seated", "equipment": [],
+                        "weekdays": days, "session_minutes": 30,
+                    }, headers=headers).status_code, 200)
                 first_id = first.get("/auth/me").json()["user_id"]
                 page = second.get("/workout-readiness", params={"user_id": first_id})
                 self.assertIn("Add your answer", page.text)
                 self.assertNotIn("Adapted activity needed", page.text)
+                self.assertIn("Tuesday and Thursday", page.text)
+                self.assertNotIn("Monday and Wednesday", page.text)

@@ -18,7 +18,17 @@
       <dl>
         <div><dt>Training choices</dt><dd>{% if preferences %}Saved. <a href="/training-preferences">Edit choices</a>{% else %}Not saved. <a href="/training-preferences">Add training choices</a>{% endif %}</dd></div>
         <div><dt>Movement answer</dt><dd>{% if not limitations %}Not saved. <a href="/movement-limitations">Add your answer</a>{% elif limitations.status == 'unsure' %}Not sure yet. <a href="/movement-limitations">Review answer</a>{% elif limitations.status == 'needs_adaptation' %}Adapted activity needed. <a href="/movement-limitations">Review answer</a>{% else %}No limitations reported. <a href="/movement-limitations">Review answer</a>{% endif %}</dd></div>
-        <div><dt>Day spacing</dt><dd>{% if pair_count is none %}Add available weekdays first.{% elif pair_count == 0 %}No two-day pair has a rest day between it in your saved availability.{% else %}{{ pair_count }} possible two-day {% if pair_count == 1 %}pair{% else %}pairs{% endif %} with a rest day between them. No pair has been selected.{% endif %}</dd></div>
+        <div><dt>Day spacing</dt><dd>
+          {% if day_pairs is none %}Add available weekdays first.
+          {% elif not day_pairs %}No two-day pair has a rest day between it in your saved availability.
+          {% else %}{{ day_pairs|length }} possible two-day {% if day_pairs|length == 1 %}pair{% else %}pairs{% endif %} with a rest day between them. No pair has been selected.
+          <details class="readiness-options">
+            <summary>See possible day pairs</summary>
+            <ul>{% for first, second in day_pairs %}<li>{{ weekday_names[first - 1] }} and {{ weekday_names[second - 1] }}</li>{% endfor %}</ul>
+            <p>These are spacing options from your availability, not scheduled workouts.</p>
+          </details>
+          {% endif %}
+        </dd></div>
         <div><dt>Exercise review</dt><dd>Pending for every catalog movement. No workout has been created.</dd></div>
       </dl>
     </section>

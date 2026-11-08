@@ -145,13 +145,14 @@ async def workout_readiness_page(request: Request):
                 exercises, exercise.id, preferences, limitations,
             ),
         } for exercise in exercises)
-        pair_count = len(strength_day_pairs(preferences)) if preferences is not None else None
+        day_pairs = strength_day_pairs(preferences) if preferences is not None else None
     except (DatabaseConfigurationError, SQLAlchemyError, InvalidCatalog):
         return templates.TemplateResponse(request=request, name="account.html", status_code=503,
                                           context={"identity": None})
     return templates.TemplateResponse(request=request, name="workout-readiness.html", context={
         "preferences": preferences, "limitations": limitations, "rows": rows,
-        "pair_count": pair_count,
+        "day_pairs": day_pairs,
+        "weekday_names": ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
     })
 
 
