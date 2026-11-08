@@ -113,3 +113,11 @@ The exact offset/floor/BMI bounds are authored product scope, not clinical
 recommendations. Proposal storage does not establish nutritional adequacy,
 predict a completion date, or select foods/workouts. No real user records belong
 in tests, logs, source control, or external services.
+
+## Creation-time display correction — 2026-11-08
+
+PostgreSQL may return `created_at` in its session time zone. The plain proposal
+value now converts that aware timestamp to UTC before API serialization or
+private page rendering. The existing `UTC` page label therefore describes the
+displayed time correctly. A +09:00 regression and an API-to-page comparison
+passed; proposal ordering and saved instants were not changed.

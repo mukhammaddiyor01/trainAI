@@ -77,5 +77,9 @@ The complete disposable PostgreSQL suite passed 196 tests with migration round
 trips. It covers stale sources and baselines, concurrent retries, two-owner
 isolation, strict input, and the private page states. Configured schema revision
 0008 was applied after confirming 0007 and no target table; no user rows were
-inspected or changed by the migration. Browser interaction beyond the anonymous
-target-page redirect has not yet been manually exercised in this increment.
+inspected or changed by the migration. Browser interaction in this original
+increment covered only the anonymous redirect. A later disposable synthetic
+browser flow completed preview, pending save, explicit approval, reload, and
+active target history. It found a proposal creation-time UTC label error,
+fixed at the plain persistence boundary; see [verification](verification.md).
+No real account or target was used.

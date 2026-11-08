@@ -4,6 +4,28 @@ Last updated: 2026-11-08 (Asia/Seoul).
 The last implementation continuation read all 22 project-owned Markdown files
 before changing application code.
 
+## Current Checkpoint — Calorie Approval Browser Verification and UTC Fix
+
+- Resumed from clean synchronized `develop` after reading all 22 project-owned
+  Markdown files. A disposable synthetic browser flow completed registration,
+  profile, gain goal, energy inputs, explicit preview, pending save, approval,
+  and active version history. Approval produced version 1 and no meal/workout plan.
+- The flow exposed a timestamp-label bug: a proposal creation time displayed
+  nine hours apart from approval time while both private pages appended `UTC`.
+  The mapping had passed through PostgreSQL's zone-aware value unchanged. Proposal
+  values now normalize to UTC at the persistence-to-plain boundary (9ab15c5).
+  Focused storage/page tests cover an explicit +09:00 value and the rendered
+  UTC label. All 220 disposable PostgreSQL tests passed with migration round
+  trips and owned-cluster cleanup; `pip check` and offline catalogs passed.
+- Reviewed current ACSM, NHS, and CDC sources for exercise prescriptions. The
+  NHS chair-supported mini-squat differs from the existing bodyweight squat
+  catalog ID; no dose or suitability was transferred. The exact-source decision
+  is recorded in docs/exercise-readiness.md (24dcb8d). All six exercises remain
+  blocked from automatic selection.
+- No schema, dependency, configured user record, active real target, workout,
+  or meal plan changed. Next: author exact-ID exercise-specific evidence and
+  application rules without treating self-report as clinical clearance.
+
 ## Current Checkpoint — Visible Strength-Day Options
 
 - Continued from clean synchronized `develop` after reading all 22 project-owned

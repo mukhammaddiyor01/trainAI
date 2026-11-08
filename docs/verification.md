@@ -508,3 +508,23 @@ cluster cleanup. A synthetic browser session verified the expandable pair list;
 its temporary account, tab, server, and database were removed. `pip check` and
 offline catalog verification passed. No schedule was
 chosen, no workout was created, and no schema or dependency changed.
+
+## Approval browser flow and proposal UTC correction — 2026-11-08
+
+A synthetic account in the disposable PostgreSQL browser server completed
+profile, gain goal, adult energy choices, an explicit 100-kcal preview, pending
+proposal save, approval as target version 1, and active history navigation.
+Reload showed the approved state without an approval control. The temporary
+account, tab, server, and cluster were removed; the configured database was
+not accessed.
+
+The browser showed proposal creation at 19:04 labelled UTC while approval
+history showed 10:04 UTC. The nine-hour difference was consistent with a +09:00
+session offset; the proposal mapper had not converted the aware database value.
+Normalizing the plain proposal timestamp to UTC fixed the label
+for detail and list pages and the API value. A fixed-offset storage regression
+and an API-to-rendered-page UTC comparison passed. All 220 disposable PostgreSQL
+checks passed, none skipped, with migration round trips and owned-cluster cleanup.
+`pip check` and offline catalog verification passed. No schema or dependency
+changed. An additional source-mapping review kept every exercise unreviewed for
+automatic selection; see docs/exercise-readiness.md.

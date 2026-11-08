@@ -92,7 +92,7 @@ activate it. `/calorie-targets` shows the latest 20 approved versions. A preview
 or saved pending proposal does not activate a target. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 219 checks, including PostgreSQL integration, use the disposable runner:
+For all 220 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
