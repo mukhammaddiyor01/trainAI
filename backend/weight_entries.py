@@ -11,6 +11,7 @@ from backend.database import session_scope
 from backend.models import Profile, WeightEntry
 from backend.services.profiles import validate_profile
 from backend.services.weight_entries import InvalidWeightEntry, WeightEntryDetails, validate_weight_entry
+from backend.services.weight_review import WeeklyWeightSummary, summarize_weight_weeks
 
 
 MAX_RECENT_WEIGHT_ENTRIES = 30
@@ -55,3 +56,29 @@ def list_recent_weight_entries(user_id: UUID) -> tuple[WeightEntryDetails, ...]:
                                .order_by(WeightEntry.local_date.desc())
                                .limit(MAX_RECENT_WEIGHT_ENTRIES)).all()
         return tuple(WeightEntryDetails(row.local_date, row.weight_kg) for row in rows)
+
+
+def read_weight_review(
+    user_id: UUID, now_utc: datetime | None = None,
+) -> tuple[WeeklyWeightSummary, ...] | None:
+    """Read one owner's five local weeks from a bounded, consistent SQL snapshot."""
+    if now_utc is None:
+        now_utc = datetime.now(timezone.utc)
+    if type(now_utc) is not datetime or now_utc.utcoffset() != timedelta(0):
+        raise ValueError("An aware UTC clock value is required.")
+    with session_scope() as session:
+        profile_row = session.scalar(select(Profile).where(Profile.user_id == user_id))
+        if profile_row is None:
+            return None
+        profile = validate_profile(profile_row.age, profile_row.height_cm,
+                                   profile_row.weight_kg, profile_row.timezone)
+        today = now_utc.astimezone(ZoneInfo(profile.timezone)).date()
+        current_monday = today - timedelta(days=today.weekday())
+        oldest_monday = current_monday - timedelta(weeks=4)
+        rows = session.scalars(select(WeightEntry).where(
+            WeightEntry.user_id == user_id,
+            WeightEntry.local_date >= oldest_monday,
+            WeightEntry.local_date <= today,
+        ).order_by(WeightEntry.local_date).limit(35)).all()
+        entries = tuple(WeightEntryDetails(row.local_date, row.weight_kg) for row in rows)
+        return summarize_weight_weeks(today, entries)
