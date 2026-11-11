@@ -23,10 +23,15 @@ automatic update to the basic profile.
   and version rules. A single entry cannot establish a trend, adherence,
   fat/muscle change, or a reason to revise calories.
 
-## Implementation order
+## Implemented flow
 
-First add a plain immutable validated value. Then add an owner-keyed PostgreSQL
-table and explicit migration, guarded bounded API, and private responsive form
-in separate verified increments. Storage and HTTP must derive owner identity
-from the session, reject forged owner fields, keep list reads bounded, and avoid
-logging measurements. Tests use a disposable database and synthetic accounts.
+Migration 0010 adds `weight_entries` with a composite owner/date primary key,
+bounded kg check, and cascading profile foreign key. `PUT /api/weight-entries`
+validates a strict two-field JSON object up to 2048 bytes, requires a signed-in
+account and same Origin, and inserts or corrects the selected date. The server
+uses the saved profile time zone to reject future dates. `GET /api/weight-entries`
+returns at most 30 owner entries, newest date first, with only date and kg.
+Both endpoints reject query parameters. The responsive `/weight-log` page is
+private, profile-first, and shows the same bounded history. It uses local assets
+and the existing private response policies. Tests use synthetic accounts in a
+disposable PostgreSQL cluster; measurements are not logged.

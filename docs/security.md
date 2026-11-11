@@ -284,3 +284,16 @@ select another owner. Anonymous users are redirected, users without profiles go
 through profile-first onboarding, and the page inherits no-store and CSP response
 headers. It displays no diagnosis, raw account identifier, or generated exercise
 prescription. Two-user, anonymous, and query-spoofing checks passed.
+
+## Daily weight observations — 2026-11-11
+
+The owner comes only from the authenticated session. `PUT /api/weight-entries`
+requires exact Origin and a strict JSON object no larger than 2048 bytes.
+Unknown owner fields, duplicate keys, invalid dates, future owner-local dates,
+nonfinite/out-of-range weights, and query parameters fail before mutation.
+`GET` and the private page are owner-scoped and limited to 30 entries; the API
+returns only the date and kg value. The existing request, response, rate, CSP,
+and no-store limits apply. The database enforces one entry per owner/date and
+the kg bound. Tests cover anonymous and two-user isolation, forged input, and
+invalid-update preservation. OAuth remains deferred; the limiter remains
+single-process.

@@ -141,3 +141,13 @@ existing profile/training rows, infer an answer, or backfill users. The complete
 model parity. The configured database was at 0008 with no table conflict before
 the additive upgrade; revision 0009 and exactly the new `user_id`/`status`
 columns were confirmed afterward through schema metadata only.
+
+## Weight-entry migration — 2026-11-11
+
+Migration 0010 creates `weight_entries` with a composite owner/local-date primary
+key, bounded kg check, timestamp columns, and a cascading profile foreign key.
+It adds no defaults for existing users and changes no existing row. All 233
+disposable PostgreSQL checks passed with metadata parity and migration round
+trips. The configured database was checked at 0009 with no conflicting table,
+then upgraded to 0010. Revision and new columns were verified using schema
+metadata only; no user rows were read.

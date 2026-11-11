@@ -47,7 +47,10 @@ An [exercise readiness gate](docs/exercise-readiness.md) keeps all six metadata
 records out of automatic selection until suitability and dosage are reviewed.
 The private `/workout-readiness` page shows saved-input status and catalog
 equipment checks and expands recovery-spaced day options without creating a workout.
-Fitness planning, logging, AI inference, training,
+The private [daily weight log](docs/weight-logging.md) records an explicit date
+and kg value in the saved profile time zone, with correction by date and a
+bounded 30-entry history. It does not update the profile or calorie target.
+Fitness planning, other daily logs, weekly review, AI inference, training,
 and camera tracking are not implemented yet.
 
 ## Local setup
@@ -77,7 +80,8 @@ See [database setup](docs/database.md) before running explicit migrations:
 
 Open `/register` to create your own account, `/login` to sign in, and `/account`
 to view your private account. Open `/profile` to save your basic details, then
-`/goal` to record your weight goal. Use `/training-preferences` to save experience,
+`/goal` to record your weight goal. Use `/weight-log` to record and correct dated
+weight observations. Use `/training-preferences` to save experience,
 activity, available equipment, weekdays, and session duration. Use
 `/movement-limitations` to report whether activity needs adaptation. Open
 `/workout-readiness` to review what is saved and what still blocks a workout.
@@ -92,7 +96,7 @@ activate it. `/calorie-targets` shows the latest 20 approved versions. A preview
 or saved pending proposal does not activate a target. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 220 checks, including PostgreSQL integration, use the disposable runner:
+For all 233 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py

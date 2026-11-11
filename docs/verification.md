@@ -528,3 +528,18 @@ checks passed, none skipped, with migration round trips and owned-cluster cleanu
 `pip check` and offline catalog verification passed. No schema or dependency
 changed. An additional source-mapping review kept every exercise unreviewed for
 automatic selection; see docs/exercise-readiness.md.
+
+## Private daily weight log — 2026-11-11
+
+Read all 22 existing project-owned Markdown files before implementation.
+Committed policy, pure validation, schema, storage, API, and page separately.
+Focused checks covered profile-first access, owner-local date boundaries,
+correction by date, 30-row read limit, database constraints, mass assignment,
+Origin, ambiguous/oversized JSON, owner isolation, and rendered empty/saved
+states. The full disposable PostgreSQL runner passed 233 tests with no skips,
+including migration downgrade/upgrade and owned-cluster cleanup. `pip check`
+and offline catalog verification passed. The configured database revision 0009
+and absent table were checked, additive migration 0010 was applied, and revision
+and new table columns were verified through schema metadata only. No real user
+rows or secrets were inspected. A manual browser flow was not repeated for this
+increment; page behavior was covered by TestClient and local asset checks.

@@ -1,8 +1,28 @@
 # TrainAI — Completed Tasks and Session Handoff
 
-Last updated: 2026-11-08 (Asia/Seoul).
-The last implementation continuation read all 22 project-owned Markdown files
+Last updated: 2026-11-11 (Asia/Seoul).
+The last implementation continuation read all 22 existing project-owned Markdown files
 before changing application code.
+
+## Current Checkpoint — Private Daily Weight Logging
+
+- Continued from clean synchronized `develop` after reading every existing
+  project-owned Markdown file. Defined explicit owner-local date and kg rules
+  (5d3b219), added plain validation (300d366), PostgreSQL table/migration 0010
+  (2f80aa2), owner-scoped storage (6ff70ef), guarded bounded API (4c317c6),
+  and responsive private page (e11eba3) as separate verified increments.
+- A saved observation can be corrected by date; the 30 newest dates are shown.
+  It never updates the profile, goal, proposal, or target. Anonymous access,
+  profile-first flow, two-user isolation, forged ownership, malformed and
+  oversized requests, date-zone boundaries, database constraints, and page
+  rendering were checked. All 233 disposable PostgreSQL tests passed with
+  migration round trips. `pip check` and offline catalog checks passed.
+- Configured database was confirmed at 0009 with no conflicting table, then
+  upgraded additively to 0010. Revision and new table columns were verified
+  through schema metadata only. No real user rows or secrets were read.
+- Next: build a bounded owner-scoped weekly weight review from explicit entries,
+  keeping missing days unknown and distinguishing observations from advice.
+  Exercise prescription and food composition reviews still block automatic plans.
 
 ## Current Checkpoint — Calorie Approval Browser Verification and UTC Fix
 
