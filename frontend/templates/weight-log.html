@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your weight log — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/weight-log.css').path }}">
+  <script src="{{ url_for('static', path='/js/weight-log.js').path }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Weight log navigation"><a href="/profile">Your profile</a><a href="/account">Your account</a></nav></header>
+  <main id="main" class="wrap weight-page">
+    <p class="eyebrow">Your daily record</p>
+    <h1>Keep a simple<br>weight log.</h1>
+    <p class="lead">Record an observation for a calendar date in your saved time zone. You can correct an entry by choosing the same date again.</p>
+    <div class="weight-layout">
+      <section class="auth-panel" aria-labelledby="entry-title">
+        <h2 id="entry-title">Record weight</h2>
+        {% if saved %}<p class="success-message" role="status">Observation saved.</p>{% endif %}
+        <p class="weight-context">Today is {{ today.isoformat() }} in {{ timezone }}.</p>
+        <form id="weight-form" action="/api/weight-entries" method="post">
+          <fieldset>
+            <legend class="visually-hidden">Weight observation</legend>
+            <label for="local_date">Local date</label>
+            <input id="local_date" name="local_date" type="date" max="{{ today.isoformat() }}" value="{{ today.isoformat() }}" required>
+            <label for="weight_kg">Weight (kg)</label>
+            <input id="weight_kg" name="weight_kg" type="number" min="20" max="500" step="any" inputmode="decimal" required>
+            <p class="field-help">Choose the date you measured. Future dates are unavailable.</p>
+            <button class="button" type="submit">Save observation</button>
+          </fieldset>
+          <p id="weight-message" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+        <noscript><p>Enable JavaScript to save an observation.</p></noscript>
+      </section>
+      <section class="weight-history" aria-labelledby="history-title">
+        <div class="history-heading"><div><p class="eyebrow">Private history</p><h2 id="history-title">Recent entries</h2></div><span>Last 30 dates</span></div>
+        {% if entries %}
+        <ol class="weight-list">
+          {% for entry in entries %}
+          <li><time datetime="{{ entry.local_date.isoformat() }}">{{ entry.local_date.isoformat() }}</time><strong>{{ entry.weight_kg }} kg</strong><button type="button" class="edit-entry" data-date="{{ entry.local_date.isoformat() }}" data-weight="{{ entry.weight_kg }}" aria-label="Edit weight for {{ entry.local_date.isoformat() }}">Edit</button></li>
+          {% endfor %}
+        </ol>
+        {% else %}
+        <div class="weight-empty"><span aria-hidden="true">＋</span><h3>No observations yet.</h3><p>Your saved entries will appear here, newest date first.</p></div>
+        {% endif %}
+      </section>
+    </div>
+    <p class="weight-scope">This log records measurements only. It does not change your profile weight, goal, or calorie targets. A single entry does not establish a trend.</p>
+  </main>
+</body>
+</html>
