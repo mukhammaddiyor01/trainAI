@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Weekly weight review — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/weight-review.css').path }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Weight review navigation"><a href="/weight-log">Weight log</a><a href="/account">Your account</a></nav></header>
+  <main id="main" class="wrap review-page">
+    <h1>What your weight log<br>shows this week.</h1>
+    <p class="lead">A five-week view of your recorded measurements. Each week begins on Monday in your saved time zone.</p>
+    <ol class="review-weeks" aria-label="Five most recent local weeks">
+      {% for week in weeks %}
+      <li class="review-week{% if loop.first %} current-week{% endif %}">
+        <div class="week-dates">
+          <span>{{ 'Current week' if loop.first else 'Previous week' if loop.index == 2 else 'Earlier week' }}</span>
+          <h2><time datetime="{{ week.week_start.isoformat() }}">{{ week.week_start.isoformat() }}</time> <span>to</span> <time datetime="{{ week.week_end.isoformat() }}">{{ week.week_end.isoformat() }}</time></h2>
+        </div>
+        <div class="week-reading">
+          <p>{{ week.observed_dates }} recorded {{ 'date' if week.observed_dates == 1 else 'dates' }}</p>
+          {% if week.observed_dates >= 2 %}
+          <strong>{{ '%+g'|format(week.observed_change_kg) }} kg</strong>
+          <span>Observed change, {{ week.first.local_date.isoformat() }} to {{ week.last.local_date.isoformat() }}</span>
+          {% elif week.observed_dates == 1 %}
+          <strong>{{ week.first.weight_kg }} kg</strong>
+          <span>One observation; no comparison yet.</span>
+          {% else %}
+          <strong>—</strong>
+          <span>No observations recorded for this week.</span>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+    <p class="review-explanation">Unrecorded days are unknown. An observed change is the difference between the first and last recorded dates within one week; it is not a trend or a predicted rate.</p>
+    <p class="review-explanation">This review does not update your profile, goal, calorie target, or plan. <a href="/weight-log">Add or correct a weight observation</a>.</p>
+  </main>
+</body>
+</html>

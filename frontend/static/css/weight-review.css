@@ -1,0 +1,14 @@
+.review-page { max-width: 1050px; padding-block: 58px 80px; }
+.review-page h1 { font-size: clamp(46px, 5vw, 70px); }
+.review-page > .lead { max-width: 62ch; }
+.review-weeks { list-style: none; padding: 0; margin: 42px 0 36px; border-top: 1px solid var(--line); }
+.review-week { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 35px; align-items: center; min-height: 154px; padding: 22px 26px; border-bottom: 1px solid var(--line); }
+.review-week.current-week { background: #e8eddf; border-left: 5px solid var(--lime); padding-left: 21px; }
+.week-dates > span { color: var(--muted); font-size: 13px; }
+.week-dates h2 { font-size: clamp(20px, 2.3vw, 29px); font-weight: 600; letter-spacing: -.04em; margin: 10px 0 0; }
+.week-dates h2 span { font-size: 15px; color: var(--muted); font-weight: 400; letter-spacing: 0; }
+.week-reading { display: grid; gap: 7px; }
+.week-reading p, .week-reading > span { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.week-reading strong { font-size: 27px; font-weight: 600; letter-spacing: -.04em; }
+.review-explanation { max-width: 72ch; color: var(--muted); font-size: 13px; line-height: 1.7; }
+@media (max-width: 700px) { .review-page { padding-block: 38px 60px; } .review-week { grid-template-columns: 1fr; gap: 18px; padding-inline: 18px; } .review-week.current-week { padding-left: 13px; } .week-dates h2 { font-size: 22px; } }
