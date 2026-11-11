@@ -77,6 +77,23 @@ class WeightEntryListResponse(BaseModel):
     items: list[WeightEntryResponse] = Field(max_length=30)
 
 
+class WeeklyWeightResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    week_start: date
+    week_end: date
+    observed_dates: int = Field(ge=0, le=7)
+    first: WeightEntryResponse | None
+    last: WeightEntryResponse | None
+    observed_change_kg: float | None = Field(allow_inf_nan=False)
+
+
+class WeightReviewResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    weeks: list[WeeklyWeightResponse] = Field(min_length=5, max_length=5)
+
+
 class GoalInput(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
 

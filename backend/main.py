@@ -35,6 +35,7 @@ from backend.food_preference_routes import router as food_preference_router
 from backend.training_preference_routes import router as training_preference_router
 from backend.movement_limitation_routes import router as movement_limitation_router
 from backend.weight_entry_routes import router as weight_entry_router
+from backend.weight_review_routes import router as weight_review_router
 from backend.weight_entries import WeightProfileRequired
 from backend.goals import GoalProfileRequired
 from backend.goal_routes import router as goal_router
@@ -118,6 +119,7 @@ def create_app() -> FastAPI:
     app.include_router(training_preference_router)
     app.include_router(movement_limitation_router)
     app.include_router(weight_entry_router)
+    app.include_router(weight_review_router)
     app.include_router(food_preference_router)
     app.include_router(energy_preference_router)
     app.include_router(energy_estimate_router)
