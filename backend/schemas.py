@@ -1,6 +1,6 @@
 """Strict HTTP contracts; secrets never belong in public response models."""
 
-from datetime import datetime
+from datetime import date, datetime
 from uuid import UUID
 from typing import Annotated, Literal
 
@@ -46,6 +46,35 @@ class ProfileInput(BaseModel):
 
 class ProfileResponse(ProfileInput):
     """An explicit four-field response without owner IDs or internal metadata."""
+
+
+class WeightEntryInput(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    local_date: str = Field(min_length=10, max_length=10, pattern=r"^\d{4}-\d{2}-\d{2}$")
+    weight_kg: float = Field(ge=20, le=500, allow_inf_nan=False)
+
+    @field_validator("local_date")
+    @classmethod
+    def valid_calendar_date(cls, value: str) -> str:
+        try:
+            date.fromisoformat(value)
+        except ValueError:
+            raise ValueError("Enter a valid calendar date.") from None
+        return value
+
+
+class WeightEntryResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    local_date: date
+    weight_kg: float = Field(ge=20, le=500, allow_inf_nan=False)
+
+
+class WeightEntryListResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    items: list[WeightEntryResponse] = Field(max_length=30)
 
 
 class GoalInput(BaseModel):
