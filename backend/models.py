@@ -1,9 +1,9 @@
 """Authentication records; fitness records arrive with their features."""
 
-from datetime import datetime
+from datetime import date, datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import ARRAY, CheckConstraint, DateTime, ForeignKey, ForeignKeyConstraint, Float, Index, Integer, SmallInteger, String, Text, UniqueConstraint, func, text
+from sqlalchemy import ARRAY, CheckConstraint, Date, DateTime, ForeignKey, ForeignKeyConstraint, Float, Index, Integer, SmallInteger, String, Text, UniqueConstraint, func, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.database import Base
@@ -47,6 +47,19 @@ class Profile(Base):
     height_cm: Mapped[float] = mapped_column(Float)
     weight_kg: Mapped[float] = mapped_column(Float)
     timezone: Mapped[str] = mapped_column(String(64))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class WeightEntry(Base):
+    __tablename__ = "weight_entries"
+    __table_args__ = (
+        CheckConstraint("weight_kg BETWEEN 20 AND 500", name="ck_weight_entries_weight"),
+    )
+
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("profiles.user_id", ondelete="CASCADE"), primary_key=True)
+    local_date: Mapped[date] = mapped_column(Date, primary_key=True)
+    weight_kg: Mapped[float] = mapped_column(Float)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
