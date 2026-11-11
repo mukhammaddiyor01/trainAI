@@ -543,3 +543,21 @@ and absent table were checked, additive migration 0010 was applied, and revision
 and new table columns were verified through schema metadata only. No real user
 rows or secrets were inspected. A manual browser flow was not repeated for this
 increment; page behavior was covered by TestClient and local asset checks.
+
+## Five-week weight observation review — 2026-11-11
+
+Read all 23 project-owned Markdown files before implementation. Boundary,
+plain service, owner-scoped storage, guarded GET API, and private responsive
+page were tested and committed separately. The current Monday week plus four
+prior weeks are read by a 35-date bound; missing dates remain unknown and fewer
+than two dates show no difference. Focused checks covered calendar/year and
+time-zone boundaries, full-window reads beyond the 30-entry log list, correction,
+owner isolation, anonymous/profile-first behavior, strict query rejection,
+allowlisted responses, and rendered empty/single/two-date states.
+
+All 242 disposable PostgreSQL tests passed, none skipped, with migration round
+trips and owned-cluster cleanup. `pip check` and offline catalogs passed. The
+schema and configured database remained at 0010; no real user rows were read.
+The dark ER diagram was regenerated to show the 11 current model tables and
+validated as XML with the expected revision/card count. A manual browser flow
+was not repeated; TestClient covered page content and local assets.

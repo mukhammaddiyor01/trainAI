@@ -17,3 +17,13 @@ Workout and meal adherence cannot be inferred from weight observations.
 
 Implement plain calculation, owner-scoped bounded read, guarded API, and private
 view as separate verified increments.
+
+## Implemented flow
+
+`GET /api/weight-review` derives the owner from the session, rejects query
+parameters, and returns exactly five bounded, allowlisted weekly summaries.
+The storage read uses the saved profile zone and explicit local-date bounds in
+one transaction. `/weight-review` requires sign-in and a saved profile, shows
+truthful empty and single-observation states, and links back to the daily log.
+There is no review write, plan proposal, or new table. Synthetic two-user,
+calendar-boundary, 35-date, API, and page checks passed in disposable PostgreSQL.

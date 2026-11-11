@@ -46,7 +46,7 @@ training and food preferences are implemented.
 The profile currently includes age, height, weight, and an explicit IANA time zone.
 Strict input/response schemas, shared authentication/origin guards, ownership-scoped
 profile operations, request/rate/resource limits, and safe errors are verified.
-All 233 working-tree checks passed with isolated PostgreSQL on 2026-11-11.
+All 242 working-tree checks passed with isolated PostgreSQL on 2026-11-11.
 Browser profile and training-preference flows were verified using synthetic data; the configured real database was upgraded
 explicitly to migration 0010. See docs/verification.md, docs/profiles.md, and
 docs/security.md and docs/goals.md. Goals keep a server-selected starting-weight
@@ -97,9 +97,9 @@ required before food selection. The configured database is at 0010.
 Unsure allergy status and unmapped names must not silently permit food selection.
 The user selected an 8-character password minimum, shared
 across service, schema, and rendered forms; the earlier mismatch is resolved.
-Daily weight observations are now available through an owner-scoped log; they
-do not change profile, goal, or target values. No generated plans, other daily
-logs, weekly review, or AI features are active. An approved calorie
+Daily weight observations and a read-only five-week weight review are available.
+They do not change profile, goal, or target values. No generated plans, other
+daily logs, broader weekly review, or AI features are active. An approved calorie
 target is an experimental daily estimate, not a complete plan.
 OAuth is explicitly deferred by the user; keep local authentication for now.
 

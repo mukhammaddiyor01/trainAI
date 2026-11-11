@@ -297,3 +297,14 @@ and no-store limits apply. The database enforces one entry per owner/date and
 the kg bound. Tests cover anonymous and two-user isolation, forged input, and
 invalid-update preservation. OAuth remains deferred; the limiter remains
 single-process.
+
+## Read-only weekly weight review — 2026-11-11
+
+The five-week read uses only the authenticated session owner and the saved
+profile zone. SQL filters owner and a bounded 35-date window; no browser-supplied
+owner or week is accepted. The GET API rejects all query parameters and returns
+only five allowlisted summaries, each with at most two dated observations and
+their difference. The private page inherits no-store, CSP, and existing request,
+response, and rate limits. Tests cover anonymous access, profile-first behavior,
+two-user isolation, query-owner spoofing, and empty/single/two-date states.
+No endpoint writes a review or changes a plan.

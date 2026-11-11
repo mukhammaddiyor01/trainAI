@@ -1,8 +1,29 @@
 # TrainAI — Completed Tasks and Session Handoff
 
 Last updated: 2026-11-11 (Asia/Seoul).
-The last implementation continuation read all 22 existing project-owned Markdown files
+The last implementation continuation read all 23 existing project-owned Markdown files
 before changing application code.
+
+## Current Checkpoint — Five-Week Weight Observation Review
+
+- Continued from clean, synchronized `develop` after reading all 23 existing
+  project-owned Markdown files. Recorded the read-only review boundary
+  (92502f0), plain Monday-week summaries (4800b2a), owner-scoped five-week
+  database read (cb397ae), guarded allowlisted GET API (ad1a07f), and private
+  responsive page (a8073a2) in small verified commits.
+- The current week and four prior weeks show recorded-date counts. Two dated
+  observations permit only their observed difference; one or zero observations
+  show no change. Missing dates remain unknown. No profile, goal, calorie
+  target, or plan is revised. Read bounds cover up to 35 dates so the earlier
+  30-entry log limit cannot truncate the fifth week.
+- Focused service, storage, API, and page tests passed. All 242 disposable
+  PostgreSQL checks passed with migration round trips and cleanup. `pip check`
+  and offline catalog checks passed. The ER diagram was corrected to revision
+  0010 and 11 tables (aec6f1e), with XML/table-count checks.
+- No schema migration, configured user-record read, dependency, or automatic
+  recommendation was introduced in this continuation. Next: define a broader
+  weekly review only as additional explicit daily logs become available;
+  preserve unknowns and require user approval for any later plan revision.
 
 ## Current Checkpoint — Private Daily Weight Logging
 
