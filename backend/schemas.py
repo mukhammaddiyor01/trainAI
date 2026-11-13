@@ -77,6 +77,35 @@ class WeightEntryListResponse(BaseModel):
     items: list[WeightEntryResponse] = Field(max_length=30)
 
 
+class SleepEntryInput(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    local_date: str = Field(min_length=10, max_length=10, pattern=r"^\d{4}-\d{2}-\d{2}$")
+    sleep_minutes: int = Field(ge=0, le=1440)
+
+    @field_validator("local_date")
+    @classmethod
+    def valid_calendar_date(cls, value: str) -> str:
+        try:
+            date.fromisoformat(value)
+        except ValueError:
+            raise ValueError("Enter a valid calendar date.") from None
+        return value
+
+
+class SleepEntryResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    local_date: date
+    sleep_minutes: int = Field(ge=0, le=1440)
+
+
+class SleepEntryListResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
+
+    items: list[SleepEntryResponse] = Field(max_length=30)
+
+
 class WeeklyWeightResponse(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
 

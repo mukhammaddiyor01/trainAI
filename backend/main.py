@@ -24,6 +24,7 @@ from backend.services.goals import InvalidGoal
 from backend.services.training_preferences import InvalidTrainingPreferences
 from backend.services.movement_limitations import InvalidMovementLimitations
 from backend.services.weight_entries import InvalidWeightEntry
+from backend.services.sleep_entries import InvalidSleepEntry
 from backend.services.food_preferences import InvalidFoodPreferences
 from backend.services.energy_preferences import InvalidEnergyPreferences
 from backend.energy_preference_routes import router as energy_preference_router
@@ -37,6 +38,8 @@ from backend.movement_limitation_routes import router as movement_limitation_rou
 from backend.weight_entry_routes import router as weight_entry_router
 from backend.weight_review_routes import router as weight_review_router
 from backend.weight_entries import WeightProfileRequired
+from backend.sleep_entries import SleepProfileRequired
+from backend.sleep_entry_routes import router as sleep_entry_router
 from backend.goals import GoalProfileRequired
 from backend.goal_routes import router as goal_router
 from backend.rate_limits import AttemptLimiter
@@ -65,11 +68,11 @@ def create_app() -> FastAPI:
         status = 422
         if isinstance(error, InvalidCredentials):
             status = 401
-        elif isinstance(error, (UsernameUnavailable, GoalProfileRequired, WeightProfileRequired)):
+        elif isinstance(error, (UsernameUnavailable, GoalProfileRequired, WeightProfileRequired, SleepProfileRequired)):
             status = 409
         return JSONResponse({"detail": str(error)}, status_code=status)
 
-    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable, InvalidProfile, InvalidGoal, GoalProfileRequired, WeightProfileRequired, InvalidTrainingPreferences, InvalidMovementLimitations, InvalidWeightEntry, InvalidFoodPreferences, InvalidEnergyPreferences]:
+    for error_type in [InvalidAccountInput, InvalidCredentials, UsernameUnavailable, InvalidProfile, InvalidGoal, GoalProfileRequired, WeightProfileRequired, SleepProfileRequired, InvalidTrainingPreferences, InvalidMovementLimitations, InvalidWeightEntry, InvalidSleepEntry, InvalidFoodPreferences, InvalidEnergyPreferences]:
         app.add_exception_handler(error_type, account_error)
 
     async def persistence_error(request, error):
@@ -119,6 +122,7 @@ def create_app() -> FastAPI:
     app.include_router(training_preference_router)
     app.include_router(movement_limitation_router)
     app.include_router(weight_entry_router)
+    app.include_router(sleep_entry_router)
     app.include_router(weight_review_router)
     app.include_router(food_preference_router)
     app.include_router(energy_preference_router)
