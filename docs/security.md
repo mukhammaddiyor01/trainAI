@@ -308,3 +308,16 @@ their difference. The private page inherits no-store, CSP, and existing request,
 response, and rate limits. Tests cover anonymous access, profile-first behavior,
 two-user isolation, query-owner spoofing, and empty/single/two-date states.
 No endpoint writes a review or changes a plan.
+
+## Daily sleep duration observations — 2026-11-13
+
+The owner comes from the session, never the request body or query. The PUT API
+requires exact Origin and a strict two-field JSON object no larger than 2048
+bytes. Invalid/future owner-local dates, coercible/noninteger/out-of-range
+minutes, duplicate JSON keys, unknown fields, query parameters, and oversized
+bodies fail before mutation. The GET API and private page return only the
+owner's newest 30 dates; responses expose date and minutes, not account or
+profile fields. PostgreSQL constrains owner/date uniqueness and duration.
+Existing no-store, CSP, rate, request, and response controls apply. Synthetic
+tests cover two-owner isolation, anonymous access, profile-first flow, invalid
+update preservation, and zero-versus-missing behavior. OAuth remains deferred.

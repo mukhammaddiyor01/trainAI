@@ -151,3 +151,13 @@ disposable PostgreSQL checks passed with metadata parity and migration round
 trips. The configured database was checked at 0009 with no conflicting table,
 then upgraded to 0010. Revision and new columns were verified using schema
 metadata only; no user rows were read.
+
+## Sleep-entry migration — 2026-11-13
+
+Migration 0011 creates `sleep_entries` with a composite owner/local-date primary
+key, 0–1440 whole-minute check, timestamps, and a cascading profile foreign key.
+It has no default or backfill and changes no existing row. All 254 disposable
+PostgreSQL tests passed with metadata parity and migration round trips. The
+configured database was at 0010 with no conflicting table before the additive
+upgrade; revision 0011 and the five new columns were verified through schema
+metadata only. No real user rows were read.

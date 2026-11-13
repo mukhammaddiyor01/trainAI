@@ -561,3 +561,21 @@ schema and configured database remained at 0010; no real user rows were read.
 The dark ER diagram was regenerated to show the 11 current model tables and
 validated as XML with the expected revision/card count. A manual browser flow
 was not repeated; TestClient covered page content and local assets.
+
+## Daily sleep duration log — 2026-11-13
+
+Read all 24 existing project-owned Markdown files before implementation. The
+boundary, plain validation, PostgreSQL model/migration, owner-scoped storage,
+strict guarded API, and private responsive page were tested and committed in
+separate increments. Focused checks covered 0 and 1440-minute values, missing
+versus zero, owner-local date boundaries, correction, owner isolation, SQL
+constraints/cascade, forged fields and query values, Origin, malformed/duplicate/
+oversized JSON, response allowlisting, and rendered empty/saved states.
+
+All 254 disposable PostgreSQL tests passed, none skipped, with migration round
+trips and owned-cluster cleanup. `pip check` and offline catalogs passed. The
+configured database was verified at 0010 with no sleep table, upgraded additively
+to 0011, and checked through revision/column metadata only. No real user rows or
+secrets were inspected. The ER diagram was regenerated to 12 tables and validated
+as XML. Manual browser interaction was not repeated; TestClient verified the
+private page and local assets.

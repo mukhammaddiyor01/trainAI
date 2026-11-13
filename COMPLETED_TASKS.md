@@ -1,8 +1,29 @@
 # TrainAI — Completed Tasks and Session Handoff
 
-Last updated: 2026-11-11 (Asia/Seoul).
-The last implementation continuation read all 23 existing project-owned Markdown files
+Last updated: 2026-11-13 (Asia/Seoul).
+The last implementation continuation read all 24 existing project-owned Markdown files
 before changing application code.
+
+## Current Checkpoint — Private Daily Sleep Duration Log
+
+- Continued from clean, synchronized `develop` after reading all 24 project-owned
+  Markdown files. Defined a non-diagnostic owner-local sleep duration boundary
+  (77990e5), plain validation (1d9d792), constrained migration 0011 (e9dfda0),
+  owner-scoped storage (6ef5061), guarded API (280ae69), and responsive private
+  page (c2c3bd2) in separate focused commits.
+- One explicit date stores 0–1440 whole minutes, with correction by date and a
+  bounded newest-30 list. Zero is a recorded value; a missing day is unknown.
+  No sleep quality, fatigue, adherence, or plan change is inferred.
+- All 254 disposable PostgreSQL tests passed, including migration round trips,
+  owner isolation, origin/input bounds, and page states. `pip check` and offline
+  catalog verification passed. The ER diagram was updated to 12 tables and
+  revision 0011 (d1169f3), then parsed and counted.
+- Configured database was confirmed at 0010 without `sleep_entries`, then
+  additively upgraded to 0011. Revision and new columns were checked using
+  schema metadata only; no real user rows or secrets were read.
+- Next: add explicit fatigue/difficulty observations or other daily logs, then
+  broaden the weekly review without treating missing data as zero. Exercise
+  prescription and food composition review remain plan-generation blockers.
 
 ## Current Checkpoint — Five-Week Weight Observation Review
 

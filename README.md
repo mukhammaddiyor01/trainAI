@@ -52,7 +52,9 @@ and kg value in the saved profile time zone, with correction by date and a
 bounded 30-entry history. It does not update the profile or calorie target.
 The read-only [weekly weight review](docs/weight-review.md) shows the current
 Monday-based week and four earlier weeks without filling unrecorded dates or
-changing any plan. Fitness planning, other daily logs, broader weekly review,
+changing any plan. A private [sleep log](docs/sleep-logging.md) records explicit
+owner-local dates and whole-minute durations without interpreting sleep quality.
+Fitness planning, other daily logs, broader weekly review,
 AI inference, training, and camera tracking are not implemented yet.
 
 ## Local setup
@@ -84,7 +86,8 @@ Open `/register` to create your own account, `/login` to sign in, and `/account`
 to view your private account. Open `/profile` to save your basic details, then
 `/goal` to record your weight goal. Use `/weight-log` to record and correct dated
 weight observations. Open `/weight-review` to inspect five weeks of recorded
-weight observations. Use `/training-preferences` to save experience, activity,
+weight observations. Use `/sleep-log` to record sleep duration by date. Use
+`/training-preferences` to save experience, activity,
 available equipment, weekdays, and session duration. Use
 `/movement-limitations` to report whether activity needs adaptation. Open
 `/workout-readiness` to review what is saved and what still blocks a workout.
@@ -99,7 +102,7 @@ activate it. `/calorie-targets` shows the latest 20 approved versions. A preview
 or saved pending proposal does not activate a target. Passwords
 must be 8–128 characters. Registration does not automatically sign in. No real user data belongs in test fixtures.
 
-For all 242 checks, including PostgreSQL integration, use the disposable runner:
+For all 254 checks, including PostgreSQL integration, use the disposable runner:
 
 ```bash
 .venv/bin/python scripts/test_postgres.py
