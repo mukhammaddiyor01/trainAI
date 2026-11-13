@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2770" height="1690" viewBox="0 0 2770 1690" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="2770" height="1850" viewBox="0 0 2770 1850" role="img" aria-labelledby="title desc">
 <title id="title">TrainAI PostgreSQL entity relationship model</title>
-<desc id="desc">Eleven current PostgreSQL tables: users, login sessions, profiles, weight entries, goals, movement limitations, training, food, and energy preferences, calorie proposals, and calorie target versions. Lines show foreign-key relationships.</desc>
+<desc id="desc">Twelve current PostgreSQL tables: users, login sessions, profiles, weight and sleep entries, goals, movement limitations, training, food, and energy preferences, calorie proposals, and calorie target versions. Lines show foreign-key relationships.</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9" fill="none" stroke="#80dbaa" stroke-width="1.6"/></marker></defs>
 <style>
 text{font-family:Inter,Arial,sans-serif}
@@ -18,8 +18,8 @@ text{font-family:Inter,Arial,sans-serif}
 <circle cx="2580" cy="-120" r="580" fill="#102419" opacity=".42"/>
 <text x="80" y="88" class="eyebrow">TRAINAI  /  DATA ARCHITECTURE</text>
 <text x="80" y="166" class="headline">PostgreSQL ER model</text>
-<text x="80" y="207" class="subtitle">Current schema · revision 0010 · 11 tables · owner-scoped fitness data</text>
-<g><path d="M630 340 H745" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="650" y="328" class="edge-label">1 : 0..1</text><path d="M355 427 V576 H355 V615" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="376" y="585" class="edge-label">1 : many</text><path d="M745 475 H680 V1130 H630" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="650" y="1108" class="edge-label">1 : many</text><path d="M1020 487 V620" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1039" y="562" class="edge-label">1 : 0..1</text><path d="M935 487 V855 H950 V885" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="954" y="835" class="edge-label">1 : 0..1</text><path d="M1295 337 H1400" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1307" y="324" class="edge-label">1 : 0..1</text><path d="M1295 393 H1350 V725 H1400" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1307" y="709" class="edge-label">1 : 0..1</text><path d="M1295 447 H1327 V1183 H1400" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1340" y="1166" class="edge-label">1 : 0..1</text><path d="M1295 284 H1340 V225 H2370 V240" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1980" y="219" class="edge-label">1 : many</text><path d="M1295 466 H1360 V1020 H2020 V1140 H2095" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1945" y="1008" class="edge-label">1 : many</text><path d="M2370 923 V1060" fill="none" stroke="#c4d878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="2391" y="1013" class="edge-label">1 : 0..1</text></g>
+<text x="80" y="207" class="subtitle">Current schema · revision 0011 · 12 tables · owner-scoped fitness data</text>
+<g><path d="M630 340 H745" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="650" y="328" class="edge-label">1 : 0..1</text><path d="M355 427 V576 H355 V615" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="376" y="585" class="edge-label">1 : many</text><path d="M745 475 H680 V1130 H630" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="650" y="1108" class="edge-label">1 : many</text><path d="M745 500 H700 V1460 H630" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="650" y="1438" class="edge-label">1 : many</text><path d="M1020 487 V620" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1039" y="562" class="edge-label">1 : 0..1</text><path d="M935 487 V855 H950 V885" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="954" y="835" class="edge-label">1 : 0..1</text><path d="M1295 337 H1400" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1307" y="324" class="edge-label">1 : 0..1</text><path d="M1295 393 H1350 V725 H1400" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1307" y="709" class="edge-label">1 : 0..1</text><path d="M1295 447 H1327 V1183 H1400" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1340" y="1166" class="edge-label">1 : 0..1</text><path d="M1295 284 H1340 V225 H2370 V240" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1980" y="219" class="edge-label">1 : many</text><path d="M1295 466 H1360 V1020 H2020 V1140 H2095" fill="none" stroke="#6dcda3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="1945" y="1008" class="edge-label">1 : many</text><path d="M2370 923 V1060" fill="none" stroke="#c4d878" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/><text x="2391" y="1013" class="edge-label">1 : 0..1</text></g>
 <g><g class="card" transform="translate(80 240)">
 <rect width="550" height="218" rx="22" fill="#101a17" stroke="#30443a" stroke-width="2"/>
 <path d="M22 0 H528 Q550 0 550 22 V71 H0 V22 Q0 0 22 0" fill="#17251f"/>
@@ -67,6 +67,25 @@ text{font-family:Inter,Arial,sans-serif}
 <text x="520" y="133" class="type" text-anchor="end">DATE</text>
 <text x="103" y="162" class="field">weight_kg</text>
 <text x="520" y="162" class="type" text-anchor="end">FLOAT</text>
+<text x="103" y="191" class="field">created_at</text>
+<text x="520" y="191" class="type" text-anchor="end">TIMESTAMPTZ</text>
+<text x="103" y="220" class="field">updated_at</text>
+<text x="520" y="220" class="type" text-anchor="end">TIMESTAMPTZ</text>
+</g>
+<g class="card" transform="translate(80 1350)">
+<rect width="550" height="247" rx="22" fill="#101a17" stroke="#30443a" stroke-width="2"/>
+<path d="M22 0 H528 Q550 0 550 22 V71 H0 V22 Q0 0 22 0" fill="#17251f"/>
+<rect x="25" y="22" width="8" height="28" rx="4" fill="#7bdfa9"/>
+<text x="51" y="48" class="table-name">sleep_entries</text>
+<line x1="25" x2="525" y1="71" y2="71" stroke="#30443a"/>
+<text x="25" y="104" class="key" fill="#72d7bd">PK/FK</text>
+<text x="103" y="104" class="field">user_id</text>
+<text x="520" y="104" class="type" text-anchor="end">UUID</text>
+<text x="25" y="133" class="key" fill="#b6f36b">PK</text>
+<text x="103" y="133" class="field">local_date</text>
+<text x="520" y="133" class="type" text-anchor="end">DATE</text>
+<text x="103" y="162" class="field">sleep_minutes</text>
+<text x="520" y="162" class="type" text-anchor="end">SMALLINT</text>
 <text x="103" y="191" class="field">created_at</text>
 <text x="520" y="191" class="type" text-anchor="end">TIMESTAMPTZ</text>
 <text x="103" y="220" class="field">updated_at</text>
@@ -255,11 +274,11 @@ text{font-family:Inter,Arial,sans-serif}
 <text x="103" y="307" class="field">superseded_at</text>
 <text x="520" y="307" class="type" text-anchor="end">TIMESTAMPTZ ?</text>
 </g></g>
-<line x1="80" x2="2690" y1="1570" y2="1570" stroke="#30443a"/>
-<text x="80" y="1615" class="footer">PK  Primary key</text>
-<text x="315" y="1615" class="footer">FK  Foreign key</text>
-<text x="565" y="1615" class="footer">?  Nullable</text>
-<text x="795" y="1615" class="footer">1 : 0..1  Optional one-to-one</text>
-<text x="1210" y="1615" class="footer">1 : many  One-to-many</text>
-<text x="2690" y="1615" class="footer" text-anchor="end">Generated from SQLAlchemy metadata</text>
+<line x1="80" x2="2690" y1="1710" y2="1710" stroke="#30443a"/>
+<text x="80" y="1755" class="footer">PK  Primary key</text>
+<text x="315" y="1755" class="footer">FK  Foreign key</text>
+<text x="565" y="1755" class="footer">?  Nullable</text>
+<text x="795" y="1755" class="footer">1 : 0..1  Optional one-to-one</text>
+<text x="1210" y="1755" class="footer">1 : many  One-to-many</text>
+<text x="2690" y="1755" class="footer" text-anchor="end">Generated from SQLAlchemy metadata</text>
 </svg>

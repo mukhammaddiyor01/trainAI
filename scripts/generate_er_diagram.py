@@ -11,13 +11,14 @@ import backend.models  # noqa: F401 - register model tables
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "docs" / "trainai-postgresql-er.svg"
-WIDTH, HEIGHT = 2770, 1690
+WIDTH, HEIGHT = 2770, 1850
 CARD_WIDTH = 550
 ROW_HEIGHT = 29
 POSITIONS = {
     "users": (80, 240),
     "login_sessions": (80, 615),
     "weight_entries": (80, 1020),
+    "sleep_entries": (80, 1350),
     "profiles": (745, 240),
     "goals": (745, 620),
     "movement_limitations": (745, 885),
@@ -30,6 +31,7 @@ POSITIONS = {
 ACCENTS = {
     "users": "#b6f36b", "login_sessions": "#b6f36b",
     "weight_entries": "#7bdfa9",
+    "sleep_entries": "#7bdfa9",
     "profiles": "#7bdfa9", "goals": "#7bdfa9",
     "movement_limitations": "#7bdfa9",
     "training_preferences": "#77d8ad", "food_preferences": "#77d8ad",
@@ -84,6 +86,7 @@ def render() -> str:
         connector("M630 340 H745", "1 : 0..1", 650, 328),
         connector("M355 427 V576 H355 V615", "1 : many", 376, 585),
         connector("M745 475 H680 V1130 H630", "1 : many", 650, 1108),
+        connector("M745 500 H700 V1460 H630", "1 : many", 650, 1438),
         connector("M1020 487 V620", "1 : 0..1", 1039, 562),
         connector("M935 487 V855 H950 V885", "1 : 0..1", 954, 835),
         connector("M1295 337 H1400", "1 : 0..1", 1307, 324),
@@ -95,7 +98,7 @@ def render() -> str:
     ]
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{WIDTH}" height="{HEIGHT}" viewBox="0 0 {WIDTH} {HEIGHT}" role="img" aria-labelledby="title desc">
 <title id="title">TrainAI PostgreSQL entity relationship model</title>
-<desc id="desc">Eleven current PostgreSQL tables: users, login sessions, profiles, weight entries, goals, movement limitations, training, food, and energy preferences, calorie proposals, and calorie target versions. Lines show foreign-key relationships.</desc>
+<desc id="desc">Twelve current PostgreSQL tables: users, login sessions, profiles, weight and sleep entries, goals, movement limitations, training, food, and energy preferences, calorie proposals, and calorie target versions. Lines show foreign-key relationships.</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9" fill="none" stroke="#80dbaa" stroke-width="1.6"/></marker></defs>
 <style>
 text{{font-family:Inter,Arial,sans-serif}}
@@ -113,16 +116,16 @@ text{{font-family:Inter,Arial,sans-serif}}
 <circle cx="2580" cy="-120" r="580" fill="#102419" opacity=".42"/>
 <text x="80" y="88" class="eyebrow">TRAINAI  /  DATA ARCHITECTURE</text>
 <text x="80" y="166" class="headline">PostgreSQL ER model</text>
-<text x="80" y="207" class="subtitle">Current schema · revision 0010 · 11 tables · owner-scoped fitness data</text>
+<text x="80" y="207" class="subtitle">Current schema · revision 0011 · 12 tables · owner-scoped fitness data</text>
 <g>{''.join(edges)}</g>
 <g>{cards}</g>
-<line x1="80" x2="2690" y1="1570" y2="1570" stroke="#30443a"/>
-<text x="80" y="1615" class="footer">PK  Primary key</text>
-<text x="315" y="1615" class="footer">FK  Foreign key</text>
-<text x="565" y="1615" class="footer">?  Nullable</text>
-<text x="795" y="1615" class="footer">1 : 0..1  Optional one-to-one</text>
-<text x="1210" y="1615" class="footer">1 : many  One-to-many</text>
-<text x="2690" y="1615" class="footer" text-anchor="end">Generated from SQLAlchemy metadata</text>
+<line x1="80" x2="2690" y1="1710" y2="1710" stroke="#30443a"/>
+<text x="80" y="1755" class="footer">PK  Primary key</text>
+<text x="315" y="1755" class="footer">FK  Foreign key</text>
+<text x="565" y="1755" class="footer">?  Nullable</text>
+<text x="795" y="1755" class="footer">1 : 0..1  Optional one-to-one</text>
+<text x="1210" y="1755" class="footer">1 : many  One-to-many</text>
+<text x="2690" y="1755" class="footer" text-anchor="end">Generated from SQLAlchemy metadata</text>
 </svg>'''
 
 
