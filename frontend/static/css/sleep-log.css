@@ -1,0 +1,4 @@
+.sleep-page .duration-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.sleep-page .weight-list button { border: 0; padding: 10px; background: none; color: var(--ink); font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; }
+.sleep-page .weight-list button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (max-width: 420px) { .sleep-page .duration-fields { gap: 10px; } }

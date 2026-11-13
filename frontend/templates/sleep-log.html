@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your sleep log — TrainAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/auth.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/weight-log.css').path }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/sleep-log.css').path }}">
+  <script src="{{ url_for('static', path='/js/sleep-log.js').path }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="wordmark" href="/">Train<span>AI</span><i aria-hidden="true"></i></a><nav aria-label="Sleep log navigation"><a href="/weight-log">Weight log</a><a href="/account">Your account</a></nav></header>
+  <main id="main" class="wrap weight-page sleep-page">
+    <h1>Record time<br>asleep.</h1>
+    <p class="lead">Choose the date you assign to a sleep period and enter its duration. A saved date can be corrected later.</p>
+    <div class="weight-layout">
+      <section class="auth-panel" aria-labelledby="entry-title">
+        <h2 id="entry-title">Sleep duration</h2>
+        {% if saved %}<p class="success-message" role="status">Sleep observation saved.</p>{% endif %}
+        <p class="weight-context">Today is {{ today.isoformat() }} in {{ timezone }}.</p>
+        <form id="sleep-form" action="/api/sleep-entries" method="post">
+          <fieldset>
+            <legend class="visually-hidden">Sleep observation</legend>
+            <label for="local_date">Local date</label>
+            <input id="local_date" name="local_date" type="date" max="{{ today.isoformat() }}" value="{{ today.isoformat() }}" required>
+            <div class="duration-fields">
+              <div><label for="sleep_hours">Hours</label><input id="sleep_hours" name="sleep_hours" type="number" min="0" max="24" step="1" inputmode="numeric" required></div>
+              <div><label for="sleep_minutes">Minutes</label><input id="sleep_minutes" name="sleep_minutes" type="number" min="0" max="59" step="1" inputmode="numeric" required></div>
+            </div>
+            <p class="field-help">Enter a total of 0 to 24 hours. Zero is an explicit observation; an unrecorded day stays unknown.</p>
+            <button class="button" type="submit">Save sleep observation</button>
+          </fieldset>
+          <p id="sleep-message" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+        <noscript><p>Enable JavaScript to save an observation.</p></noscript>
+      </section>
+      <section class="weight-history" aria-labelledby="history-title">
+        <div class="history-heading"><h2 id="history-title">Recent entries</h2><span>Last 30 dates</span></div>
+        {% if entries %}
+        <ol class="weight-list sleep-list">
+          {% for entry in entries %}
+          <li><time datetime="{{ entry.local_date.isoformat() }}">{{ entry.local_date.isoformat() }}</time><strong>{{ entry.sleep_minutes // 60 }}h {{ '%02d'|format(entry.sleep_minutes % 60) }}m</strong><button type="button" class="edit-sleep" data-date="{{ entry.local_date.isoformat() }}" data-minutes="{{ entry.sleep_minutes }}" aria-label="Edit sleep for {{ entry.local_date.isoformat() }}">Edit</button></li>
+          {% endfor %}
+        </ol>
+        {% else %}
+        <div class="weight-empty"><span aria-hidden="true">＋</span><h3>No sleep observations yet.</h3><p>Saved dates and durations will appear here.</p></div>
+        {% endif %}
+      </section>
+    </div>
+    <p class="weight-scope">This log records your reported duration only. It does not assess sleep quality, explain fatigue, or change your workout or calorie target.</p>
+  </main>
+</body>
+</html>

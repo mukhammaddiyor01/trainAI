@@ -9,6 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from backend.guards import optional_account
 from backend.profiles import read_profile
 from backend.weight_entries import list_recent_weight_entries, read_weight_review
+from backend.sleep_entries import list_recent_sleep_entries
 from backend.goals import read_goal
 from backend.training_preferences import read_training_preferences
 from backend.movement_limitations import read_movement_limitations
@@ -31,6 +32,26 @@ from backend.services.workout_schedule import strength_day_pairs
 from backend.routes import templates
 
 router = APIRouter()
+
+
+@router.get("/sleep-log", response_class=HTMLResponse)
+async def sleep_log_page(request: Request):
+    try:
+        identity = await optional_account(request)
+        if identity is None:
+            return RedirectResponse("/login", status_code=303)
+        profile = await run_in_threadpool(read_profile, identity.user_id)
+        if profile is None:
+            return RedirectResponse("/profile", status_code=303)
+        entries = await run_in_threadpool(list_recent_sleep_entries, identity.user_id)
+        today = datetime.now(timezone.utc).astimezone(ZoneInfo(profile.timezone)).date()
+    except (DatabaseConfigurationError, SQLAlchemyError):
+        return templates.TemplateResponse(request=request, name="account.html", status_code=503,
+                                          context={"identity": None})
+    return templates.TemplateResponse(request=request, name="sleep-log.html", context={
+        "entries": entries, "today": today, "timezone": profile.timezone,
+        "saved": request.query_params.get("saved") == "1",
+    })
 
 
 @router.get("/weight-review", response_class=HTMLResponse)
