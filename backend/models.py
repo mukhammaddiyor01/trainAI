@@ -63,6 +63,19 @@ class WeightEntry(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+class SleepEntry(Base):
+    __tablename__ = "sleep_entries"
+    __table_args__ = (
+        CheckConstraint("sleep_minutes BETWEEN 0 AND 1440", name="ck_sleep_entries_minutes"),
+    )
+
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("profiles.user_id", ondelete="CASCADE"), primary_key=True)
+    local_date: Mapped[date] = mapped_column(Date, primary_key=True)
+    sleep_minutes: Mapped[int] = mapped_column(SmallInteger)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class Goal(Base):
     __tablename__ = "goals"
     __table_args__ = (
