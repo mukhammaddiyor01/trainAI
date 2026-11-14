@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import math
 
 from backend.services.catalogs import ExerciseDetails, FoodDetails, InvalidCatalog
+from backend.services.exercise_prescriptions import exercise_prescription_gaps
 from backend.services.food_preferences import FoodPreferencesDetails, validate_food_preferences
 from backend.services.allergens import resolve_allergy_names
 from backend.services.movement_limitations import MovementLimitationsDetails, validate_movement_limitations
@@ -60,8 +61,8 @@ def exercise_selection_blockers(
             blockers.append("movement_answer_unsure")
         elif status == "needs_adaptation":
             blockers.append("adaptation_review_required")
-    # None of the six metadata seeds has an exercise-specific suitability or dosage review.
-    blockers.append("exercise_prescription_unreviewed")
+    if exercise_prescription_gaps(exercise):
+        blockers.append("exercise_prescription_unreviewed")
     return tuple(blockers)
 
 

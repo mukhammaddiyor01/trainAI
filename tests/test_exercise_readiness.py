@@ -10,6 +10,7 @@ from backend.services.catalog_use import (
 )
 from backend.services.movement_limitations import InvalidMovementLimitations, validate_movement_limitations
 from backend.services.training_preferences import InvalidTrainingPreferences, validate_training_preferences
+from backend.services.exercise_prescriptions import exercise_prescription_gaps
 
 
 class ExerciseReadinessTests(unittest.TestCase):
@@ -37,6 +38,36 @@ class ExerciseReadinessTests(unittest.TestCase):
                                  ("exercise_prescription_unreviewed",))
                 with self.assertRaises(ExerciseSelectionUnavailable):
                     require_exercise_selection_review(self.exercises, exercise.id, preferences, answer)
+
+    def test_review_gaps_cover_every_exact_catalog_identity(self):
+        expected_special = {
+            "exercise-bodyweight-squat": "chair_squat_variant_mismatch",
+            "exercise-pushups": "wall_and_hand_position_variant_mismatch",
+            "exercise-plank": "bounded_hold_missing",
+        }
+        self.assertEqual(len(self.exercises), 6)
+        for exercise in self.exercises:
+            with self.subTest(exercise=exercise.id):
+                gaps = exercise_prescription_gaps(exercise)
+                self.assertNotIn("catalog_identity_unreviewed", gaps)
+                self.assertIn("suitability_unreviewed", gaps)
+                self.assertIn("dose_unreviewed", gaps)
+                self.assertIn("rest_and_recovery_unreviewed", gaps)
+                self.assertIn("alternative_unreviewed", gaps)
+                if exercise.id in expected_special:
+                    self.assertIn(expected_special[exercise.id], gaps)
+
+    def test_changed_source_or_equipment_cannot_inherit_review(self):
+        exercise = self.exercises[0]
+        for altered in (
+            replace(exercise, source_revision="0" * 40),
+            replace(exercise, source_id="Other_Squat"),
+            replace(exercise, required_equipment=("bench",)),
+        ):
+            with self.subTest(altered=altered):
+                self.assertEqual(exercise_prescription_gaps(altered)[0], "catalog_identity_unreviewed")
+        with self.assertRaises(ValueError):
+            exercise_prescription_gaps(None)
 
     def test_equipment_must_be_complete_and_source_level_grants_nothing(self):
         answer = validate_movement_limitations("none_reported")
