@@ -66,6 +66,30 @@ gaps above. The next implementation step is an explicit per-ID review gate tied
 to the pinned source identity. All six records stay ineligible for automatic
 selection until each required field has supported evidence and a tested rule.
 
+## Front-plank dose review — 2026-11-14
+
+The retained `Plank` record describes a prone, straight-body hold supported by
+forearms under the shoulders and toes. The [ACE Front Plank exercise library](https://www.acefitness.org/resources/everyone/exercise-library/32/front-plank/)
+describes the same support points and alignment, with no equipment. Its difficulty
+label is **intermediate**; the retained catalog's `source_level` says **beginner**.
+Neither label alone proves suitability for an individual.
+
+[ACE's Kick Start Workout, Phase II](https://www.acefitness.org/resources/everyone/blog/6595/ace-s-kick-start-workout-phase-ii/)
+links that exact Front Plank library entry and uses two 15–20-second holds with
+30 seconds between them as a warm-up in weeks 5–8. A separate [ACE core workout](https://www.acefitness.org/resources/everyone/blog/6280/4-week-core-workout-challenge/)
+places core workouts on non-consecutive days and advises stopping or modifying
+when form deteriorates. For an internal bounded candidate, TrainAI records the
+lower 15-second hold, two sets, 30-second between-set rest, and non-consecutive
+day recovery. These are source-backed program values, **not** a personalized
+starting prescription. The upstream "as long as possible" instruction must not
+override the bounded candidate.
+
+ACE's library says to stop if low-back pain occurs. A knee-supported plank is a
+different variant and has no TrainAI catalog ID. Therefore individual ability,
+symptoms or needed adaptation, and an exact-ID alternative remain unresolved.
+The plank stays blocked from automatic selection; a `none_reported` limitations
+answer alone does not establish ability to hold the position.
+
 ## Fail-closed application rule
 
 The plain `exercise_prescription_gaps` service checks each of the six reviewed
