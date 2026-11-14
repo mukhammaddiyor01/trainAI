@@ -10,7 +10,7 @@ from backend.services.catalog_use import (
 )
 from backend.services.movement_limitations import InvalidMovementLimitations, validate_movement_limitations
 from backend.services.training_preferences import InvalidTrainingPreferences, validate_training_preferences
-from backend.services.exercise_prescriptions import exercise_prescription_gaps
+from backend.services.exercise_prescriptions import exercise_prescription_gaps, reviewed_exercise_dose
 
 
 class ExerciseReadinessTests(unittest.TestCase):
@@ -43,7 +43,6 @@ class ExerciseReadinessTests(unittest.TestCase):
         expected_special = {
             "exercise-bodyweight-squat": "chair_squat_variant_mismatch",
             "exercise-pushups": "wall_and_hand_position_variant_mismatch",
-            "exercise-plank": "bounded_hold_missing",
         }
         self.assertEqual(len(self.exercises), 6)
         for exercise in self.exercises:
@@ -51,11 +50,28 @@ class ExerciseReadinessTests(unittest.TestCase):
                 gaps = exercise_prescription_gaps(exercise)
                 self.assertNotIn("catalog_identity_unreviewed", gaps)
                 self.assertIn("suitability_unreviewed", gaps)
-                self.assertIn("dose_unreviewed", gaps)
-                self.assertIn("rest_and_recovery_unreviewed", gaps)
                 self.assertIn("alternative_unreviewed", gaps)
+                if exercise.id == "exercise-plank":
+                    self.assertEqual(gaps, ("suitability_unreviewed", "alternative_unreviewed"))
+                else:
+                    self.assertIn("dose_unreviewed", gaps)
+                    self.assertIn("rest_and_recovery_unreviewed", gaps)
                 if exercise.id in expected_special:
                     self.assertIn(expected_special[exercise.id], gaps)
+
+    def test_bounded_front_plank_dose_is_only_reviewed_example(self):
+        plank = next(exercise for exercise in self.exercises if exercise.id == "exercise-plank")
+        dose = reviewed_exercise_dose(plank)
+        self.assertEqual((dose.sets, dose.hold_seconds, dose.rest_seconds, dose.recovery),
+                         (2, 15, 30, "non_consecutive_days"))
+        self.assertTrue(all(reviewed_exercise_dose(exercise) is None for exercise in self.exercises
+                            if exercise.id != plank.id))
+        self.assertIsNone(reviewed_exercise_dose(replace(plank, source_revision="0" * 40)))
+        self.assertIsNone(reviewed_exercise_dose(replace(plank, name="Other Plank")))
+        self.assertIn("exercise_prescription_unreviewed", exercise_selection_blockers(
+            self.exercises, plank.id, self.preferences(),
+            validate_movement_limitations("none_reported"),
+        ))
 
     def test_changed_source_or_equipment_cannot_inherit_review(self):
         exercise = self.exercises[0]
@@ -63,6 +79,7 @@ class ExerciseReadinessTests(unittest.TestCase):
             replace(exercise, source_revision="0" * 40),
             replace(exercise, source_id="Other_Squat"),
             replace(exercise, required_equipment=("bench",)),
+            replace(exercise, name="Different Squat"),
         ):
             with self.subTest(altered=altered):
                 self.assertEqual(exercise_prescription_gaps(altered)[0], "catalog_identity_unreviewed")
