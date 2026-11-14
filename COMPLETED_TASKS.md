@@ -4,6 +4,25 @@ Last updated: 2026-11-14 (Asia/Seoul).
 The last implementation continuation read all 25 existing project-owned Markdown files
 before changing application code.
 
+## Current Checkpoint — Source-Matched Front Plank Dose Candidate
+
+- Continued from clean, synchronized `develop` after reading all 25 project-owned
+  Markdown files. ACE's Front Plank library matches the retained forearm-and-toe
+  support variant; its linked Kick Start program supplies a 15–20-second hold,
+  two sets, and 30 seconds between holds. An ACE core workout supplies
+  non-consecutive recovery days. The exact evidence and limitation are recorded
+  in docs/exercise-readiness.md (896e9d7).
+- A plain source-matched dose candidate now records two 15-second holds, 30-second
+  rest, and non-consecutive recovery (326c711). Changed catalog identity cannot
+  inherit it. It is not a personalized prescription. Suitability and an exact-ID
+  alternative remain unreviewed, so every exercise still fails the automatic
+  selection gate.
+- Eight focused tests and all 257 disposable PostgreSQL tests passed. No schema,
+  API, UI, configured database record, dependency, or plan changed.
+- Next: review an exact-ID lower-intensity plank alternative and determine what
+  explicit capability/limitation input is needed before the plank can enter a
+  deterministic plan. Do not use `none_reported` as proof of capability.
+
 ## Current Checkpoint — Exact-Source Exercise Prescription Gaps
 
 - Continued from clean, synchronized `develop` after reading all 25 project-owned

@@ -93,9 +93,12 @@ answer alone does not establish ability to hold the position.
 ## Fail-closed application rule
 
 The plain `exercise_prescription_gaps` service checks each of the six reviewed
-IDs against its pinned source ID, revision, and required equipment. It reports
+IDs against its pinned source ID, revision, name, movement type, muscle metadata,
+and required equipment. It reports
 variant-specific evidence mismatches where identified, plus missing suitability,
-dose, rest/recovery, and alternative reviews. A changed identity adds
+dose, rest/recovery, and alternative reviews. The exact-match plank now has a
+source-backed bounded dose and recovery candidate, so only suitability and an
+exact-ID alternative remain open for it. A changed identity adds
 `catalog_identity_unreviewed`. The existing selector keeps its single public
 `exercise_prescription_unreviewed` blocker while any gaps remain; no record is
 currently eligible. This gap list is an internal review checklist, not a dose
@@ -136,3 +139,8 @@ On 2026-11-14, exact-source gap tests covered all six IDs and changed source,
 revision, and equipment values. All 256 disposable PostgreSQL tests passed;
 `pip check` and offline catalog verification passed. No schema, API, UI,
 configured database record, or automatic workout plan changed.
+
+The front-plank candidate and source-identity checks passed eight focused tests
+and all 257 disposable PostgreSQL tests on 2026-11-14. Automatic exercise
+selection still refuses the plank and the other five records. No schema,
+private API, browser surface, or configured user data changed.
