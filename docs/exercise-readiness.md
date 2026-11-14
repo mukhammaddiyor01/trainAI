@@ -68,6 +68,15 @@ selection until each required field has supported evidence and a tested rule.
 
 ## Fail-closed application rule
 
+The plain `exercise_prescription_gaps` service checks each of the six reviewed
+IDs against its pinned source ID, revision, and required equipment. It reports
+variant-specific evidence mismatches where identified, plus missing suitability,
+dose, rest/recovery, and alternative reviews. A changed identity adds
+`catalog_identity_unreviewed`. The existing selector keeps its single public
+`exercise_prescription_unreviewed` blocker while any gaps remain; no record is
+currently eligible. This gap list is an internal review checklist, not a dose
+or a user-specific clearance result.
+
 The plain service reports exact blockers for missing training preferences,
 unavailable required equipment, and a missing, unsure, or adaptation-needed
 movement answer. A `none_reported` answer removes only that self-report blocker;
@@ -98,3 +107,8 @@ cover owner isolation, profile-first access, anonymous redirect, missing/saved
 inputs, and query-owner spoofing. A disposable synthetic browser session verified
 the empty state after profile setup. No schema, dependency, or configured user
 record changed.
+
+On 2026-11-14, exact-source gap tests covered all six IDs and changed source,
+revision, and equipment values. All 256 disposable PostgreSQL tests passed;
+`pip check` and offline catalog verification passed. No schema, API, UI,
+configured database record, or automatic workout plan changed.

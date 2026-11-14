@@ -1,8 +1,28 @@
 # TrainAI — Completed Tasks and Session Handoff
 
-Last updated: 2026-11-13 (Asia/Seoul).
-The last implementation continuation read all 24 existing project-owned Markdown files
+Last updated: 2026-11-14 (Asia/Seoul).
+The last implementation continuation read all 25 existing project-owned Markdown files
 before changing application code.
+
+## Current Checkpoint — Exact-Source Exercise Prescription Gaps
+
+- Continued from clean, synchronized `develop` after reading all 25 project-owned
+  Markdown files. Compared the six pinned exercise variants with retained source
+  records and current ACSM, NHS, and ACE guidance. Documented variant mismatches
+  and missing suitability, dose, rest/recovery, and alternative evidence in a
+  focused commit (0a9e546). No general guideline dose was transferred to a
+  different catalog movement.
+- Added a plain exact-ID review-gap service and kept automatic selection blocked
+  for every exercise (6d8b619). Source ID, pinned revision, and equipment changes
+  fail closed. Existing API/page blocker wording remains stable. No prescription,
+  workout, database, or user record was created.
+- All 256 disposable PostgreSQL tests passed, including two new exact-source
+  tests. Dependency and offline catalog checks passed. The configured database
+  remains at 0011; no migration or dependency changed.
+- Next: find an exact supported exercise variant with evidence for individual
+  applicability, bounded dose, rest/recovery, and an alternative; author and test
+  its explicit rules before allowing that ID into a deterministic workout plan.
+  Food composition evidence remains a separate meal-plan blocker.
 
 ## Current Checkpoint — Private Daily Sleep Duration Log
 
